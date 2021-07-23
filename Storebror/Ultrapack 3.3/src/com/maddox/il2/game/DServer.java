@@ -77,9 +77,9 @@ public class DServer extends Main {
         CmdEnv.top().exec("load com.maddox.rts.cmd.CmdFile PARAM CURENV on");
         CmdEnv.top().exec("file .rcs");
 
-        // TODO: Automount SFS_UP Folder
-        CmdEnv.top().exec("CmdLoad com.maddox.rts.cmd.CmdSFSAutoMount NAME sfsautomount HELP sfsautomount [MOUNT <folder name>] [UNMOUNT <folder name>]");
-        CmdEnv.top().exec("sfsautomount MOUNT SFS_UP");
+//        // TODO: Automount SFS_UP Folder
+//        CmdEnv.top().exec("CmdLoad com.maddox.rts.cmd.CmdSFSAutoMount NAME sfsautomount HELP sfsautomount [MOUNT <folder name>] [UNMOUNT <folder name>]");
+//        CmdEnv.top().exec("sfsautomount MOUNT SFS_UP");
 
         Regiment.loadAll();
         this.preloadNetClasses();
