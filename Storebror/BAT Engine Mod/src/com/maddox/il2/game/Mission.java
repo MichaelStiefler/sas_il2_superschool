@@ -1651,18 +1651,22 @@ public class Mission implements Destroy {
 		}
 	}
 
-	private void loadNStationary(SectFile sectfile) {
-		int i = sectfile.sectionIndex("NStationary");
-		if (i >= 0) {
-			int i_107_ = sectfile.vars(i);
-			for (int i_108_ = 0; i_108_ < i_107_; i_108_++) {
-				LOADING_STEP((float) (85 + Math.round((float) i_108_ / (float) i_107_ * 5.0F)), "task.Load_stationary_objects");
-				NumberTokenizer numbertokenizer = new NumberTokenizer(sectfile.line(i, i_108_));
-				loadStationaryActor(numbertokenizer.next(""), numbertokenizer.next(""), numbertokenizer.next(0), numbertokenizer.next(0.0), numbertokenizer.next(0.0), numbertokenizer.next(0.0F), numbertokenizer.next(0.0F),
-						numbertokenizer.next((String) null), numbertokenizer.next((String) null), numbertokenizer.next((String) null), numbertokenizer.next((String) null), numbertokenizer.next(0));
-			}
-		}
-	}
+    private void loadNStationary(SectFile paramSectFile)
+    {
+        int i = paramSectFile.sectionIndex("NStationary");
+        if(i < 0)
+            return;
+        int j = paramSectFile.vars(i);
+        for(int k = 0; k < j; k++)
+        {
+            LOADING_STEP(85 + Math.round((float)(k / j) * 5F), "task.Load_stationary_objects");
+            NumberTokenizer localNumberTokenizer = new NumberTokenizer(paramSectFile.line(i, k));
+            String curName = localNumberTokenizer.next("");
+            if(!World.cur().triggersGuard.listTriggerStaticAppar.contains(curName))
+                loadStationaryActor(curName, localNumberTokenizer.next(""), localNumberTokenizer.next(0), localNumberTokenizer.next(0.0D), localNumberTokenizer.next(0.0D), localNumberTokenizer.next(0.0F), localNumberTokenizer.next(0.0F), localNumberTokenizer.next(null), localNumberTokenizer.next(null), localNumberTokenizer.next(null), localNumberTokenizer.next(null), localNumberTokenizer.next(-1));
+        }
+
+    }
 
 	// TODO: HSFX Triggers Backport by Whistler +++
     public void loadNStationaryTrigger(String s)
@@ -1685,57 +1689,70 @@ public class Mission implements Destroy {
     }
     // TODO: HSFX Triggers Backport by Whistler ---
     
-	private void loadRocketry(SectFile sectfile) {
-		int i = sectfile.sectionIndex("Rocket");
-		if (i >= 0) {
-			int i_109_ = sectfile.vars(i);
-			for (int i_110_ = 0; i_110_ < i_109_; i_110_++) {
-				NumberTokenizer numbertokenizer = new NumberTokenizer(sectfile.line(i, i_110_));
-				if (numbertokenizer.hasMoreTokens()) {
-					String string = numbertokenizer.next("");
-					if (numbertokenizer.hasMoreTokens()) {
-						String string_111_ = numbertokenizer.next("");
-						if (numbertokenizer.hasMoreTokens()) {
-							int i_112_ = numbertokenizer.next(1, 1, 2);
-							double d = numbertokenizer.next(0.0);
-							if (numbertokenizer.hasMoreTokens()) {
-								double d_113_ = numbertokenizer.next(0.0);
-								if (numbertokenizer.hasMoreTokens()) {
-									float f = numbertokenizer.next(0.0F);
-									if (numbertokenizer.hasMoreTokens()) {
-										float f_114_ = numbertokenizer.next(0.0F);
-										int i_115_ = numbertokenizer.next(1);
-										float f_116_ = numbertokenizer.next(20.0F);
-										Point2d point2d = null;
-										if (numbertokenizer.hasMoreTokens()) point2d = new Point2d(numbertokenizer.next(0.0), numbertokenizer.next(0.0));
-										NetChannel netchannel = null;
-										int i_117_ = 0;
-										if (net.isMirror()) {
-											netchannel = net.masterChannel();
-											i_117_ = ((Integer) actors.get(curActor)).intValue();
-											if (i_117_ == 0) {
-												actors.set(curActor++, null);
-												continue;
-											}
-										}
-										RocketryGeneric rocketrygeneric = null;
-										try {
-											rocketrygeneric = (RocketryGeneric.New(string, string_111_, netchannel, i_117_, i_112_, d, d_113_, f, f_114_, i_115_, f_116_, point2d));
-										} catch (Exception exception) {
-											System.out.println(exception.getMessage());
-											exception.printStackTrace();
-										}
-										if (net.isMirror()) actors.set(curActor++, rocketrygeneric);
-										else actors.add(rocketrygeneric);
-									}
-								}
-							}
-						}
-					}
-				}
-			}
-		}
-	}
+    private void loadRocketry(SectFile paramSectFile)
+    {
+        int i = paramSectFile.sectionIndex("Rocket");
+        if(i < 0)
+            return;
+        int j = paramSectFile.vars(i);
+        for(int k = 0; k < j; k++)
+        {
+            NumberTokenizer localNumberTokenizer = new NumberTokenizer(paramSectFile.line(i, k));
+            if(!localNumberTokenizer.hasMoreTokens())
+                continue;
+            String str1 = localNumberTokenizer.next("");
+            // TODO: HSFX Triggers Backport by Whistler +++
+            if(World.cur().triggersGuard.listTriggerStaticAppar.contains(str1) || !localNumberTokenizer.hasMoreTokens())
+                continue;
+            // TODO: HSFX Triggers Backport by Whistler ---
+            String str2 = localNumberTokenizer.next("");
+            if(!localNumberTokenizer.hasMoreTokens())
+                continue;
+            int m = localNumberTokenizer.next(1, 1, 2);
+            double d1 = localNumberTokenizer.next(0.0D);
+            if(!localNumberTokenizer.hasMoreTokens())
+                continue;
+            double d2 = localNumberTokenizer.next(0.0D);
+            if(!localNumberTokenizer.hasMoreTokens())
+                continue;
+            float f1 = localNumberTokenizer.next(0.0F);
+            if(!localNumberTokenizer.hasMoreTokens())
+                continue;
+            float f2 = localNumberTokenizer.next(0.0F);
+            int n = localNumberTokenizer.next(1);
+            float f3 = localNumberTokenizer.next(20F);
+            Point2d localPoint2d = null;
+            if(localNumberTokenizer.hasMoreTokens())
+                localPoint2d = new Point2d(localNumberTokenizer.next(0.0D), localNumberTokenizer.next(0.0D));
+            NetChannel localNetChannel = null;
+            int i1 = 0;
+            if(net.isMirror())
+            {
+                localNetChannel = net.masterChannel();
+                i1 = ((Integer)actors.get(curActor)).intValue();
+                if(i1 == 0)
+                {
+                    actors.set(curActor++, null);
+                    continue;
+                }
+            }
+            RocketryGeneric localRocketryGeneric = null;
+            try
+            {
+                localRocketryGeneric = RocketryGeneric.New(str1, str2, localNetChannel, i1, m, d1, d2, f1, f2, n, f3, localPoint2d);
+            }
+            catch(Exception localException)
+            {
+                System.out.println(localException.getMessage());
+                localException.printStackTrace();
+            }
+            if(net.isMirror())
+                actors.set(curActor++, localRocketryGeneric);
+            else
+                actors.add(localRocketryGeneric);
+        }
+
+    }
 
 	// TODO: HSFX Triggers Backport by Whistler +++
     public void loadRocketryTrigger(String s)
