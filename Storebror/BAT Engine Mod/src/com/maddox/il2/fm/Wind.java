@@ -202,7 +202,7 @@ vector3d.z *= (double) f_9_;					//always multiply by fractional height AGL (0 t
       if (f < 0.0F) {
         f = 0.0F;
       }
-      if (f > 359.98999F) {
+      if (f > 359.99F) {
         f = 0.0F;
       }
       this.curWindDirection = f;

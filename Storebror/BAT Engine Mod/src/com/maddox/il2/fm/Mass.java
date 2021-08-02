@@ -157,8 +157,8 @@ public class Mass {
 			f = sectfile.get(s, "Nitro", 0.0F);
 			maxNitro = nitro = f;
 			referenceWeight += fuel + maxNitro;
-			return;
 		}
+        this.loadMassFactors(sectfile);
 	}
 
 	public void onFuelTanksChanged() {
