@@ -29,6 +29,7 @@ import com.maddox.il2.ai.ground.NearestEnemies;
 import com.maddox.il2.ai.ground.Obstacle;
 import com.maddox.il2.ai.ground.Predator;
 import com.maddox.il2.ai.ground.Prey;
+import com.maddox.il2.ai.ground.TgtInfantry;
 import com.maddox.il2.ai.ground.TgtTank;
 import com.maddox.il2.engine.Actor;
 import com.maddox.il2.engine.ActorHMesh;
@@ -598,7 +599,10 @@ public abstract class ArtilleryGeneric extends ActorHMesh implements MsgCollisio
                 this.heightAboveLandSurface = this.heightAboveLandSurface2;
             }
             this.Align();
-            if (bool) this.ShowExplode(15.0F);
+            // TODO: +++ TgtInfantry backport by SAS~Storebror +++
+//          if (bool) this.ShowExplode(15.0F);
+          if (bool && !(this instanceof TgtInfantry)) ShowExplode(15F);
+          // TODO: --- TgtInfantry backport by SAS~Storebror ---
             if (bool) this.send_DeathCommand(actor);
         }
     }

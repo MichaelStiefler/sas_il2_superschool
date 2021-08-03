@@ -90,6 +90,10 @@ public class HUD {
     public static final long  logCenterTimeLife     = 5000L;
     private String            logCenter;
     private long              logCenterTime;
+    // TODO: +++ Trigger backport from HSFX 7.0.3 by SAS~Storebror +++
+    private long              logTriggerTime;
+    private static ArrayList  msgWaitingList;
+    // TODO: --- Trigger backport from HSFX 7.0.3 by SAS~Storebror ---
     private String            logIntro;
     private String            logIntroESC;
     private TTFont            fntCenter;
@@ -138,6 +142,31 @@ public class HUD {
     }
     // TODO: --- Additional Player Info Mod for Admins by SAS~Storebror ---
 
+    // TODO: +++ Trigger backport from HSFX 7.0.3 by SAS~Storebror +++
+    static class MsgWaiting
+    {
+
+        int getLast()
+        {
+            return last;
+        }
+
+        String getMsg()
+        {
+            return msg;
+        }
+
+        String msg;
+        int last;
+
+        MsgWaiting(String s, int i)
+        {
+            msg = s;
+            last = i;
+        }
+    }
+    // TODO: --- Trigger backport from HSFX 7.0.3 by SAS~Storebror ---
+
     static class Ptr {
         float x;
         float y;
@@ -150,7 +179,7 @@ public class HUD {
             this.y = f_0_;
             this.color = i;
             this.alpha = f_1_;
-            this.angle = (float) (f_2_ * 180.0F / 3.141592653589793);
+            this.angle = (float) (f_2_ * 180.0F / Math.PI);
         }
 
         public Ptr(float f, float f_3_, int i, float f_4_, float f_5_) {
@@ -943,6 +972,25 @@ public class HUD {
             i |= i_48_ << 8;
             ttfont.output(i, (this.viewDX - f) / 2.0F, this.viewDY * 0.75F, 0.0F, this.logCenter);
         }
+        // TODO: +++ Trigger backport from HSFX 7.0.3 by SAS~Storebror +++
+        if(msgWaitingList.size() > 0)
+            if(logTriggerTime != 0L && l > logTriggerTime + (long)((MsgWaiting)msgWaitingList.get(0)).getLast())
+            {
+//                System.out.println("HUD removing \"" + ((MsgWaiting)msgWaitingList.get(0)).getMsg() + "\" (" + ((MsgWaiting)msgWaitingList.get(0)).getLast() + "ms)");
+                msgWaitingList.remove(0);
+                logTriggerTime = 0L;
+            } else
+            {
+                if(logTriggerTime == 0L)
+                    logTriggerTime = l;
+                TTFont ttfont1 = fntCenter;
+                float f1 = ttfont1.width(((MsgWaiting)msgWaitingList.get(0)).getMsg());
+                int j1 = 0xff0000ff;
+                int i2 = 255 - (int)(((double)(l - logTriggerTime) / (double)((MsgWaiting)msgWaitingList.get(0)).getLast()) * 255D);
+                j1 |= i2 << 8;
+                ttfont1.output(j1, ((float)viewDX - f1) / 2.0F, (float)viewDY * 0.75F, 0.0F, ((MsgWaiting)msgWaitingList.get(0)).getMsg());
+            }
+        // TODO: --- Trigger backport from HSFX 7.0.3 by SAS~Storebror ---
         if (this.logIntroESC != null) {
             TTFont ttfont = TTFont.font[0];
             float f = ttfont.width(this.logIntroESC);
@@ -1443,5 +1491,24 @@ public class HUD {
         this.subTitlesLines = Config.cur.ini.get("game", "SubTitlesLines", this.subTitlesLines);
         if (this.subTitlesLines < 1) this.subTitlesLines = 1;
         this.bNoHudLog = Config.cur.ini.get("game", "NoHudLog", this.bNoHudLog);
+        // TODO: +++ Trigger backport from HSFX 7.0.3 by SAS~Storebror +++
+        msgWaitingList = new ArrayList();
+        logTriggerTime = 0L;
+        // TODO: --- Trigger backport from HSFX 7.0.3 by SAS~Storebror ---
     }
+    
+    // TODO: +++ Trigger backport from HSFX 7.0.3 by SAS~Storebror +++
+    public static void addMsgToWaitingList(String s, int i)
+    {
+//        System.out.println("addMsgToWaitingList (" + s + ", " + i + ")");
+        if (msgWaitingList == null) msgWaitingList = new ArrayList();
+        msgWaitingList.add(new MsgWaiting(s, i));
+    }
+    public static void clearWaitingList()
+    {
+//        System.out.println("clearWaitingList");
+        if (msgWaitingList == null) msgWaitingList = new ArrayList();
+        msgWaitingList.clear();
+    }
+    // TODO: --- Trigger backport from HSFX 7.0.3 by SAS~Storebror ---
 }

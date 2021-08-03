@@ -93,7 +93,9 @@ public class NetFilesTrack {
             outputstream.close();
             return l;
         } catch (FileNotFoundException fnfe) {
-            if (!s.toLowerCase().startsWith("paintschemes/skins/")) printDebug(fnfe);
+            if (s.toLowerCase().startsWith("paintschemes/skins/") || s.toLowerCase().startsWith("paintschemes/pilots/")) {
+                System.out.println("Skin File \"" + s + "\" not available.");
+            } else printDebug(fnfe);
         } catch (Exception e) {
             printDebug(e);
         }

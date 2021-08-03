@@ -13,6 +13,7 @@ import com.maddox.JGP.Tuple3d;
 import com.maddox.il2.ai.EventLog;
 import com.maddox.il2.ai.MsgExplosion;
 import com.maddox.il2.ai.Regiment;
+import com.maddox.il2.ai.Trigger;
 import com.maddox.il2.ai.UserCfg;
 import com.maddox.il2.ai.World;
 import com.maddox.il2.ai.air.Point_Stay;
@@ -99,6 +100,10 @@ public class NetUser extends NetHost implements NetFileClient, NetUpdate {
     public static final int MSG_DOT_RANGE_FOE      = 30;
     public static final int MSG_EVENTLOG           = 31;
     public static final int MSG_NOISEART           = 32;
+    // TODO: +++ Trigger backport from HSFX 7.0.3 by SAS~Storebror +++
+    public static final int MSG_TRIGGER            = 51;
+//    public static final int MSG_TRIGGER_SG         = 51;
+    // TODO: --- Trigger backport from HSFX 7.0.3 by SAS~Storebror ---
 
     // TODO: Storebror: Track Users hitting refly where this shouldn't be possible
     private long      lastSuspiciousPreRefly      = 0L;
@@ -1372,6 +1377,17 @@ public class NetUser extends NetHost implements NetFileClient, NetUpdate {
                 this.getEventLog(netmsginput);
                 return true;
 
+                // TODO: +++ Trigger backport from HSFX 7.0.3 by SAS~Storebror +++
+            case MSG_TRIGGER:
+//                getTriggerMsg(netmsginput);
+                Trigger.getReplicatedTrigger(netmsginput);
+                return true;
+                
+//            case MSG_TRIGGER_SG:
+//                getTriggerStartGround(netmsginput);
+//                return true;
+                // TODO: --- Trigger backport from HSFX 7.0.3 by SAS~Storebror ---
+               
 //            case 10:
 //            case 11:
 //            case 12:
@@ -2505,7 +2521,7 @@ public class NetUser extends NetHost implements NetFileClient, NetUpdate {
         if (SLAP_DEBUG) System.out.println("### SLAP DEBUG ### " + logLine);
     }
 
-    private static boolean SLAP_DEBUG = true;
+    private static boolean SLAP_DEBUG = false;
     // TODO: --- New "slap" command implementation by SAS~Storebror ---
 
     static {

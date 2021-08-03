@@ -12,6 +12,7 @@ import java.util.Iterator;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import com.maddox.JGP.Point2d;
 import com.maddox.JGP.Point3d;
 import com.maddox.il2.engine.Actor;
 import com.maddox.il2.engine.Config;
@@ -156,6 +157,13 @@ public class EventLog {
     public static final int NA_DROP_FUELTANKS = 73;
     // --- 4.14.1 Backport ----
     
+    // TODO: +++ Trigger backport from HSFX 7.0.3 by SAS~Storebror +++
+    public static final int TRIGGER = 100;
+    public static final int TRIGGER_LINK = 101;
+    public static final int TRIGGER_MESSAGE = 102;
+    public static final int TRIGGER_MESSAGE_LINK = 103;
+    // TODO: --- Trigger backport from HSFX 7.0.3 by SAS~Storebror ---
+
     // TODO: +++ By SAS~Storebror: Avoid masses of "damaged" event log entries when ships get bombed! +++
     private static ArrayList            pendingEventLogActions = new ArrayList();
     private static long                 firstCallTimeSeconds = 0;
@@ -1320,10 +1328,36 @@ public class EventLog {
       type(BASESELECT, World.getTimeofDay(), paramString, "", null, paramBornPlace.army, (float)paramBornPlace.place.x, (float)paramBornPlace.place.y, 0.0F, false, paramString);
     }
     
+    // TODO: +++ Trigger backport from HSFX 7.0.3 by SAS~Storebror +++
+    public static void onTriggerActivate(Actor obj_triggered, Trigger trigger)
+    {
+        if(!Mission.isPlaying())
+            return;
+        if(obj_triggered == null)
+            type(TRIGGER_MESSAGE, World.getTimeofDay(), trigger.getTriggerName(), "", 0, (float)trigger.getPosTrigger().x, (float)trigger.getPosTrigger().y, true);
+        else
+            type(TRIGGER, World.getTimeofDay(), trigger.getTriggerName(), obj_triggered.name(), obj_triggered.getArmy(), (float)trigger.getPosTrigger().x, (float)trigger.getPosTrigger().y, true);
+    }
+
+    public static void onTriggerActivateLink(Actor obj_triggered, Trigger trigger)
+    {
+        if(!Mission.isPlaying())
+            return;
+        Point2d pos = trigger.getPosLink();
+        if (pos == null) pos = trigger.getPosTrigger();
+        if(obj_triggered == null)
+            type(TRIGGER_MESSAGE_LINK, World.getTimeofDay(), trigger.getLinkActorName(), "", trigger.getTriggerName(), 0, (float)pos.x, (float)pos.y, true);
+        else
+            type(TRIGGER_LINK, World.getTimeofDay(), trigger.getLinkActorName(), obj_triggered.name(), trigger.getTriggerName(), obj_triggered.getArmy(), (float)pos.x, (float)pos.y, true);
+    }
+    // TODO: --- Trigger backport from HSFX 7.0.3 by SAS~Storebror ---
     
-    
-    
-    
+    public static void type(int i, float f, String s, String s1, String s2, int j, float f1, float f2, 
+            boolean flag)
+    {
+        type(i, f, s, s1, s2, j, f1, f2, 0F, flag, null);
+    }
+
     public static void type(int i, float f, String s, String s1, int j, float f1, float f2, float f3, 
             boolean flag)
     {
@@ -1862,6 +1896,44 @@ public class EventLog {
             stringbuffer.append(s);
             stringbuffer.append(" dropped fuel tanks");
             break;
+
+            // TODO: +++ Trigger backport from HSFX 7.0.3 by SAS~Storebror +++
+        case TRIGGER:
+            stringbuffer.append(s1);
+            stringbuffer.append("(");
+            stringbuffer.append(j);
+            stringbuffer.append(")");
+            stringbuffer.append(" was activated by ");
+            stringbuffer.append(s);
+            stringbuffer.append(" at ");
+            break;
+
+        case TRIGGER_LINK:
+            stringbuffer.append(s1);
+            stringbuffer.append("(");
+            stringbuffer.append(j);
+            stringbuffer.append(")");
+            stringbuffer.append(" was activated by ");
+            stringbuffer.append(s2);
+            stringbuffer.append(" link to ");
+            stringbuffer.append(s);
+            stringbuffer.append(" at ");
+            break;
+
+        case TRIGGER_MESSAGE:
+            stringbuffer.append("A message was activated by ");
+            stringbuffer.append(s);
+            stringbuffer.append(" at ");
+            break;
+
+        case TRIGGER_MESSAGE_LINK:
+            stringbuffer.append("A message was activated by ");
+            stringbuffer.append(s2);
+            stringbuffer.append(" link to ");
+            stringbuffer.append(s);
+            stringbuffer.append(" at ");
+            break;
+            // TODO: --- Trigger backport from HSFX 7.0.3 by SAS~Storebror ---
 
         case FLY:
         default:

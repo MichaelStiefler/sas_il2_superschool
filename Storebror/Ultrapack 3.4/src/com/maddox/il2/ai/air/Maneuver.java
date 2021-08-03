@@ -468,6 +468,10 @@ public class Maneuver extends AIFlightModel {
     private static DecimalFormat df                 = new DecimalFormat("0.##");
     // TODO: --- UP3 Patch Pack Dogfight Server Distribution Control ---
 
+    // TODO: +++ Trigger backport from HSFX 7.0.3 by SAS~Storebror +++
+    public boolean triggerTakeOff;
+    // TODO: --- Trigger backport from HSFX 7.0.3 by SAS~Storebror ---
+    
     // TODO: Cheater Protection
     public int originalSkill = -1;
 
@@ -808,6 +812,9 @@ public class Maneuver extends AIFlightModel {
         this.ignoredActor = null;
         this.collisionDangerActor = null;
         this.distToTaxiPoint = -1F;
+        // TODO: +++ Trigger backport from HSFX 7.0.3 by SAS~Storebror +++
+        this.triggerTakeOff = true;
+        // TODO: --- Trigger backport from HSFX 7.0.3 by SAS~Storebror ---
         this.AP = new AutopilotAI(this);
         this.shootingDeviation = 6F;
         this.cCoeff = 0.01F * this.courage + World.Rnd().nextFloat(0.93F, 0.98F);
@@ -3885,6 +3892,10 @@ public class Maneuver extends AIFlightModel {
                             break;
                         }
                 }
+                // TODO: +++ Trigger backport from HSFX 7.0.3 by SAS~Storebror +++
+                if(!triggerTakeOff)
+                    break;
+                // TODO: --- Trigger backport from HSFX 7.0.3 by SAS~Storebror ---
                 if (this.Gears.onGround()) {
                     if (this.EI.engines[0].getStage() == 0) {
                         this.CT.setPowerControl(0.0F);

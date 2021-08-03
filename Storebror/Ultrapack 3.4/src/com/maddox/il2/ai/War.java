@@ -124,6 +124,10 @@ public class War {
     public void interpolateTick() {
         if (!this.isActive()) return;
         try {
+            // TODO: +++ Trigger backport from HSFX 7.0.3 by SAS~Storebror +++
+//          if(Time.tickCounter() % 128 == 0) // TODO: Changed by SAS~Storebror: All special trigger handling shifted to dedicated classes
+              World.cur().triggersGuard.checkTask();
+          // TODO: --- Trigger backport from HSFX 7.0.3 by SAS~Storebror ---
             if (Time.current() > 1000L) this.checkGroupsContact();
             this.checkCollisionForAircraft();
             if (Time.tickCounter() % 4 == 0) {

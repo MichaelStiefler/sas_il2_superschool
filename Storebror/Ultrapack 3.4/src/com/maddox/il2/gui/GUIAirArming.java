@@ -1616,12 +1616,12 @@ public class GUIAirArming extends GameState {
         i = this.cWeapon.getSelected();
         if (i < 0 || i >= as.length) return;
         String as1[] = Aircraft.getWeaponHooksRegistered(class1);
-        com.maddox.il2.objects.air.Aircraft._WeaponSlot a_lweaponslot[] = Aircraft.getWeaponSlotsRegistered(class1, as[i]);
+        Aircraft._WeaponSlot a_lweaponslot[] = Aircraft.getWeaponSlotsRegistered(class1, as[i]);
         if (as1 == null || a_lweaponslot == null) return;
         for (int j = 0; j < as1.length; j++)
             if (as1[j] != null && a_lweaponslot[j] != null) {
                 Class class2 = a_lweaponslot[j].clazz;
-                if (!com.maddox.il2.objects.weapons.BombGun.class.isAssignableFrom(class2) || Property.containsValue(class2, "external")) {
+                if (!BombGun.class.isAssignableFrom(class2) || Property.containsValue(class2, "external")) {
                     String s = Property.stringValue(class2, "mesh", null);
                     if (s == null) {
                         Class class3 = (Class) Property.value(class2, "bulletClass", null);
@@ -1648,7 +1648,8 @@ public class GUIAirArming extends GameState {
                         actorsimplemesh.pos.resetAsBase();
                         this.weaponMeshs.add(actorsimplemesh);
                     } catch (Exception exception) {
-                        System.out.println(exception.getMessage());
+                        System.out.println("Exception in GUIAirArming.prepareWeapons(). Aircraft class is " + class1.getName() + ".");
+//                        System.out.println(exception.getMessage());
                         exception.printStackTrace();
                     }
                 }

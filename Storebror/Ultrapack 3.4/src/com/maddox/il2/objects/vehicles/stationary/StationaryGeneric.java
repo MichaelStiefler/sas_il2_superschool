@@ -13,6 +13,7 @@ import com.maddox.il2.ai.TableFunctions;
 import com.maddox.il2.ai.World;
 import com.maddox.il2.ai.ground.Obstacle;
 import com.maddox.il2.ai.ground.Prey;
+import com.maddox.il2.ai.ground.TgtInfantry;
 import com.maddox.il2.ai.ground.TgtTank;
 import com.maddox.il2.engine.Actor;
 import com.maddox.il2.engine.ActorHMesh;
@@ -336,7 +337,10 @@ public abstract class StationaryGeneric extends ActorHMesh implements MsgExplosi
                 this.heightAboveLandSurface = (float) -matrix4d.m23;
             }
             this.Align();
-            if (bool) this.ShowExplode(15.0F, actor);
+            // TODO: +++ TgtInfantry backport by SAS~Storebror +++
+//          if (bool) this.ShowExplode(15.0F, actor);
+          if(bool && !(this instanceof TgtInfantry)) ShowExplode(15F, actor);
+          // TODO: --- TgtInfantry backport by SAS~Storebror ---
             if (bool) this.send_DeathCommand(actor);
         }
     }

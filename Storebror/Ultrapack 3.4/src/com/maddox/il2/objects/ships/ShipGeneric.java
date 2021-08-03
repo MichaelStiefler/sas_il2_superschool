@@ -928,7 +928,11 @@ public class ShipGeneric extends ActorHMesh implements MsgCollisionRequestListen
             this.CreateGuns();
             this.setDefaultLivePose();
             if (!this.isNetMirror() && this.prop.nGuns > 0 && this.DELAY_WAKEUP > 0.0F) this.wakeupTmr = -SecsToTicks(Rnd(2.0F, 7.0F));
-            if (!this.interpEnd("move")) this.interpPut(new Move(), "move", Time.current(), null);
+            // TODO: +++ Trigger backport from HSFX 7.0.3 by SAS~Storebror +++
+//          if (!this.interpEnd("move"))
+          if(!World.cur().triggersGuard.getListTriggerChiefActivate().contains(string) && !interpEnd("move"))
+              // TODO: --- Trigger backport from HSFX 7.0.3 by SAS~Storebror ---
+            this.interpPut(new Move(), "move", Time.current(), null);
         } catch (Exception exception) {
             System.out.println("Ship creation failure:");
             System.out.println(exception.getMessage());
@@ -946,6 +950,22 @@ public class ShipGeneric extends ActorHMesh implements MsgCollisionRequestListen
         // System.out.println("Ship name: " + zutiShipName);
         // ----------------------
     }
+
+    // TODO: +++ Trigger backport from HSFX 7.0.3 by SAS~Storebror +++
+    public void startMove()
+    {
+        long l = NetServerParams.getServerTime();
+        for(int k1 = 0; k1 < path.size(); k1++)
+        {
+            Segment segment = (Segment)path.get(k1);
+            segment.timeIn += l;
+            segment.timeOut += l;
+        }
+
+        if(!interpEnd("move"))
+            interpPut(new Move(), "move", Time.current(), null);
+    }
+    // TODO: --- Trigger backport from HSFX 7.0.3 by SAS~Storebror ---
 
     private void SetEffectsIntens(float f) {
         if (this.dying != 0) f = -1.0F;

@@ -15,7 +15,7 @@ public abstract class ActorHMesh extends ActorMesh {
     public float collisionR() {
         // TODO: +++ Mission Change Nullpointer Exception Hotfix by SAS~Storebror +++
 // return this.mesh().collisionR();
-        if (this.mesh() == null) System.out.println("Mission Change Nullpointer Exception Hotfix: " + this.name() + " would have caused issues on removal.");
+//        if (this.mesh() == null) System.out.println("Mission Change Nullpointer Exception Hotfix: " + this.name() + " would have caused issues on removal.");
         return this.mesh() == null ? this.lastCollisionR : this.mesh().collisionR();
         // TODO: --- Mission Change Nullpointer Exception Hotfix by SAS~Storebror ---
     }

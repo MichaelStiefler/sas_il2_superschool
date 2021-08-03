@@ -61,6 +61,10 @@ public class RocketryGeneric extends ActorMesh implements MsgCollisionListener, 
     private long               actionTimeMS    = 0L;
     private int                countRockets;
     private static RangeRandom rndSeed         = new RangeRandom();
+    // TODO: +++ Trigger backport from HSFX 7.0.3 by SAS~Storebror +++
+    private int timeout;
+    // TODO: --- Trigger backport from HSFX 7.0.3 by SAS~Storebror ---
+
 
     class Mirror extends ActorNet {
         NetMsgFiltered out = new NetMsgFiltered();
@@ -602,19 +606,49 @@ public class RocketryGeneric extends ActorMesh implements MsgCollisionListener, 
         int i_50_ = (int) (f_46_ * 60.0F + 0.5F);
         if (i_50_ < 0) i_50_ = 0;
         if (i_50_ > 14400) i_50_ = 14400;
+        // TODO: +++ Trigger backport from HSFX 7.0.3 by SAS~Storebror +++
+        timeout = i_50_;
+        // TODO: --- Trigger backport from HSFX 7.0.3 by SAS~Storebror ---
         this.launchIntervalS = (int) (f_47_ * 60.0F + 0.5F);
         if (this.launchIntervalS < 180) this.launchIntervalS = 180;
         if (this.launchIntervalS > 14400) this.launchIntervalS = 14400;
         this.damage = 0.0F;
         this.actionTimeMS = 9223372036854775807L;
         this.createNetObject(netchannel, i_44_);
-        if (this.targetPos != null) if (this.isNetMaster()) {
-            long l = 1000L * i_50_ - 1000L * this.launchIntervalS / 2L;
-            if (l <= 0L) this.prepareLaunch_Master(i_50_);
-            else this.actionTimeMS = Time.current() + l;
-        } else this.actionTimeMS = 9223372036854775807L;
-        if (!this.interpEnd("move")) this.interpPut(new Move(), "move", Time.current(), null);
+        // TODO: +++ Trigger backport from HSFX 7.0.3 by SAS~Storebror +++
+        if(!World.cur().triggersGuard.getListTriggerChiefActivate().contains(string))
+        {
+            // TODO: --- Trigger backport from HSFX 7.0.3 by SAS~Storebror ---
+            if (this.targetPos != null) if (this.isNetMaster()) {
+                long l = 1000L * i_50_ - 1000L * this.launchIntervalS / 2L;
+                if (l <= 0L) this.prepareLaunch_Master(i_50_);
+                else this.actionTimeMS = Time.current() + l;
+            } else this.actionTimeMS = 9223372036854775807L;
+            if (!this.interpEnd("move")) this.interpPut(new Move(), "move", Time.current(), null);
+            // TODO: +++ Trigger backport from HSFX 7.0.3 by SAS~Storebror +++
+        }
+        // TODO: --- Trigger backport from HSFX 7.0.3 by SAS~Storebror ---
     }
+
+    // TODO: +++ Trigger backport from HSFX 7.0.3 by SAS~Storebror +++
+    public void startMove()
+    {
+        if(targetPos != null)
+            if(isNetMaster())
+            {
+                long l1 = 1000L * (long)timeout - (1000L * (long)launchIntervalS) / 2L;
+                if(l1 <= 0L)
+                    prepareLaunch_Master(timeout);
+                else
+                    actionTimeMS = Time.current() + l1;
+            } else
+            {
+                actionTimeMS = 0x7fffffffffffffffL;
+            }
+        if(!interpEnd("move"))
+            interpPut(new Move(), "move", Time.current(), null);
+    }
+    // TODO: --- Trigger backport from HSFX 7.0.3 by SAS~Storebror ---
 
     public int HitbyMask() {
         return -2;

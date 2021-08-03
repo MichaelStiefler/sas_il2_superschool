@@ -5,6 +5,7 @@ import com.maddox.JGP.Point3d;
 import com.maddox.JGP.Vector3d;
 import com.maddox.il2.ai.air.AirGroup;
 import com.maddox.il2.ai.air.AirGroupList;
+import com.maddox.il2.ai.air.Maneuver;
 import com.maddox.il2.engine.Actor;
 import com.maddox.il2.engine.Engine;
 import com.maddox.il2.engine.MsgOwnerListener;
@@ -101,7 +102,13 @@ public class Wing extends Chief implements MsgOwnerListener {
         return this;
     }
 
+    // TODO: Added by SAS~Storebror for Trigger online replication compatibility
     public void load(SectFile sectfile, String string, NetChannel netchannel) throws Exception {
+        this.load(sectfile, string, netchannel, false);
+    }
+
+    public void load(SectFile sectfile, String string, NetChannel netchannel, boolean loadFromTrigger) throws Exception {
+    // ---
         if (sectfile.sectionIndex(string) < 0) {
             this.destroy();
             throw new Exception("Mission: section '" + string + "' not found");
@@ -158,7 +165,10 @@ public class Wing extends Chief implements MsgOwnerListener {
 
             this.way.load(sectfile, string_3_);
             for (int i_4_ = 0; i_4_ < i; i_4_++) {
-                this.airc[i_4_] = Mission.cur().loadAir(sectfile, string_2_, string, string + i_4_, i_4_);
+                // TODO: +++ Trigger backport from HSFX 7.0.3 by SAS~Storebror +++
+//                this.airc[i_4_] = Mission.cur().loadAir(sectfile, string_2_, string, string + i_4_, i_4_);
+                this.airc[i_4_] = Mission.cur().loadAir(sectfile, string_2_, string, string + i_4_, i_4_, loadFromTrigger);
+                // TODO: --- Trigger backport from HSFX 7.0.3 by SAS~Storebror ---
                 this.airc[i_4_].setArmy(this.getArmy());
                 this.airc[i_4_].checkTurretSkill();
                 this.airc[i_4_].setOwner(this);
@@ -172,6 +182,10 @@ public class Wing extends Chief implements MsgOwnerListener {
                 this.airc[i_4_].preparePaintScheme();
                 this.airc[i_4_].prepareCamouflage();
                 this.setPosAndSpeed(this.airc[i_4_], this.way);
+                // TODO: +++ Trigger backport from HSFX 7.0.3 by SAS~Storebror +++
+                if(World.cur().triggersGuard.getListTriggerAircraftActivate().contains(string) && (airc[i_4_].FM instanceof Maneuver))
+                    ((Maneuver)airc[i_4_].FM).triggerTakeOff = false;
+                // TODO: --- Trigger backport from HSFX 7.0.3 by SAS~Storebror ---
             }
             this.setArmy(this.airc[0].getArmy());
             Formation.generate(this.airc);

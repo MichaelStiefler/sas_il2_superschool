@@ -22,6 +22,7 @@ import com.maddox.il2.ai.EventLog;
 import com.maddox.il2.ai.Front;
 import com.maddox.il2.ai.Squadron;
 import com.maddox.il2.ai.Target;
+import com.maddox.il2.ai.Trigger;
 import com.maddox.il2.ai.UserCfg;
 import com.maddox.il2.ai.War;
 import com.maddox.il2.ai.Wing;
@@ -110,6 +111,7 @@ import com.maddox.rts.SectFile;
 import com.maddox.rts.Spawn;
 import com.maddox.rts.Time;
 import com.maddox.rts.net.NetFileServerDef;
+import com.maddox.sas1946.il2.util.Reflection;
 import com.maddox.sound.AudioDevice;
 import com.maddox.sound.CmdMusic;
 import com.maddox.util.HashMapInt;
@@ -593,11 +595,25 @@ public class Mission implements Destroy {
             List list = null;
             // TODO: Edited by |ZUTI|: enables AI objects on the map
             // if (Main.cur().netServerParams.isCoop() || Main.cur().netServerParams.isSingle())
-            if (Main.cur().netServerParams.isCoop() || Main.cur().netServerParams.isDogfight() || Main.cur().netServerParams.isSingle()) {
+            // TODO: +++ Trigger backport from HSFX 7.0.3 by SAS~Storebror +++
+//            if (Main.cur().netServerParams.isCoop() || Main.cur().netServerParams.isDogfight() || Main.cur().netServerParams.isSingle()) {
+            try
+            {
+                loadTriggers(sectfile);
+            }
+            catch(Exception ex)
+            {
+                System.out.println("Mission error, ID_30 (tiggers) : " + ex.toString());
+                ex.printStackTrace();
+            }
+                // TODO: --- Trigger backport from HSFX 7.0.3 by SAS~Storebror ---
                 // load AI planes
                 try {
                     list = this.loadWings(sectfile);
                 } catch (Exception ex) {
+                    // TODO: Edited by |ZUTI|: enables AI objects on the map
+                    System.out.println("Mission error, ID_04: (wings)" + ex.toString());
+                    // TODO: --- Trigger backport from HSFX 7.0.3 by SAS~Storebror ---
                     ex.printStackTrace();
                 }
 
@@ -605,9 +621,14 @@ public class Mission implements Destroy {
                 try {
                     this.loadChiefs(sectfile);
                 } catch (Exception ex) {
+                    // TODO: Edited by |ZUTI|: enables AI objects on the map
+                    System.out.println("Mission error, ID_05: (chiefs)" + ex.toString());
+                    // TODO: --- Trigger backport from HSFX 7.0.3 by SAS~Storebror ---
                     ex.printStackTrace();
                 }
-            }
+                // TODO: Edited by |ZUTI|: enables AI objects on the map
+//        }
+                // TODO: --- Trigger backport from HSFX 7.0.3 by SAS~Storebror ---
 
             try {
                 this.loadHouses(sectfile);
@@ -1088,6 +1109,11 @@ public class Mission implements Destroy {
             if (i_23_ > 0 && !this._loadPlayer) {
                 if (netchannel == null) {
                     double d = i_23_ * 60L;
+//                  // TODO: +++ Trigger backport from HSFX 7.0.3 MODIFIED by SAS~Storebror +++
+                    // TODO: Changed by SAS~Storebror: Don't delay-spawn aircraft when they have a Trigger spawning them!
+                    if(World.cur().triggersGuard.getListTriggerAircraftSpawn().contains(string)) d= Double.MAX_VALUE;
+                    // ---
+ //                  // TODO: --- Trigger backport from HSFX 7.0.3 MODIFIED by SAS~Storebror ---
                     new MsgAction(0, d, new TimeOutWing(string)) {
                         public void doAction(Object object) {
                             TimeOutWing timeoutwing = (TimeOutWing) object;
@@ -1095,7 +1121,11 @@ public class Mission implements Destroy {
                         }
                     };
                 }
-            } else {
+            } else
+                // TODO: +++ Trigger backport from HSFX 7.0.3 by SAS~Storebror +++
+                if(!World.cur().triggersGuard.getListTriggerAircraftSpawn().contains(string)) 
+                    // TODO: --- Trigger backport from HSFX 7.0.3 by SAS~Storebror ---
+            {
                 NetAircraft.loadingCoopPlane = Main.cur().netServerParams != null && Main.cur().netServerParams.isCoop();
 
                 Wing wing = new Wing();
@@ -1117,7 +1147,42 @@ public class Mission implements Destroy {
         return arraylist;
     }
 
-    private void prepareSkinInWing(SectFile sectfile, Wing wing) {
+    // TODO: +++ Trigger backport from HSFX 7.0.3 by SAS~Storebror +++
+    public void loadWingOnTrigger(String s)
+    {
+        System.out.println("loadWingOnTrigger(" + s + ")");
+        if (!Mission.isSingle() && !Mission.isServer()) return;
+        //if (this.net.isMirror()) return; // TODO: TEST Added by SAS~Storebror to fight dedicated Server / Client issues!
+        //if (this.net.isMirror()) this.actors.add(null); // TODO: TEST Added by SAS~Storebror to fight dedicated Server / Client issues!
+        try
+        {
+            NetAircraft.loadingCoopPlane = Main.cur().netServerParams != null && Main.cur().netServerParams.isCoop(); // false;
+            Wing localWing = new Wing();
+            
+            NetChannel netchannel = null;
+            if (!isServer()) netchannel = this.net.masterChannel();
+            
+//            if (this.net.isMirror()) {
+//                Actor actor = Actor.getByName(s);
+//                this.actors.add(actor);
+//                System.out.println("loadWingOnTrigger net.isMirror, actors size: " + this.actors.size() + ", curActor: " + this.curActor + ", actor=" + actor.name() + "(" + actor.getClass().getName() + ")");
+//            }
+            
+            localWing.load(sectFile, s, netchannel, this.net.isMirror());
+            
+//            localWing.load(sectFile, s, null);
+            prepareSkinInWing(sectFile, localWing);
+            localWing.setOnAirport();
+        }
+        catch(Exception e)
+        {
+            System.out.println("Mission error, ID_31 : Wing not load : " + e.toString());
+            e.printStackTrace();
+        }
+    }
+    // TODO: --- Trigger backport from HSFX 7.0.3 by SAS~Storebror ---
+
+     private void prepareSkinInWing(SectFile sectfile, Wing wing) {
         if (Config.isUSE_RENDER()) {
             Aircraft[] aircrafts = wing.airc;
             for (int i = 0; i < aircrafts.length; i++)
@@ -1255,7 +1320,15 @@ public class Mission implements Destroy {
         }
     }
 
+    // TODO: +++ Trigger backport from HSFX 7.0.3 by SAS~Storebror +++
+    // TODO: Added by SAS~Storebror for Trigger online replication compatibility
     public Aircraft loadAir(SectFile sectfile, String aircraftClassName, String wingName, String aircraftName, int positionInWing) throws Exception {
+        return this.loadAir(sectfile, aircraftClassName, wingName, aircraftName, positionInWing, false);
+    }
+    // ---
+    
+    public Aircraft loadAir(SectFile sectfile, String aircraftClassName, String wingName, String aircraftName, int positionInWing, boolean loadFromTrigger) throws Exception {
+        // TODO: --- Trigger backport from HSFX 7.0.3 by SAS~Storebror ---
         boolean isNotServer = !isServer();
         Class aircraftClass = ObjIO.classForName(aircraftClassName);
         Aircraft aircraft = (Aircraft) aircraftClass.newInstance();
@@ -1267,16 +1340,29 @@ public class Mission implements Destroy {
             } else this.playerNum--;
         }
         aircraft.setName(aircraftName);
+        // TODO: +++ Trigger backport from HSFX 7.0.3 by SAS~Storebror +++
+        // TODO: Added by SAS~Storebror for Trigger online replication compatibility
+//      if (loadFromTrigger && this.curActor >= this.actors.size()) this.actors.add(new Integer(aircraft.net == null?0:aircraft.net.idLocal()));
+      if (loadFromTrigger && this.curActor >= this.actors.size()) this.actors.add(new Integer(aircraft.net.idLocal()));
+      // ---
+      // TODO: --- Trigger backport from HSFX 7.0.3 by SAS~Storebror ---
         int actorIndex = 0;
         if (isNotServer) {
             actorIndex = ((Integer) this.actors.get(this.curActor)).intValue();
             if (actorIndex == 0) aircraft.load(sectfile, wingName, positionInWing, null, 0);
             else aircraft.load(sectfile, wingName, positionInWing, this.net.masterChannel(), actorIndex);
         } else aircraft.load(sectfile, wingName, positionInWing, null, 0);
-        if (aircraft.isSpawnFromMission()) if (this.net.isMirror()) {
-            if (actorIndex == 0) this.actors.set(this.curActor++, null);
-            else this.actors.set(this.curActor++, aircraft);
-        } else this.actors.add(aircraft);
+        if (aircraft.isSpawnFromMission()) {
+            if (this.net.isMirror()) {
+                if (actorIndex == 0) {
+                    this.actors.set(this.curActor++, null);
+                } else {
+                    this.actors.set(this.curActor++, aircraft);
+                }
+            } else {
+                this.actors.add(aircraft);
+            }
+        }
         aircraft.pos.reset();
         return aircraft;
     }
@@ -1366,106 +1452,287 @@ public class Mission implements Destroy {
         }
     }
 
-    private void loadChiefs(SectFile sectfile) throws Exception {
-        int i = sectfile.sectionIndex("Chiefs");
-        if (i >= 0) {
-            if (chiefsIni == null) chiefsIni = new SectFile("com/maddox/il2/objects/chief.ini");
-            int i_70_ = sectfile.vars(i);
-            for (int i_71_ = 0; i_71_ < i_70_; i_71_++) {
-                this.LOADING_STEP(60 + Math.round((float) i_71_ / (float) i_70_ * 20.0F), "task.Load_tanks");
-                NumberTokenizer numbertokenizer = new NumberTokenizer(sectfile.line(i, i_71_));
-                String string = numbertokenizer.next();
-                String string_72_ = numbertokenizer.next();
-                int i_73_ = numbertokenizer.next(-1);
-                if (i_73_ < 0) System.out.println("Mission: Wrong chief's army [" + i_73_ + "]");
-                else {
-                    Chief.new_DELAY_WAKEUP = numbertokenizer.next(0.0F);
-                    Chief.new_SKILL_IDX = numbertokenizer.next(2);
-                    if (Chief.new_SKILL_IDX < 0 || Chief.new_SKILL_IDX > 3) System.out.println("Mission: Wrong chief's skill [" + Chief.new_SKILL_IDX + "]");
-                    else {
-                        Chief.new_SLOWFIRE_K = numbertokenizer.next(1.0F);
-                        if (Chief.new_SLOWFIRE_K < 0.5F || Chief.new_SLOWFIRE_K > 100.0F) System.out.println("Mission: Wrong chief's slowfire [" + Chief.new_SLOWFIRE_K + "]");
-                        else if (chiefsIni.sectionIndex(string_72_) < 0) System.out.println("Mission: Wrong chief's type [" + string_72_ + "]");
-                        else {
-                            int i_74_ = string_72_.indexOf('.');
-                            if (i_74_ <= 0) System.out.println("Mission: Wrong chief's type [" + string_72_ + "]");
-                            else {
-                                String string_75_ = string_72_.substring(0, i_74_);
-                                String string_76_ = string_72_.substring(i_74_ + 1);
-                                String string_77_ = chiefsIni.get(string_75_, string_76_);
-                                if (string_77_ == null) System.out.println("Mission: Wrong chief's type [" + string_72_ + "]");
-                                else {
-                                    numbertokenizer = new NumberTokenizer(string_77_);
-                                    string_77_ = numbertokenizer.nextToken();
-                                    numbertokenizer.nextToken();
-                                    String string_78_ = null;
-                                    if (numbertokenizer.hasMoreTokens()) string_78_ = numbertokenizer.nextToken();
-                                    Class var_class = ObjIO.classForName(string_77_);
-                                    if (var_class == null) System.out.println("Mission: Unknown chief's class [" + string_77_ + "]");
-                                    else {
-                                        Constructor constructor;
-                                        try {
-                                            Class[] var_classes = new Class[6];
+//    private void loadChiefs(SectFile sectfile) throws Exception {
+//        int i = sectfile.sectionIndex("Chiefs");
+//        if (i >= 0) {
+//            if (chiefsIni == null) chiefsIni = new SectFile("com/maddox/il2/objects/chief.ini");
+//            int i_70_ = sectfile.vars(i);
+//            for (int i_71_ = 0; i_71_ < i_70_; i_71_++) {
+//                this.LOADING_STEP(60 + Math.round((float) i_71_ / (float) i_70_ * 20.0F), "task.Load_tanks");
+//                NumberTokenizer numbertokenizer = new NumberTokenizer(sectfile.line(i, i_71_));
+//                String string = numbertokenizer.next();
+//                String string_72_ = numbertokenizer.next();
+//                int i_73_ = numbertokenizer.next(-1);
+//                if (i_73_ < 0) System.out.println("Mission: Wrong chief's army [" + i_73_ + "]");
+//                else {
+//                    Chief.new_DELAY_WAKEUP = numbertokenizer.next(0.0F);
+//                    Chief.new_SKILL_IDX = numbertokenizer.next(2);
+//                    if (Chief.new_SKILL_IDX < 0 || Chief.new_SKILL_IDX > 3) System.out.println("Mission: Wrong chief's skill [" + Chief.new_SKILL_IDX + "]");
+//                    else {
+//                        Chief.new_SLOWFIRE_K = numbertokenizer.next(1.0F);
+//                        if (Chief.new_SLOWFIRE_K < 0.5F || Chief.new_SLOWFIRE_K > 100.0F) System.out.println("Mission: Wrong chief's slowfire [" + Chief.new_SLOWFIRE_K + "]");
+//                        else if (chiefsIni.sectionIndex(string_72_) < 0) System.out.println("Mission: Wrong chief's type [" + string_72_ + "]");
+//                        else {
+//                            int i_74_ = string_72_.indexOf('.');
+//                            if (i_74_ <= 0) System.out.println("Mission: Wrong chief's type [" + string_72_ + "]");
+//                            else {
+//                                String string_75_ = string_72_.substring(0, i_74_);
+//                                String string_76_ = string_72_.substring(i_74_ + 1);
+//                                String string_77_ = chiefsIni.get(string_75_, string_76_);
+//                                if (string_77_ == null) System.out.println("Mission: Wrong chief's type [" + string_72_ + "]");
+//                                else {
+//                                    numbertokenizer = new NumberTokenizer(string_77_);
+//                                    string_77_ = numbertokenizer.nextToken();
+//                                    numbertokenizer.nextToken();
+//                                    String string_78_ = null;
+//                                    if (numbertokenizer.hasMoreTokens()) string_78_ = numbertokenizer.nextToken();
+//                                    Class var_class = ObjIO.classForName(string_77_);
+//                                    if (var_class == null) System.out.println("Mission: Unknown chief's class [" + string_77_ + "]");
+//                                    else {
+//                                        Constructor constructor;
+//                                        try {
+//                                            Class[] var_classes = new Class[6];
+//
+//                                            var_classes[0] = String.class;
+//                                            var_classes[1] = Integer.TYPE;
+//                                            var_classes[2] = SectFile.class;
+//                                            var_classes[3] = String.class;
+//                                            var_classes[4] = SectFile.class;
+//                                            var_classes[5] = String.class;
+//                                            constructor = var_class.getConstructor(var_classes);
+//                                        } catch (Exception exception) {
+//                                            System.out.println("Mission: No required constructor in chief's class [" + string_77_ + "]");
+//                                            continue;
+//                                        }
+//                                        int i_79_ = this.curActor;
+//                                        Object object;
+//                                        try {
+//                                            Object[] objects = new Object[6];
+//                                            objects[0] = string;
+//                                            objects[1] = new Integer(i_73_);
+//                                            objects[2] = chiefsIni;
+//                                            objects[3] = string_72_;
+//                                            objects[4] = sectfile;
+//                                            objects[5] = string + "_Road";
+//                                            object = constructor.newInstance(objects);
+//                                        } catch (Exception exception) {
+//                                            System.out.println("Mission: Can't create chief '" + string + "' [class:" + string_77_ + "]");
+//                                            exception.printStackTrace();
+//                                            continue;
+//                                        }
+//                                        if (string_78_ != null) ((Actor) object).icon = IconDraw.get(string_78_);
+//                                        if (i_79_ != this.curActor && this.net != null && this.net.isMirror()) for (int i_80_ = i_79_; i_80_ < this.curActor; i_80_++) {
+//                                            Actor actor = (Actor) this.actors.get(i_80_);
+//                                            if (actor.net == null || actor.net.isMaster()) {
+//                                                if (Actor.isValid(actor)) {
+//                                                    if (object instanceof ChiefGround) ((ChiefGround) object).Detach(actor, actor);
+//                                                    actor.destroy();
+//                                                }
+//                                                this.actors.set(i_80_, null);
+//                                            }
+//                                        }
+//                                        if (object instanceof ChiefGround) ((ChiefGround) object).dreamFire(true);
+//                                    }
+//                                }
+//                            }
+//                        }
+//                    }
+//                }
+//            }
+//        }
+//    }
 
-                                            var_classes[0] = String.class;
-                                            var_classes[1] = Integer.TYPE;
-                                            var_classes[2] = SectFile.class;
-                                            var_classes[3] = String.class;
-                                            var_classes[4] = SectFile.class;
-                                            var_classes[5] = String.class;
-                                            constructor = var_class.getConstructor(var_classes);
-                                        } catch (Exception exception) {
-                                            System.out.println("Mission: No required constructor in chief's class [" + string_77_ + "]");
-                                            continue;
-                                        }
-                                        int i_79_ = this.curActor;
-                                        Object object;
-                                        try {
-                                            Object[] objects = new Object[6];
-                                            objects[0] = string;
-                                            objects[1] = new Integer(i_73_);
-                                            objects[2] = chiefsIni;
-                                            objects[3] = string_72_;
-                                            objects[4] = sectfile;
-                                            objects[5] = string + "_Road";
-                                            object = constructor.newInstance(objects);
-                                        } catch (Exception exception) {
-                                            System.out.println("Mission: Can't create chief '" + string + "' [class:" + string_77_ + "]");
-                                            exception.printStackTrace();
-                                            continue;
-                                        }
-                                        if (string_78_ != null) ((Actor) object).icon = IconDraw.get(string_78_);
-                                        if (i_79_ != this.curActor && this.net != null && this.net.isMirror()) for (int i_80_ = i_79_; i_80_ < this.curActor; i_80_++) {
-                                            Actor actor = (Actor) this.actors.get(i_80_);
-                                            if (actor.net == null || actor.net.isMaster()) {
-                                                if (Actor.isValid(actor)) {
-                                                    if (object instanceof ChiefGround) ((ChiefGround) object).Detach(actor, actor);
-                                                    actor.destroy();
-                                                }
-                                                this.actors.set(i_80_, null);
-                                            }
-                                        }
-                                        if (object instanceof ChiefGround) ((ChiefGround) object).dreamFire(true);
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }
-    }
+//  private void dumpActors() {
+//  for (int i=0; i<this.actors.size(); i++)
+//      if (this.actors.get(i) instanceof Actor) System.out.println("this.actors[" + i + "]=" + ((Actor)this.actors.get(i)).name());
+//  for (int i=0; i<Engine.targets().size(); i++)
+//      if (Engine.targets().get(i) instanceof Actor) System.out.println("Engine.targets[" + i + "]=" + ((Actor)Engine.targets().get(i)).name());
+//}
 
-    public int getUnitNetIdRemote(Actor actor) {
-        if (this.net.isMaster()) {
-            this.actors.add(actor);
-            return 0;
-        }
-        Integer integer = (Integer) this.actors.get(this.curActor);
-        this.actors.set(this.curActor, actor);
-        this.curActor++;
-        return integer.intValue();
-    }
+// TODO: +++ Trigger backport from HSFX 7.0.3 by SAS~Storebror +++
+private void loadChiefs(SectFile sectfile)
+      throws Exception
+  {
+      loadChiefs(sectfile, false, "");
+  }
+
+  public void loadChiefsTrigger(String s)
+  {
+      System.out.println("loadChiefsTrigger(" + s + ")");
+//      if (!Mission.isSingle() && !Mission.isServer()) return;
+      try
+      {
+//          if (this.net.isMirror()) return; // TODO: TEST Added by SAS~Storebror to fight dedicated Server / Client issues!
+//          if (this.net.isMirror()) this.actors.add(null); // TODO: TEST Added by SAS~Storebror to fight dedicated Server / Client issues!
+          
+          boolean spawnFromMission = Reflection.getBoolean(Actor.class, "bSpawnFromMission");
+          Actor.setSpawnFromMission(true);
+//          this.dumpActors();
+          loadChiefs(sectFile, true, s);
+//          this.dumpActors();
+          Actor.setSpawnFromMission(spawnFromMission);
+      }
+      catch(Exception e)
+      {
+          System.out.println("Mission error, ID_31 : Chiefs not load : " + e.toString());
+          e.printStackTrace();
+      }
+  }
+
+  private void loadChiefs(SectFile sectfile, boolean flagTrigger, String s)
+//private void loadChiefs(SectFile sectfile)
+  // TODO: --- Trigger backport from HSFX 7.0.3 by SAS~Storebror ---
+      throws Exception {
+      
+//      System.out.println("loadChiefs(" + sectfile.fileName() + ", " + flagTrigger + ", " + s + ")");
+  int sectIndex = sectfile.sectionIndex("Chiefs");
+  if (sectIndex >= 0) {
+      if (chiefsIni == null) chiefsIni = new SectFile("com/maddox/il2/objects/chief.ini");
+      int sectVarsNum = sectfile.vars(sectIndex);
+      for (int sectVarIndex = 0; sectVarIndex < sectVarsNum; sectVarIndex++) {
+          // TODO: +++ Trigger backport from HSFX 7.0.3 by SAS~Storebror +++
+          if(!flagTrigger)
+              // TODO: --- Trigger backport from HSFX 7.0.3 by SAS~Storebror ---
+              this.LOADING_STEP(60 + Math.round((float) sectVarIndex / (float) sectVarsNum * 20.0F), "task.Load_tanks");
+          NumberTokenizer numbertokenizer = new NumberTokenizer(sectfile.line(sectIndex, sectVarIndex));
+          String chiefName = numbertokenizer.next();
+          // TODO: +++ Trigger backport from HSFX 7.0.3 by SAS~Storebror +++
+          if((!flagTrigger && World.cur().triggersGuard.getListTriggerChiefSpawn().contains(chiefName)) || (flagTrigger && !chiefName.equals(s)))
+              continue;
+          // TODO: --- Trigger backport from HSFX 7.0.3 by SAS~Storebror ---
+          String chiefType = numbertokenizer.next();
+          int chiefArmy = numbertokenizer.next(-1);
+          if (chiefArmy < 0) System.out.println("Mission: Wrong chief's army [" + chiefArmy + "]");
+          else {
+              Chief.new_DELAY_WAKEUP = numbertokenizer.next(0.0F);
+              Chief.new_SKILL_IDX = numbertokenizer.next(2);
+              if (Chief.new_SKILL_IDX < 0 || Chief.new_SKILL_IDX > 3) System.out.println("Mission: Wrong chief's skill [" + Chief.new_SKILL_IDX + "]");
+              else {
+                  Chief.new_SLOWFIRE_K = numbertokenizer.next(1.0F);
+                  if (Chief.new_SLOWFIRE_K < 0.5F || Chief.new_SLOWFIRE_K > 100.0F) System.out.println("Mission: Wrong chief's slowfire [" + Chief.new_SLOWFIRE_K + "]");
+                  else if (chiefsIni.sectionIndex(chiefType) < 0) System.out.println("Mission: Wrong chief's type [" + chiefType + "]");
+                  else {
+                      int typeSeparatorPos = chiefType.indexOf('.');
+                      if (typeSeparatorPos <= 0) System.out.println("Mission: Wrong chief's type [" + chiefType + "]");
+                      else {
+                          String chiefTypePackage = chiefType.substring(0, typeSeparatorPos);
+                          String chiefTypeName = chiefType.substring(typeSeparatorPos + 1);
+                          String chiefFromIni = chiefsIni.get(chiefTypePackage, chiefTypeName);
+                          if (chiefFromIni == null) System.out.println("Mission: Wrong chief's type [" + chiefType + "]");
+                          else {
+                              numbertokenizer = new NumberTokenizer(chiefFromIni);
+                              chiefFromIni = numbertokenizer.nextToken();
+                              numbertokenizer.nextToken();
+                              String chiefIcon = null;
+                              if (numbertokenizer.hasMoreTokens()) chiefIcon = numbertokenizer.nextToken();
+                              Class chiefClass = ObjIO.classForName(chiefFromIni);
+                              if (chiefClass == null) System.out.println("Mission: Unknown chief's class [" + chiefFromIni + "]");
+                              else {
+                                  Constructor constructor;
+                                  try {
+                                      Class[] chiefPropertyClasses = new Class[6];
+
+                                      chiefPropertyClasses[0] = String.class;
+                                      chiefPropertyClasses[1] = Integer.TYPE;
+                                      chiefPropertyClasses[2] = SectFile.class;
+                                      chiefPropertyClasses[3] = String.class;
+                                      chiefPropertyClasses[4] = SectFile.class;
+                                      chiefPropertyClasses[5] = String.class;
+                                      constructor = chiefClass.getConstructor(chiefPropertyClasses);
+                                  } catch (Exception exception) {
+                                      System.out.println("Mission: No required constructor in chief's class [" + chiefFromIni + "]");
+                                      continue;
+                                  }
+                                  int lastCurActor = this.curActor;
+                                  Object object;
+                                  try {
+                                      Object[] chiefProperties = new Object[6];
+                                      chiefProperties[0] = chiefName;
+                                      chiefProperties[1] = new Integer(chiefArmy);
+                                      chiefProperties[2] = chiefsIni;
+                                      chiefProperties[3] = chiefType;
+                                      chiefProperties[4] = sectfile;
+                                      chiefProperties[5] = chiefName + "_Road";
+                                      object = constructor.newInstance(chiefProperties);
+                                  } catch (Exception exception) {
+                                      System.out.println("Mission: Can't create chief '" + chiefName + "' [class:" + chiefFromIni + "]");
+                                      exception.printStackTrace();
+                                      continue;
+                                  }
+                                  if (chiefIcon != null) ((Actor) object).icon = IconDraw.get(chiefIcon);
+                                  if (lastCurActor != this.curActor && this.net != null && this.net.isMirror() /*&& !flagTrigger*/) for (int actorIndex = lastCurActor; actorIndex < this.curActor; actorIndex++) {
+//                                      System.out.print("loadChiefs TEST ");
+//                                      if (this.actors.get(actorIndex) instanceof Actor) {
+//                                          Actor actorTmp = (Actor) this.actors.get(actorIndex);
+//                                          System.out.print("actor(" + actorIndex + ")=" + actorTmp.name() + " (" + actorTmp.getClass().getName() + ")");
+//                                          System.out.println();
+//                                      } else {
+//                                          int actorIdx = ((Integer)this.actors.get(actorIndex)).intValue();
+//                                          for (int tempIdx = 0; tempIdx < this.actors.size(); tempIdx++)
+//                                              if (this.actors.get(actorIndex) instanceof Actor) {
+//                                                  Actor actorTmp = (Actor) this.actors.get(actorIndex);
+//                                                  if (actorTmp.net == null) continue;
+//                                                  if (actorTmp.net.idLocal() != actorIdx && actorTmp.net.idRemote() != actorIdx) continue;
+//                                                  System.out.print("actor(" + actorIndex + ")=" + actorTmp.name() + " (" + actorTmp.getClass().getName() + ")");
+//                                                  System.out.println();
+//                                              }                                            }
+                                      if (!(this.actors.get(actorIndex) instanceof Actor)) continue;
+                                      Actor actor = (Actor) this.actors.get(actorIndex);
+                                      if (actor.net == null || actor.net.isMaster()) {
+                                          if (Actor.isValid(actor)) {
+                                              if (object instanceof ChiefGround) ((ChiefGround) object).Detach(actor, actor);
+                                              actor.destroy();
+                                          }
+                                          this.actors.set(actorIndex, null);
+                                      }
+                                  }
+                                  if (object instanceof ChiefGround) ((ChiefGround) object).dreamFire(true);
+                              }
+                          }
+                      }
+                  }
+              }
+          }
+          // TODO: +++ Trigger backport from HSFX 7.0.3 by SAS~Storebror +++
+          if(flagTrigger && chiefName.equals(s))
+              break;
+          // TODO: --- Trigger backport from HSFX 7.0.3 by SAS~Storebror ---
+      }
+  }
+}
+
+  // TODO: +++ Trigger backport from HSFX 7.0.3 by SAS~Storebror +++
+//  public int getUnitNetIdRemote(Actor actor) {
+//        if (this.net.isMaster()) {
+//            this.actors.add(actor);
+//            return 0;
+//        }
+//        Integer integer = (Integer) this.actors.get(this.curActor);
+//        this.actors.set(this.curActor, actor);
+//        this.curActor++;
+//        return integer.intValue();
+//    }
+  
+  public int getUnitNetIdRemote(Actor actor) {
+      if (this.net.isMaster()) {
+          this.actors.add(actor);
+//          System.out.println("getUnitNetIdRemote net.isMaster, actors size: " + this.actors.size() + ", curActor: " + this.curActor + ", actor=" + actor.name() + "(" + actor.getClass().getName() + ")");
+          return 0;
+      } else if (this.net.isMirror() && this.curActor == this.actors.size()) { // TODO: Added by SAS~Storebror: Potentially adding an actor from Trigger
+          this.actors.add(new Integer(actor.net == null?0:actor.net.idLocal()));
+//          this.actors.add(new Integer(actor.net.idLocal()));
+          this.curActor++;
+//          System.out.println("getUnitNetIdRemote net.isMirror, actors size: " + this.actors.size() + ", curActor: " + this.curActor + ", actor=" + actor.name() + "(" + actor.getClass().getName() + ")");
+          return actor.net == null?0:actor.net.idLocal();
+//          return actor.net.idLocal();
+      }
+      Integer integer = (Integer) this.actors.get(this.curActor);
+      this.actors.set(this.curActor, actor);
+      this.curActor++;
+//      System.out.println("getUnitNetIdRemote, actors size: " + this.actors.size() + ", curActor: " + this.curActor + ", actor=" + actor.name() + "(" + actor.getClass().getName() + ")");
+      return integer.intValue();
+  }
+  // TODO: --- Trigger backport from HSFX 7.0.3 by SAS~Storebror ---
 
     private Actor loadStationaryActor(String string, String string_81_, int i, double d, double d_82_, float f, float f_83_, String string_84_, String string_85_, String string_86_) {
         Class var_class;
@@ -1586,11 +1853,43 @@ public class Mission implements Destroy {
                 try {
                     this.LOADING_STEP(85 + Math.round((float) i_90_ / (float) i_89_ * 5.0F), "task.Load_stationary_objects");
                     NumberTokenizer numbertokenizer = new NumberTokenizer(sectfile.line(i, i_90_));
-                    this.loadStationaryActor(numbertokenizer.next(""), numbertokenizer.next(""), numbertokenizer.next(0), numbertokenizer.next(0.0), numbertokenizer.next(0.0), numbertokenizer.next(0.0F), numbertokenizer.next(0.0F),
-                            numbertokenizer.next((String) null), numbertokenizer.next((String) null), numbertokenizer.next((String) null));
+                    // TODO: +++ Trigger backport from HSFX 7.0.3 by SAS~Storebror +++
+//                  this.loadStationaryActor(numbertokenizer.next(""), numbertokenizer.next(""), numbertokenizer.next(0), numbertokenizer.next(0.0), numbertokenizer.next(0.0), numbertokenizer.next(0.0F), numbertokenizer.next(0.0F),
+//                          numbertokenizer.next((String) null), numbertokenizer.next((String) null), numbertokenizer.next((String) null));
+                  String curName = numbertokenizer.next("");
+                  if(!World.cur().triggersGuard.getListTriggerStaticSpawn().contains(curName))
+                    this.loadStationaryActor(curName, numbertokenizer.next(""), numbertokenizer.next(0), numbertokenizer.next(0.0), numbertokenizer.next(0.0), numbertokenizer.next(0.0F), numbertokenizer.next(0.0F),
+                                            numbertokenizer.next((String) null), numbertokenizer.next((String) null), numbertokenizer.next((String) null));
+                  // TODO: --- Trigger backport from HSFX 7.0.3 by SAS~Storebror ---
                 } catch (Exception ex) {
                     System.out.println("Error when reading .mis NStationary section line " + i_90_ + " (" + ex.toString() + " )");
                 }
+        }
+    }
+
+    public void loadNStationaryTrigger(String s)
+    {
+        System.out.println("loadNStationaryTrigger(" + s + ")");
+        if (!Mission.isSingle() && !Mission.isServer()) return;
+//        if (this.net.isMirror()) return; // TODO: TEST Added by SAS~Storebror to fight dedicated Server / Client issues!
+//        if (this.net.isMirror()) this.actors.add(null); // TODO: TEST Added by SAS~Storebror to fight dedicated Server / Client issues!
+        int sectionIndex = sectFile.sectionIndex("NStationary");
+        if(sectionIndex >= 0)
+        {
+            int numVars = sectFile.vars(sectionIndex);
+            for(int varIndex = 0; varIndex < numVars; varIndex++)
+            {
+                NumberTokenizer numbertokenizer = new NumberTokenizer(sectFile.line(sectionIndex, varIndex));
+                String curName = numbertokenizer.next("");
+                if(!curName.equals(s))
+                    continue;
+//                System.out.println("before loadStationaryActor");
+                this.loadStationaryActor(curName, numbertokenizer.next(""), numbertokenizer.next(0), numbertokenizer.next(0.0), numbertokenizer.next(0.0), numbertokenizer.next(0.0F), numbertokenizer.next(0.0F),
+                                        numbertokenizer.next((String) null), numbertokenizer.next((String) null), numbertokenizer.next((String) null));
+//                System.out.println("after loadStationaryActor");
+                break;
+            }
+
         }
     }
 
@@ -1646,7 +1945,74 @@ public class Mission implements Destroy {
         }
     }
 
-    private void loadHouses(SectFile sectfile) {
+    public void loadRocketryTrigger(String s)
+    {
+        System.out.println("loadRocketryTrigger(" + s + ")");
+        if (!Mission.isSingle() && !Mission.isServer()) return;
+        int i = sectFile.sectionIndex("Rocket");
+        if(i < 0)
+            return;
+        int j = sectFile.vars(i);
+        for(int k = 0; k < j; k++)
+        {
+            NumberTokenizer localNumberTokenizer = new NumberTokenizer(sectFile.line(i, k));
+            if(!localNumberTokenizer.hasMoreTokens())
+                continue;
+            String str1 = localNumberTokenizer.next("");
+            if(!str1.equals(s) || !localNumberTokenizer.hasMoreTokens())
+                continue;
+            String str2 = localNumberTokenizer.next("");
+            if(!localNumberTokenizer.hasMoreTokens())
+                continue;
+            int m = localNumberTokenizer.next(1, 1, 2);
+            double d1 = localNumberTokenizer.next(0.0D);
+            if(!localNumberTokenizer.hasMoreTokens())
+                continue;
+            double d2 = localNumberTokenizer.next(0.0D);
+            if(!localNumberTokenizer.hasMoreTokens())
+                continue;
+            float f1 = localNumberTokenizer.next(0.0F);
+            if(!localNumberTokenizer.hasMoreTokens())
+                continue;
+            float f2 = localNumberTokenizer.next(0.0F);
+            int n = localNumberTokenizer.next(1);
+            float f3 = localNumberTokenizer.next(20F);
+            Point2d localPoint2d = null;
+            if(localNumberTokenizer.hasMoreTokens())
+                localPoint2d = new Point2d(localNumberTokenizer.next(0.0D), localNumberTokenizer.next(0.0D));
+            NetChannel localNetChannel = null;
+            int i1 = 0;
+            if(net.isMirror())
+            {
+                localNetChannel = net.masterChannel();
+                i1 = ((Integer)actors.get(curActor)).intValue();
+                if(i1 == 0)
+                {
+                    actors.set(curActor++, null);
+                    System.out.println("loadRocketryTrigger 1, actors size: " + this.actors.size() + ", curActor: " + this.curActor);
+                    continue;
+                }
+            }
+            RocketryGeneric localRocketryGeneric = null;
+            try
+            {
+                localRocketryGeneric = RocketryGeneric.New(str1, str2, localNetChannel, i1, m, d1, d2, f1, f2, n, f3, localPoint2d);
+            }
+            catch(Exception localException)
+            {
+                System.out.println(localException.getMessage());
+                localException.printStackTrace();
+            }
+            if(net.isMirror())
+                actors.set(curActor++, localRocketryGeneric);
+            else
+                actors.add(localRocketryGeneric);
+            System.out.println("loadRocketryTrigger 2, actors size: " + this.actors.size() + ", curActor: " + this.curActor);
+        }
+
+    }
+
+     private void loadHouses(SectFile sectfile) {
         int i = sectfile.sectionIndex("Buildings");
         if (i >= 0) {
             int i_100_ = sectfile.vars(i);
@@ -1941,6 +2307,28 @@ public class Mission implements Destroy {
         }
     }
 
+    private void loadTriggers(SectFile sectfile)
+    {
+//        Exception test = new Exception("loadTriggers");
+//        test.printStackTrace();
+//        if(Main.cur().netServerParams.isSingle() || Main.cur().netServerParams.isCoop() || Main.cur().netServerParams.isDogfight())
+//        {
+            int triggerSectionIndex = sectfile.sectionIndex("Trigger");
+            if(triggerSectionIndex >= 0)
+            {
+                int triggerSectionVars = sectfile.vars(triggerSectionIndex);
+                int lineNumber = 0;
+                if(sectfile.line(triggerSectionIndex, lineNumber).indexOf("Version ") >= 0)
+                    lineNumber = 1;
+                for(; lineNumber < triggerSectionVars; lineNumber++)
+                    Trigger.create(sectfile.line(triggerSectionIndex, lineNumber));
+
+            }
+            Trigger.checkLinkedTriggerActivation();
+            
+//        }
+    }
+
     private void loadViewPoint(SectFile sectfile) {
         int sectionIndex = sectfile.sectionIndex("StaticCamera");
         if (sectionIndex < 0) return;
@@ -2108,9 +2496,18 @@ public class Mission implements Destroy {
         }
         // TODO: Edited by |ZUTI|
         // if (Main.cur().netServerParams.isMaster() && (Main.cur().netServerParams.isCoop() || Main.cur().netServerParams.isSingle()))
-        if (Main.cur().netServerParams.isMaster() && (Main.cur().netServerParams.isCoop() || Main.cur().netServerParams.isDogfight() || Main.cur().netServerParams.isSingle())) World.cur().targetsGuard.activate();
+        if (Main.cur().netServerParams.isMaster() && (Main.cur().netServerParams.isCoop() || Main.cur().netServerParams.isDogfight() || Main.cur().netServerParams.isSingle())) {
+            // TODO: +++ Trigger backport from HSFX 7.0.3 by SAS~Storebror +++
+            World.cur().triggersGuard.activate();
+            // TODO: --- Trigger backport from HSFX 7.0.3 by SAS~Storebror ---
+            World.cur().targetsGuard.activate();
+        }
         EventLog.type(true, "Mission: " + this.name() + " is Playing");
         EventLog.type("Mission BEGIN");
+        
+        // TODO: +++ Trigger backport from HSFX 7.0.3 by SAS~Storebror +++
+        HUD.clearWaitingList();
+        // TODO: --- Trigger backport from HSFX 7.0.3 by SAS~Storebror ---
 
         // TODO: Added by |ZUTI|: reset server time!
         if (Main.cur().netServerParams != null) ZutiSupportMethods_Net.resetServerTime(Main.cur().netServerParams);
@@ -2152,6 +2549,11 @@ public class Mission implements Destroy {
         try {
             if (this.bPlaying) {
                 EventLog.type("Mission END");
+                
+                // TODO: +++ Trigger backport from HSFX 7.0.3 by SAS~Storebror +++
+                HUD.clearWaitingList();
+                // TODO: --- Trigger backport from HSFX 7.0.3 by SAS~Storebror ---
+
                 // TODO: +++ Auto NTRK recording Mod by SAS~Storebror +++
                 NetMissionTrack.stopRecording();
                 // TODO: --- Auto NTRK recording Mod by SAS~Storebror ---
@@ -2265,27 +2667,44 @@ public class Mission implements Destroy {
         try {
             NetMsgGuaranted netmsgguaranted = new NetMsgGuaranted();
             netmsgguaranted.writeByte(i);
-            int i_143_ = this.sectFile.sections();
-            for (int i_144_ = 0; i_144_ < i_143_; i_144_++) {
-                String string = this.sectFile.sectionName(i_144_);
-                if (!string.startsWith("$$$")) {
-                    if (netmsgguaranted.size() >= 128) {
+            int numSections = this.sectFile.sections();
+            for (int sectionIndex = 0; sectionIndex < numSections; sectionIndex++) {
+                String sectionName = this.sectFile.sectionName(sectionIndex);
+                if (!sectionName.startsWith("$$$")) {
+                    // TODO: +++ Fix exceeding netmessage length issue by SAS~Storebror +++
+                    //if (netmsgguaranted.size() >= 128) {
+                    if ((netmsgguaranted.size() + sectionName.length()) >= 240) {
+                    // TODO: --- Fix exceeding netmessage length issue by SAS~Storebror ---
                         this.net.postTo(netchannel, netmsgguaranted);
                         netmsgguaranted = new NetMsgGuaranted();
                         netmsgguaranted.writeByte(i);
                     }
                     netmsgguaranted.writeInt(-1);
-                    netmsgguaranted.write255(string);
-                    int i_145_ = this.sectFile.vars(i_144_);
-                    for (int i_146_ = 0; i_146_ < i_145_; i_146_++) {
-                        if (netmsgguaranted.size() >= 128) {
+                    netmsgguaranted.write255(sectionName);
+                    int numVars = this.sectFile.vars(sectionIndex);
+                    for (int varsIndex = 0; varsIndex < numVars; varsIndex++) {
+                        // TODO: +++ Fix exceeding netmessage length issue by SAS~Storebror +++
+//                        if (netmsgguaranted.size() >= 128) {
+                        if ((netmsgguaranted.size() + this.sectFile.var(sectionIndex, varsIndex).length() + this.sectFile.value(sectionIndex, varsIndex).length()) >= 240) {
+                        // TODO: --- Fix exceeding netmessage length issue by SAS~Storebror ---
                             this.net.postTo(netchannel, netmsgguaranted);
                             netmsgguaranted = new NetMsgGuaranted();
                             netmsgguaranted.writeByte(i);
                         }
-                        netmsgguaranted.writeInt(i_144_);
-                        netmsgguaranted.write255(this.sectFile.var(i_144_, i_146_));
-                        netmsgguaranted.write255(this.sectFile.value(i_144_, i_146_));
+                        netmsgguaranted.writeInt(sectionIndex);
+                        netmsgguaranted.write255(this.sectFile.var(sectionIndex, varsIndex));
+                        
+//                        //TODO: Test!!!
+//                        String tempValue = this.sectFile.value(sectionIndex, varsIndex);
+//                        if (tempValue.indexOf("%GRID%") > -1 || tempValue.indexOf("%ALTM%") > -1 || tempValue.indexOf("%ALTF%") > -1) {
+//                            System.out.println("tempValue = " + tempValue);
+//                            tempValue = replaceAll(tempValue, "%GRID%", "%% GRID %%");
+//                            tempValue = replaceAll(tempValue, "%ALTM%", "%% ALTM %%");
+//                            tempValue = replaceAll(tempValue, "%ALTF%", "%% ALTF %%");
+//                            System.out.println("tempValue new = " + tempValue);
+//                        }
+//                        netmsgguaranted.write255(tempValue);
+                        netmsgguaranted.write255(this.sectFile.value(sectionIndex, varsIndex));
                     }
                 }
             }

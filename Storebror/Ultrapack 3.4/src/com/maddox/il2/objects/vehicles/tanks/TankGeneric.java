@@ -29,6 +29,7 @@ import com.maddox.il2.ai.ground.Obstacle;
 import com.maddox.il2.ai.ground.Predator;
 import com.maddox.il2.ai.ground.Prey;
 import com.maddox.il2.ai.ground.StaticObstacle;
+import com.maddox.il2.ai.ground.TgtInfantry;
 import com.maddox.il2.ai.ground.TgtTank;
 import com.maddox.il2.ai.ground.UnitData;
 import com.maddox.il2.ai.ground.UnitInPackedForm;
@@ -896,7 +897,11 @@ public abstract class TankGeneric extends ActorHMesh implements MsgCollisionRequ
                 this.dying = 1;
                 this.dyingDelay = SecsToTicks(Rnd(6.0F, 12.0F));
                 this.mov.switchToRotate(this, (this.RndB(0.5F) ? 1.0F : -1.0F) * Rnd(70.0F, 170.0F), this.prop.ROT_SPEED_MAX);
-                this.RunSmoke(0.2F, 17.0F);
+                // TODO: +++ TgtInfantry backport by SAS~Storebror +++
+//              this.RunSmoke(0.2F, 17.0F);
+              if(!(this instanceof TgtInfantry))
+                  RunSmoke(0.3F, 15F);
+              // TODO: --- TgtInfantry backport by SAS~Storebror ---
             }
         }
     }

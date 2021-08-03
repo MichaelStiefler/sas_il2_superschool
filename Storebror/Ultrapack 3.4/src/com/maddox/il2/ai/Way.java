@@ -183,6 +183,12 @@ public class Way {
     public void load(SectFile sectfile, String string) throws Exception {
         int i = sectfile.sectionIndex(string);
         int j = sectfile.vars(i);
+        // TODO: +++ Trigger backport from HSFX 7.0.3 by SAS~Storebror +++
+        double altiTrigger = -1D;
+        double diffAltiFist = -999999D;
+        if(World.cur().triggersGuard.getListTriggerAircraftAirSpawnRelativeAltitude().contains(string.substring(0, string.length() - 4)))
+            altiTrigger = World.cur().triggersGuard.getTriggerTarget(string.substring(0, string.length() - 4)).getAltitude();
+        // TODO: --- Trigger backport from HSFX 7.0.3 by SAS~Storebror ---
         for (int k = 0; k < j; k++) {
             String s1 = sectfile.var(i, k);
             WayPoint waypoint = new WayPoint();
@@ -229,6 +235,16 @@ public class Way {
             P.x = numbertokenizer.next(0.0F, -1000000.0F, 1000000.0F);
             P.y = numbertokenizer.next(0.0F, -1000000.0F, 1000000.0F);
             P.z = numbertokenizer.next(0.0F, -1000000.0F, 1000000.0F) + World.land().HQ(P.x, P.y);
+            // TODO: +++ Trigger backport from HSFX 7.0.3 by SAS~Storebror +++
+            if(altiTrigger >= 0.0D && (waypoint.Action != 1 || waypoint.Action != 2))
+            {
+                if(diffAltiFist == -999999D)
+                    diffAltiFist = altiTrigger - P.z;
+                P.z += diffAltiFist;
+                if(P.z - World.land().HQ(P.x, P.y) < 100D)
+                    P.z = World.land().HQ(P.x, P.y) + 100D;
+            }
+            // TODO: --- Trigger backport from HSFX 7.0.3 by SAS~Storebror ---
             float f = numbertokenizer.next(0.0F, 0.0F, 2800.0F);
             waypoint.set(P);
             waypoint.set(f / 3.6F);
@@ -295,7 +311,7 @@ public class Way {
 
     // TODO: +++ TD AI code backport from 4.13 +++
     public void setNearestTaxingPoint(Point3d point3d, Orient orient) {
-        double d = 1.7976931348623157E+308D;
+        double d = Double.MAX_VALUE;
         int i = 0;
         for (int j = this.Cur; j < this.WList.size(); j++) {
             WayPoint waypoint = (WayPoint) this.WList.get(j);

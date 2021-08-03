@@ -2102,7 +2102,10 @@ public class BigshipGeneric extends ActorHMesh implements MsgCollisionRequestLis
 
             if ((this instanceof RwyTransp || this instanceof RwyTranspWide || this instanceof RwyTranspSqr) && Engine.land().isWater(this.pos.getAbs().getX(), this.pos.getAbs().getY())) this.hierMesh().chunkVisible("Hull1", false);
 
-            if (!this.interpEnd("move")) {
+            // TODO: +++ Trigger backport from HSFX 7.0.3 by SAS~Storebror +++
+//          if (!this.interpEnd("move"))
+          if(!World.cur().triggersGuard.getListTriggerChiefActivate().contains(string) && !interpEnd("move")) {
+              // TODO: --- Trigger backport from HSFX 7.0.3 by SAS~Storebror ---
                 this.interpPut(new Move(), "move", Time.current(), null);
                 InterpolateAdapter.forceListener(this);
             }
@@ -2126,6 +2129,22 @@ public class BigshipGeneric extends ActorHMesh implements MsgCollisionRequestLis
 
         this.CURRSPEED = 2.0F * this.prop.SPEED;
     }
+
+    // TODO: +++ Trigger backport from HSFX 7.0.3 by SAS~Storebror +++
+    public void startMove()
+    {
+        long l = NetServerParams.getServerTime();
+        for(int k1 = 0; k1 < path.size(); k1++)
+        {
+            Segment segment = (Segment)path.get(k1);
+            segment.timeIn += l;
+            segment.timeOut += l;
+        }
+
+        if(!interpEnd("move"))
+            interpPut(new Move(), "move", Time.current(), null);
+    }
+    // TODO: --- Trigger backport from HSFX 7.0.3 by SAS~Storebror ---
 
     private void SetEffectsIntens(float f) {
         if (this.dying != 0) f = -1.0F;

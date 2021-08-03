@@ -413,7 +413,7 @@ public class Builder {
         if (this.isLoadedLandscape()) {
             int i = (int) this.viewWindow.win.dx;
             int i_18_ = (int) this.viewWindow.win.dy;
-            double d_19_ = this.camera.FOV() * 3.141592653589793 / 180.0 / 2.0;
+            double d_19_ = this.camera.FOV() * Math.PI / 360.0;
             double d_20_ = (double) i / (double) i_18_;
             if (d < 0.0) {
                 this.viewHMax = Main3D.cur3D().land2D.mapSizeX() / 2.0 / Math.tan(d_19_);
@@ -696,6 +696,17 @@ public class Builder {
         return this.pathes.currentPPoint;
     }
 
+    // TODO: +++ Trigger backport from HSFX 7.0.3 by SAS~Storebror +++
+    public PPoint selectedFirstPoint()
+    {
+        Path path = selectedPath();
+        if(path != null)
+            return path.point(0);
+        else
+            return null;
+    }
+    // TODO: --- Trigger backport from HSFX 7.0.3 by SAS~Storebror ---
+
     public Path selectedPath() {
         if (this.pathes == null) return null;
         if (!Actor.isValid(this.pathes.currentPPoint)) return null;
@@ -953,6 +964,29 @@ public class Builder {
                     this.setOverActor(this.selectNear(i, i_52_));
                     if (!Actor.isValid(this.selectedPoint()) && !(this.selectedActor() instanceof PlMisRocket.Rocket)) this.breakSelectTarget();
                     break;
+                    
+                    // TODO: +++ Trigger backport from HSFX 7.0.3 by SAS~Storebror +++
+//                case 6:
+//                    movedActor = null;
+//                    setOverActor(selectNear(i, i_52_));
+//                    if(!Actor.isValid(selectedPoint()) && !(selectedActor() instanceof PlMisRocket.Rocket))
+//                        breakSelectSpawnPoint();
+//                    break;
+
+                case 8:
+                    movedActor = null;
+                    setOverActor(selectNear(i, i_52_));
+                    if(!(selectedActor() instanceof ActorTrigger))
+                        breakSelectTrigger();
+                    break;
+
+                case 9:
+                    movedActor = null;
+                    setOverActor(selectNear(i, i_52_));
+                    if(!(selectedActor() instanceof ActorTrigger))
+                        breakSelectTriggerLink();
+                    break;
+                    // TODO: --- Trigger backport from HSFX 7.0.3 by SAS~Storebror ---
             }
             this.mousePosX = i;
             this.mousePosY = i_52_;
@@ -1225,6 +1259,53 @@ public class Builder {
         }
     }
 
+    // TODO: +++ Trigger backport from HSFX 7.0.3 by SAS~Storebror +++
+    /*private*/ void drawSelectTargetAndSpawnPoint()
+    {
+        if(mouseState != 4 && mouseState != 6 && mouseState != 8 && mouseState != 9)
+            return;
+        if(!viewWindow.isMouseOver())
+            return;
+        Actor actorSelect = null;
+        if(mouseState != 8 && mouseState != 9)
+        {
+            if(mouseState == 6)
+                actorSelect = (PAir)selectedFirstPoint();
+            else
+                actorSelect = (PAir)selectedPoint();
+        } else
+        {
+            actorSelect = (ActorTrigger)selectedActor();
+        }
+        Point3d point3d;
+        if(Actor.isValid(actorSelect))
+        {
+            point3d = actorSelect.pos.getAbsPoint();
+        } else
+        {
+            Actor actor = selectedActor();
+            if(!(actor instanceof PlMisRocket.Rocket))
+                return;
+            point3d = actor.pos.getAbsPoint();
+        }
+        project2d(point3d, projectPos2d);
+        lineNXYZ[0] = (float)projectPos2d.x;
+        lineNXYZ[1] = (float)projectPos2d.y;
+        lineNXYZ[2] = 0.0F;
+        lineNXYZ[3] = mousePosX;
+        lineNXYZ[4] = mousePosY;
+        lineNXYZ[5] = 0.0F;
+        Render.drawBeginLines(-1);
+        int i = 0xff00ff00;
+        if(mouseState == 6 || mouseState == 9)
+            i = 0xff00ffff;
+        Render.drawLines(lineNXYZ, 2, 1.0F, i, Mat.NOWRITEZ | Mat.MODULATE | Mat.NOTEXTURE, 2);
+        Render.drawEnd();
+        float f = conf.iconSize * 2;
+        Render.drawTile((float)mousePosX - f / 2.0F, (float)mousePosY - f / 2.0F, f, f, 0.0F, selectTargetMat, -1, 0.0F, 0.0F, 1.0F, 1.0F);
+    }
+    // TODO: --- Trigger backport from HSFX 7.0.3 by SAS~Storebror ---
+
     private void drawSelectTarget() {
         if (this.mouseState == 4 && this.viewWindow.isMouseOver()) {
             PAir pair = (PAir) this.selectedPoint();
@@ -1287,6 +1368,162 @@ public class Builder {
             this.viewWindow.mouseCursor = 1;
         }
     }
+
+    // TODO: +++ Trigger backport from HSFX 7.0.3 by SAS~Storebror +++
+//  public void beginSelectSpawnPoint()
+//  {
+//      Path path = selectedPath();
+//      if(path == null || !(path instanceof PathAir))
+//      {
+//          Actor actor = selectedActor();
+//          if(!(actor instanceof PlMisRocket.Rocket))
+//              return;
+//      }
+//      mouseState = 6;
+//      viewWindow.mouseCursor = 1;
+//  }
+//
+//  public void endSelectSpawnPoint()
+//  {
+//      if(mouseState != 6)
+//          return;
+//      mouseState = 0;
+//      viewWindow.mouseCursor = 1;
+//      Actor actor = getOverActor();
+//      PathAir pathair = (PathAir)selectedPath();
+//      if(!Actor.isValid(actor))
+//          return;
+//      if(actor instanceof PlaneGeneric)
+//      {
+//          PlaneGeneric planegeneric = (PlaneGeneric)actor;
+//          PlMisAir plmisair = (PlMisAir)Plugin.getPlugin("MisAir");
+//          int i = plmisair.getSelectedPlaneIndex();
+//          pathair.setSpawnPoint(i, planegeneric);
+//          ((GWindowDialogControl) (plmisair.wSpawnPointLabel[i])).cap.set(Plugin.i18n("IndicatedByTheYellowLine"));
+//      }
+//      Plugin plugin = (Plugin)Property.value(pathair, "builderPlugin");
+//      if(plugin != null)
+//          plugin.updateSelector();
+//      PlMission.setChanged();
+//  }
+//
+//  public void breakSelectSpawnPoint()
+//  {
+//      if(mouseState != 6)
+//      {
+//          return;
+//      } else
+//      {
+//          mouseState = 0;
+//          viewWindow.mouseCursor = 1;
+//          return;
+//      }
+//  }
+
+  public void beginSelectTrigger()
+  {
+      Actor actor = selectedActor();
+      //if(actor != null)
+      if(!(actor instanceof ActorTrigger))
+      {
+//          System.out.println("beginSelectTrigger !(actor instanceof ActorTrigger)");
+          return;
+      } else
+      {
+//          System.out.println("beginSelectTrigger return");
+          mouseState = 8;
+          viewWindow.mouseCursor = 1;
+          return;
+      }
+  }
+
+  public void endSelectTrigger()
+  {
+      System.out.println("endSelectTrigger 1");
+      if(mouseState != 8)
+          return;
+      System.out.println("endSelectTrigger 2");
+      mouseState = 0;
+      viewWindow.mouseCursor = 1;
+      Actor actor = getOverActor();
+      System.out.println("endSelectTrigger actor=" + actor.getClass().getName());
+      ActorTrigger actortrigger = (ActorTrigger)selectedActor();
+      System.out.println("endSelectTrigger actortrigger=" + actortrigger.getClass().getName());
+      if(!Actor.isValid(actor))
+          return;
+      System.out.println("endSelectTrigger 3");
+      if (!actortrigger.getTriggerActors().contains(actor)) actortrigger.addTriggerActor(actor);
+      setSelected(actortrigger);
+      Plugin plugin = (Plugin)Property.value(actortrigger, "builderPlugin");
+      System.out.println("endSelectTrigger plugin=" + plugin==null?"null":plugin.getClass().getName());
+      if(plugin != null) {
+          if (plugin instanceof PlMisTrigger) {
+              ((PlMisTrigger)plugin).updateSelector(actortrigger, actor);
+          } else {
+              plugin.updateSelector();
+          }
+      }
+      PlMission.setChanged();
+  }
+
+  public void breakSelectTrigger()
+  {
+      if(mouseState != 8)
+      {
+          return;
+      } else
+      {
+          mouseState = 0;
+          viewWindow.mouseCursor = 1;
+          return;
+      }
+  }
+
+  public void beginSelectTriggerLink()
+  {
+      Actor actor = selectedActor();
+      if(!(actor instanceof ActorTrigger))
+      {
+          return;
+      } else
+      {
+          mouseState = 9;
+          viewWindow.mouseCursor = 1;
+          return;
+      }
+  }
+
+  public void endSelectTriggerLink()
+  {
+      if(mouseState != 9)
+          return;
+      mouseState = 0;
+      viewWindow.mouseCursor = 1;
+      Actor actor = getOverActor();
+      ActorTrigger actortrigger = (ActorTrigger)selectedActor();
+      if(!Actor.isValid(actor))
+          return;
+      actortrigger.setLinkActor(actor);
+      setSelected(actortrigger);
+      Plugin plugin = (Plugin)Property.value(actortrigger, "builderPlugin");
+      if(plugin != null)
+          plugin.updateSelector();
+      PlMission.setChanged();
+  }
+
+  public void breakSelectTriggerLink()
+  {
+      if(mouseState != 9)
+      {
+          return;
+      } else
+      {
+          mouseState = 0;
+          viewWindow.mouseCursor = 1;
+          return;
+      }
+  }
+  // TODO: --- Trigger backport from HSFX 7.0.3 by SAS~Storebror ---
 
     private void initHotKeys() {
         HotKeyCmdEnv.setCurrentEnv(envName);
@@ -1449,7 +1686,96 @@ public class Builder {
                 }
             }
         });
-        HotKeyCmdEnv.addCmd(new HotKeyCmd(true, "objectMove") {
+        // TODO: +++ Trigger backport from HSFX 7.0.3 by SAS~Storebror +++
+        
+//      HotKeyCmdEnv.addCmd(new HotKeyCmd(true, "objectMove") {
+//          public void begin() {
+//              if (Builder.this.isLoadedLandscape() && !Builder.this.isFreeView()) if (Builder.this.mouseState == 4) Builder.this.endSelectTarget();
+//              else if (Builder.this.mouseState == 0) {
+//                  Builder.this.mouseState = 1;
+//                  Builder.this.viewWindow.mouseCursor = 7;
+//                  Actor actor = Builder.this.selectNear(Builder.this.mousePosX, Builder.this.mousePosY);
+//                  if (actor != null) {
+//                      Builder.this.setSelected(actor);
+//                      Builder.this.repaint();
+//                  }
+//                  Builder.this.setOverActor(null);
+//              }
+//          }
+//
+//          public void end() {
+//              if (Builder.this.isLoadedLandscape() && !Builder.this.isFreeView() && Builder.this.mouseState == 1) {
+//                  Builder.this.mouseState = 0;
+//                  Builder.this.viewWindow.mouseCursor = 1;
+//              }
+//          }
+//      });
+      
+      HotKeyCmdEnv.addCmd(new HotKeyCmd(true, "objectMove") {
+
+          public void begin()
+          {
+              if(!isLoadedLandscape())
+                  return;
+              if(isFreeView())
+                  return;
+              if(mouseState == 4)
+              {
+                  endSelectTarget();
+                  return;
+              }
+//              if(mouseState == 6)
+//              {
+//                  endSelectSpawnPoint();
+//                  return;
+//              }
+              if(mouseState == 8)
+              {
+                  endSelectTrigger();
+                  return;
+              }
+              if(mouseState == 9)
+              {
+                  endSelectTriggerLink();
+                  return;
+              }
+              if(mouseState != 0)
+                  return;
+              mouseState = 1;
+              viewWindow.mouseCursor = 7;
+              Actor actor = selectNear(mousePosX, mousePosY);
+              if(actor != null)
+              {
+                  setSelected(actor);
+                  repaint();
+                   
+                                                  
+              }
+              setOverActor(null);
+          }
+
+          public void end()
+          {
+              if(!isLoadedLandscape())
+                  return;
+              if(isFreeView())
+                  return;
+              if(mouseState != 1)
+              {
+                  return;
+              } else
+              {
+                  mouseState = 0;
+                  viewWindow.mouseCursor = 1;
+                  return;
+              }
+          }
+
+      }
+);
+      // TODO: --- Trigger backport from HSFX 7.0.3 by SAS~Storebror ---
+
+      HotKeyCmdEnv.addCmd(new HotKeyCmd(true, "objectMove") {
             public void begin() {
                 if (Builder.this.isLoadedLandscape() && !Builder.this.isFreeView()) if (Builder.this.mouseState == 4) Builder.this.endSelectTarget();
                 else if (Builder.this.mouseState == 0) {
@@ -1578,6 +1904,11 @@ public class Builder {
                 else {
                     Builder.this.setOverActor(null);
                     Builder.this.breakSelectTarget();
+                    // TODO: +++ Trigger backport from HSFX 7.0.3 by SAS~Storebror +++
+//                  Builder.this.breakSelectSpawnPoint();
+                  Builder.this.breakSelectTrigger();
+                  Builder.this.breakSelectTriggerLink();
+                  // TODO: --- Trigger backport from HSFX 7.0.3 by SAS~Storebror ---
                     Builder.this.mouseState = 0;
                 }
             }
@@ -2229,6 +2560,10 @@ public class Builder {
                     else if (tab.cap.caption.equals(Plugin.i18n("mds.tabRRR"))) Plugin.builder.wSelect.setMetricSize(40, 45);
                     else if (tab.cap.caption.equals(Plugin.i18n("Type"))) Plugin.builder.wSelect.setMetricSize(20, 25);
                     else if (tab.cap.caption.equals(Plugin.i18n("tTarget"))) Plugin.builder.wSelect.setMetricSize(36, 29);
+
+                    // TODO: +++ Trigger backport from HSFX 7.0.3 by SAS~Storebror +++
+                    else if (tab.cap.caption.equals(Plugin.i18n("tTrigger"))) Plugin.builder.wSelect.setMetricSize(60, 38);
+                    // TODO: --- Trigger backport from HSFX 7.0.3 by SAS~Storebror ---
 
                     Builder.zutiLastTabCaption = tab.cap.caption;
                 }

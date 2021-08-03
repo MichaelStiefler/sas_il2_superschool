@@ -556,6 +556,9 @@ public class ChiefGround extends Chief implements MsgDreamListener {
                     orient.orient(vector3f);
                     actor.pos.setAbs(orient);
                     actor.pos.reset();
+                    // TODO: +++ Trigger backport from HSFX 7.0.3 by SAS~Storebror +++
+                    if(!World.cur().triggersGuard.getListTriggerChiefActivate().contains(name()))
+                        // TODO: --- Trigger backport from HSFX 7.0.3 by SAS~Storebror ---
                     ((UnitInterface) objects[i_50_]).startMove();
                     i_50_++;
                 }
@@ -568,6 +571,18 @@ public class ChiefGround extends Chief implements MsgDreamListener {
             this.recomputeMinMaxSegments();
         }
     }
+
+    // TODO: +++ Trigger backport from HSFX 7.0.3 by SAS~Storebror +++
+    public void startMove()
+    {
+        Object aobj[] = getOwnerAttached();
+        if(aobj.length <= 0)
+            return;
+        for(int j = 0; j < aobj.length; j++)
+            ((UnitInterface)aobj[j]).startMove();
+
+    }
+    // TODO: --- Trigger backport from HSFX 7.0.3 by SAS~Storebror ---
 
     private void reformForSHIFT(Object[] objects, float f, boolean bool) {
         if (objects != null) {

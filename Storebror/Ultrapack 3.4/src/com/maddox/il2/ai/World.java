@@ -116,6 +116,9 @@ public class World {
     public static Actor       remover                 = new Remover();
     static ClipFilter         clipFilter              = new ClipFilter();
     public TargetsGuard       targetsGuard            = new TargetsGuard();
+    // TODO: +++ Trigger backport from HSFX 7.0.3 by SAS~Storebror +++
+    public TriggersGuard      triggersGuard           = new TriggersGuard();
+    // TODO: --- Trigger backport from HSFX 7.0.3 by SAS~Storebror ---
     public ScoreCounter       scoreCounter            = new ScoreCounter();
     private Wind              wind                    = new Wind();
     protected Front           front                   = new Front();
@@ -665,6 +668,9 @@ public class World {
             if (Actor.isValid(runaway)) runaway.destroy();
         }
         this.targetsGuard.resetGame();
+        // TODO: +++ Trigger backport from HSFX 7.0.3 by SAS~Storebror +++
+        this.triggersGuard.resetGame();
+        // TODO: --- Trigger backport from HSFX 7.0.3 by SAS~Storebror ---
         this.scoreCounter.resetGame();
         NearestEnemies.resetGameClear();
         NearestAircraft.resetGameClear();

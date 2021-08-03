@@ -119,7 +119,11 @@ public class Train extends Chief {
             this.requiredSpeed = 0.0F;
             this.placeTrain(true, false);
             this.recomputeSpeedRequirements(this.road.get(this.headSeg).length2Dallprev + this.headAlong - this.trainLength);
-            if (!this.interpEnd("move")) this.interpPut(new Move(), "move", Time.current(), null);
+            // TODO: +++ Trigger backport from HSFX 7.0.3 by SAS~Storebror +++
+//          if (!this.interpEnd("move"))
+          if(!interpEnd("move") && !World.cur().triggersGuard.getListTriggerChiefActivate().contains(string))
+              // TODO: --- Trigger backport from HSFX 7.0.3 by SAS~Storebror ---
+              this.interpPut(new Move(), "move", Time.current(), null);
         } catch (Exception exception) {
             System.out.println("Train creation failure:");
             System.out.println(exception.getMessage());
@@ -127,6 +131,14 @@ public class Train extends Chief {
             ConstructorFailure();
         }
     }
+
+    // TODO: +++ Trigger backport from HSFX 7.0.3 by SAS~Storebror +++
+    public void startMove()
+    {
+        if(!interpEnd("move"))
+            interpPut(new Move(), "move", Time.current(), null);
+    }
+    // TODO: --- Trigger backport from HSFX 7.0.3 by SAS~Storebror ---
 
     public void BridgeSegmentDestroyed(int i, int i_12_, Actor actor) {
         boolean bool = this.road.MarkDestroyedSegments(i, i_12_);
