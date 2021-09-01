@@ -4,20 +4,6 @@ import com.maddox.rts.Property;
 
 public class Do17Z_0 extends Do17 {
 
-    protected void moveBayDoor(float f) {
-        if (f < 0.02F) {
-            this.hierMesh().chunkVisible("Bay_D0", true);
-            this.hierMesh().chunkVisible("BayL01_D0", false);
-            this.hierMesh().chunkVisible("BayR01_D0", false);
-        } else {
-            this.hierMesh().chunkVisible("Bay_D0", false);
-            this.hierMesh().chunkVisible("BayL01_D0", true);
-            this.hierMesh().chunkVisible("BayR01_D0", true);
-            this.hierMesh().chunkSetAngles("BayL01_D0", 0.0F, Aircraft.cvt(f, 0.04F, 0.7F, 0.0F, 120.5F), 0.0F);
-            this.hierMesh().chunkSetAngles("BayR01_D0", 0.0F, Aircraft.cvt(f, 0.04F, 0.7F, 0.0F, -120.5F), 0.0F);
-        }
-    }
-
     static {
         Class class1 = Do17Z_0.class;
         new NetAircraft.SPAWN(class1);

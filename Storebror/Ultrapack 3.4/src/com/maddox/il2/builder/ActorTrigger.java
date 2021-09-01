@@ -97,7 +97,7 @@ public class ActorTrigger extends Actor implements ActorAlign {
     }
 
     public ActorTrigger(Point3d triggerPoint, int triggerType, int triggeredByArmy, boolean hasTimeout, int timeoutMilliseconds, int radius, int altitudeMin, int altitudeMax, int triggeredBy, boolean triggerOnExit, int noObjectsMin, int probability,
-            int deltaAltitude, String displayMessage, int displayTime) {
+            int deltaAltitude, String displayMessage, float displayTime) {
 //        this.setTriggerActor(null);
         this.triggerActors = new ArrayList();
         this.setLinkActor(null);
@@ -278,11 +278,11 @@ public class ActorTrigger extends Actor implements ActorAlign {
         this.displayMessage = displayMessage;
     }
 
-    public int getDisplayTime() {
+    public float getDisplayTime() {
         return this.displayTime;
     }
 
-    public void setDisplayTime(int displayTime) {
+    public void setDisplayTime(float displayTime) {
         this.displayTime = displayTime;
     }
 
@@ -310,7 +310,7 @@ public class ActorTrigger extends Actor implements ActorAlign {
     private int             deltaAltitude;
     private int             probability;
     private String          displayMessage;
-    private int             displayTime;
+    private float           displayTime;
     private boolean         activated;
 
 //    public static final int TRIGGER_TYPE_SPAWN                      = 0;

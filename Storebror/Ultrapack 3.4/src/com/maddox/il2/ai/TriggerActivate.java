@@ -20,7 +20,7 @@ import com.maddox.sas1946.il2.util.TrueRandom;
 public class TriggerActivate extends Trigger {
 
     public TriggerActivate(String triggerName, int triggeredByArmy, int timeout, int posX, int posY, int radius, String targetActorNames, int altitudeMin, int altitudeMax, int triggeredBy, boolean triggerOnExit, int noObjectsMin, int probability,
-            String linkActorName, String displayMessage, int displayTime) {
+            String linkActorName, String displayMessage, float displayTime) {
         super(triggerName, triggeredByArmy, timeout, posX, posY, radius, altitudeMin, altitudeMax, triggeredBy, triggerOnExit, noObjectsMin, probability, linkActorName, displayMessage, displayTime);
         this.setTargetActorNames(targetActorNames);
         this.setTriggerClass(TYPE_ACTIVATE);
@@ -70,10 +70,13 @@ public class TriggerActivate extends Trigger {
               }
               else if (targetActor instanceof Trigger) {
                   ((Trigger) targetActor).setActivated(true);
-                  System.out.println("Trigger " + ((Trigger)targetActor).name() + " activated!");
+                  // System.out.println("Trigger " + ((Trigger)targetActor).name() + " activated!");
 
               }
-              else throw new RuntimeException("TriggerActivate Target Actor Type mismatch, " + targetActorName + " type is:" + targetActor==null?"null":targetActor.getClass().getName());
+              else {
+//                   throw new RuntimeException("TriggerActivate Target Actor Type mismatch, " + (targetActorName == null?"null":targetActorName) + " type is:" + (targetActor==null?"null":targetActor.getClass().getName()));
+                   System.out.println("TriggerActivate Target Actor Type mismatch, " + (targetActorName == null?"null":targetActorName) + " type is:" + (targetActor==null?"null":targetActor.getClass().getName()));
+              }
           }
           if (this.getLinkActorName() == "" || this.getLinkActorName() == null) {
               EventLog.onTriggerActivate(Actor.getByName(targetActorName), this);

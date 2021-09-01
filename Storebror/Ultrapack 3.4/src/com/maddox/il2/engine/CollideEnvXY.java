@@ -26,6 +26,7 @@ import com.maddox.il2.objects.vehicles.cars.CarGeneric;
 import com.maddox.il2.objects.vehicles.planes.PlaneGeneric;
 import com.maddox.il2.objects.vehicles.tanks.TankGeneric;
 import com.maddox.rts.Time;
+import com.maddox.sas1946.il2.util.HighPrecisionTimer;
 import com.maddox.util.HashMapExt;
 import com.maddox.util.HashMapXY16Hash;
 import com.maddox.util.HashMapXY16List;
@@ -1651,9 +1652,11 @@ public class CollideEnvXY extends CollideEnv
         current.clear();
     }
 
-    public ResultTrigger getEnemiesInCyl(Point2d triggerPoint, double radius, double altMin, double altMax, 
+    public ResultTrigger getEnemiesInCylOld(Point2d triggerPoint, double radius, double altMin, double altMax, 
             int triggerArmy, int typeActivate, int actorsMin)
     {
+        HighPrecisionTimer hpt = new HighPrecisionTimer();
+        hpt.initTimer();
         int count = 0;
         double asl = 0.0D;
         ArrayList listActorsAlreadyProcessed = new ArrayList();
@@ -1674,7 +1677,9 @@ public class CollideEnvXY extends CollideEnv
                         {
                             Actor actor = (Actor)mapGridActorEntry.getKey();
                             int army = actor.getArmy();
-                            if(army == 0 || army == triggerArmy || !actor.isAlive() || listActorsAlreadyProcessed.contains(actor))
+//                            if(army == 0 || army == triggerArmy || !actor.isAlive() || listActorsAlreadyProcessed.contains(actor))
+//                                continue;
+                            if(army == 0 || (army & triggerArmy) == 0 || !actor.isAlive() || listActorsAlreadyProcessed.contains(actor))
                                 continue;
                             if(typeActivate == ActorTrigger.TRIGGERED_BY_AI_AIRCRAFT_ONLY
                                     || typeActivate == ActorTrigger.TRIGGERED_BY_HUMAN_AIRCRAFT_ONLY
@@ -1707,8 +1712,10 @@ public class CollideEnvXY extends CollideEnv
                                 count++;
                                 listActorsAlreadyProcessed.add(actor);
                                 asl += actorPoint.z;
-                                if(count >= actorsMin)
+                                if(count >= actorsMin) {
+                                    System.out.println("Processing Trigger at x=" + triggerPoint.x + ", y=" + triggerPoint.y + " took " + (hpt.getSecondsElapsed() * 1000000D) + " nanoseconds.");
                                     return new CollideEnv.ResultTrigger(true, asl / (double)count);
+                                }
                             }
                         }
 
@@ -1724,7 +1731,9 @@ public class CollideEnvXY extends CollideEnv
                             Actor actor = (Actor)staticActorsList.get(staticActorsIndex);
                             int army = actor.getArmy();
                             
-                            if(army == 0 || army == triggerArmy || !actor.isAlive() || listActorsAlreadyProcessed.contains(actor))
+//                            if(army == 0 || army == triggerArmy || !actor.isAlive() || listActorsAlreadyProcessed.contains(actor))
+//                                continue;
+                            if(army == 0 || (army & triggerArmy) == 0 || !actor.isAlive() || listActorsAlreadyProcessed.contains(actor))
                                 continue;
 
                             if(typeActivate == ActorTrigger.TRIGGERED_BY_STATIC_AIRCRAFTS_ONLY && !(actor instanceof PlaneGeneric)
@@ -1741,8 +1750,10 @@ public class CollideEnvXY extends CollideEnv
                                 count++;
                                 listActorsAlreadyProcessed.add(actor);
                                 asl += actorPoint.z;
-                                if(count >= actorsMin)
+                                if(count >= actorsMin) {
+                                    System.out.println("Processing Trigger at x=" + triggerPoint.x + ", y=" + triggerPoint.y + " took " + (hpt.getSecondsElapsed() * 1000000D) + " nanoseconds.");
                                     return new CollideEnv.ResultTrigger(true, asl / (double)count);
+                                }
                             }
                         }
                     }
@@ -1750,6 +1761,80 @@ public class CollideEnvXY extends CollideEnv
             }
         }
 
+        System.out.println("Processing Trigger at x=" + triggerPoint.x + ", y=" + triggerPoint.y + " took " + (hpt.getSecondsElapsed() * 1000000D) + " nanoseconds.");
+        return new CollideEnv.ResultTrigger(false);
+    }
+
+//    DecimalFormat df = new DecimalFormat("0.00");
+    
+    public ResultTrigger getEnemiesInCyl(Point2d triggerPoint, double radius, double altMin, double altMax, int triggerArmy, int typeActivate, int actorsMin) {
+//        HighPrecisionTimer hpt = new HighPrecisionTimer();
+//        hpt.initTimer();
+        int count = 0;
+        double asl = 0.0D;
+        ArrayList listActorsAlreadyProcessed = new ArrayList();
+        for (int targetIndex = 0; targetIndex < Engine.targets().size(); targetIndex++) {
+            Actor actor = (Actor) Engine.targets().get(targetIndex);
+            if (actor == null || !Actor.isValid(actor))
+                continue;
+            if (actor.getArmy() == 0 || (actor.getArmy() & triggerArmy) == 0 || !actor.isAlive() || listActorsAlreadyProcessed.contains(actor))
+                continue;
+            Point3d actorPoint = actor.pos.getAbsPoint();
+            double actorAltMin = altMin < 1000D ? actorPoint.z - Engine.land().HQ(actorPoint.x, actorPoint.y) : actorPoint.z;
+            double actorAltMax = altMax < 1000D ? actorPoint.z - Engine.land().HQ(actorPoint.x, actorPoint.y) : actorPoint.z;
+            if (triggerPoint.distance(new Point2d(actorPoint.x, actorPoint.y)) > radius || actorAltMax > altMax || actorAltMin < altMin)
+                continue;
+            
+            switch (typeActivate) {
+                case ActorTrigger.TRIGGERED_BY_AI_AIRCRAFT_ONLY:
+                    if (!(actor instanceof Aircraft)) continue;
+                    if (((Aircraft) actor).FM.isPlayers() || ((Aircraft) actor).isNetPlayer()) continue;
+                    break;
+                case ActorTrigger.TRIGGERED_BY_HUMAN_AIRCRAFT_ONLY:
+                    if (!(actor instanceof Aircraft)) continue;
+                    if (!((Aircraft) actor).FM.isPlayers() && !((Aircraft) actor).isNetPlayer()) continue;
+                    break;
+                case ActorTrigger.TRIGGERED_BY_MOVING_AIRCRAFTS_ONLY:
+                    if (!(actor instanceof Aircraft)) continue;
+                    break;
+                case ActorTrigger.TRIGGERED_BY_STATIC_AIRCRAFTS_ONLY:
+                    if (!(actor instanceof PlaneGeneric)) continue;
+                    break;
+                case ActorTrigger.TRIGGERED_BY_GROUND_OBJECTS_ONLY:
+                    if (actor instanceof Aircraft) continue;
+                    break;
+                case ActorTrigger.TRIGGERED_BY_ARMOUR_ONLY:
+                    if (!(actor instanceof TankGeneric) && !(actor instanceof STank) && !(actor instanceof TgtTank)) continue;
+                    break;
+                case ActorTrigger.TRIGGERED_BY_ARTILLERY_ONLY:
+                    if ((!(actor instanceof ArtilleryGeneric) && !(actor instanceof SArtillery) && !(actor instanceof TgtFlak)) || (actor instanceof TgtInfantry)) continue;
+                    break;
+                case ActorTrigger.TRIGGERED_BY_INFANTRY_ONLY:
+                    if (!(actor instanceof TgtInfantry)) continue;
+                    break;
+                case ActorTrigger.TRIGGERED_BY_SHIPS_ONLY:
+                    if (!(actor instanceof BigshipGeneric) && !(actor instanceof ShipGeneric)) continue;
+                    break;
+                case ActorTrigger.TRIGGERED_BY_TRAINS_ONLY:
+                    if (!(actor instanceof Wagon) && !(actor instanceof SWagon) && !(actor instanceof TgtTrain)) continue;
+                    break;
+                case ActorTrigger.TRIGGERED_BY_VEHICLES_ONLY:
+                    if (((!(actor instanceof CarGeneric) && !(actor instanceof TgtVehicle)) || (actor instanceof TgtInfantry))) continue;
+                    break;
+                default:
+                    break;
+            }
+            count++;
+            listActorsAlreadyProcessed.add(actor);
+            asl += actorPoint.z;
+            if (count >= actorsMin) {
+//                double secsProcessed = hpt.getSecondsElapsed();
+//                System.out.println("Processing Trigger at x=" + triggerPoint.x + ", y=" + triggerPoint.y + " took " + df.format(secsProcessed * 1000000D) + " nanoseconds.");
+                return new CollideEnv.ResultTrigger(true, asl / (double) count);
+            }
+        }
+//        double secsProcessed = hpt.getSecondsElapsed();
+//        System.out.println("Processing Trigger at x=" + triggerPoint.x + ", y=" + triggerPoint.y + " took " +  df.format(secsProcessed * 1000000D) + " nanoseconds.");
         return new CollideEnv.ResultTrigger(false);
     }
 

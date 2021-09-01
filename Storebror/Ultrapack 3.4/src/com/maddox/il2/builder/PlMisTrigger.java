@@ -13,7 +13,6 @@ import java.util.StringTokenizer;
 import com.maddox.JGP.Point2d;
 import com.maddox.JGP.Point3d;
 import com.maddox.gwindow.GNotifyListener;
-import com.maddox.gwindow.GRegion;
 import com.maddox.gwindow.GWindow;
 import com.maddox.gwindow.GWindowButton;
 import com.maddox.gwindow.GWindowCheckBox;
@@ -38,6 +37,7 @@ import com.maddox.il2.game.I18N;
 import com.maddox.il2.game.Main3D;
 import com.maddox.rts.Property;
 import com.maddox.rts.SectFile;
+import com.maddox.rts.Time;
 import com.maddox.util.NumberTokenizer;
 import com.maddox.util.UnicodeTo8bit;
 
@@ -65,6 +65,23 @@ public class PlMisTrigger extends Plugin {
             else mapGrid = "" + cx2;
             mapGrid += "-" + (int) Math.ceil(posY);
             if (actor instanceof ActorTrigger) {
+                switch (((ActorTrigger)actor).getType()) {
+                    case Trigger.TYPE_SPAWN:
+                        shortClassName = "TriggerSpawn";
+                        break;
+                    case Trigger.TYPE_ACTIVATE:
+                        shortClassName = "TriggerSpawnRelativeAlt";
+                        break;
+                    case Trigger.TYPE_SPAWN_AIRCRAFT_RELATIVE_ALTITUDE:
+                        shortClassName = "TriggerActivate";
+                        break;
+                    case Trigger.TYPE_MESSAGE:
+                        shortClassName = "TriggerMessage";
+                        break;
+                    default:
+                        shortClassName = "Trigger";
+                        break;
+                }
                 return actor.name() + " (" + shortClassName + ") [" + mapGrid + "]";
             }
 
@@ -128,6 +145,7 @@ public class PlMisTrigger extends Plugin {
         if (Plugin.builder.isFreeView()) return;
         if (!this.wShowTrigger.bChecked) return;
         Actor actor = Plugin.builder.selectedActor();
+        Render.drawBeginLines(-1);
         for (int j = 0; j < this.allActors.size(); j++) {
             ActorTrigger actortrigger = (ActorTrigger) this.allActors.get(j);
 //            if (Actor.isValid(actortrigger.getTriggerActor()) && Plugin.builder.project2d(actortrigger.pos.getAbsPoint(), this.p2d) && Plugin.builder.project2d(actortrigger.getTriggerActor().pos.getAbsPoint(), this.p2dt)
@@ -154,9 +172,9 @@ public class PlMisTrigger extends Plugin {
                     this.line2XYZ[3] = (float) this.p2dt.x;
                     this.line2XYZ[4] = (float) this.p2dt.y;
                     this.line2XYZ[5] = 0.0F;
-                    Render.drawBeginLines(-1);
+//                    Render.drawBeginLines(-1);
                     Render.drawLines(this.line2XYZ, 2, 1.25F, k, Mat.NOWRITEZ | Mat.MODULATE | Mat.NOTEXTURE | Mat.BLEND, 3);
-                    Render.drawEnd();
+//                    Render.drawEnd();
                 }
             }
 
@@ -168,12 +186,12 @@ public class PlMisTrigger extends Plugin {
                 this.line2XYZ[3] = (float) this.p2dt.x;
                 this.line2XYZ[4] = (float) this.p2dt.y;
                 this.line2XYZ[5] = 0.0F;
-                Render.drawBeginLines(-1);
+//                Render.drawBeginLines(-1);
                 Render.drawLines(this.line2XYZ, 2, 1.25F, k, Mat.NOWRITEZ | Mat.MODULATE | Mat.NOTEXTURE | Mat.BLEND, 3);
-                Render.drawEnd();
+//                Render.drawEnd();
             }
         }
-
+        Render.drawEnd();
     }
 
     public void renderMap2DAfter() {
@@ -329,7 +347,7 @@ public class PlMisTrigger extends Plugin {
                     if (numbertokenizer.hasMoreElements()) hudMessage = hudMessage + " ";
                 }
                 ActorTrigger actorTrigger = this.insert(name, point3d, type, false, army, btimeout, timeout, radius, altitudeMin, altitudeMax, appliesFor, bSortie, noObjectMin, probability, altitudeDifference, hudMessage, messageTimeout);
-                System.out.println("ActorTrigger " + name + " inserted!");
+                // System.out.println("ActorTrigger " + name + " inserted!");
                 if (actorTrigger != null) {
                     pendingActorsForAdding.put(actorTrigger, triggerTargetName);
                     // actorTrigger.addActor(s);
@@ -365,31 +383,48 @@ public class PlMisTrigger extends Plugin {
         actor.destroy();
     }
 
+//    public void afterDelete() {
+//        for (int i = 0; i < this.allActors.size();) {
+//            ActorTrigger actortrigger = (ActorTrigger) this.allActors.get(i);
+//            if (actortrigger.getTriggerActors() != null) {
+//                boolean validForDeletion = true;
+//                for (int actorTriggerIndex = 0; actorTriggerIndex < actortrigger.getTriggerActors().size(); actorTriggerIndex++) {
+//                    if (actortrigger.getTriggerActors().get(actorTriggerIndex) == null || Actor.isValid((Actor) actortrigger.getTriggerActors().get(actorTriggerIndex))) {
+//                        validForDeletion = false;
+//                        break;
+//                    }
+//                }
+//                if (validForDeletion) {
+//                    actortrigger.destroy();
+//                    this.allActors.remove(i);
+//                    continue;
+//                }
+//            }
+//            i++;
+////            if (actortrigger.getTriggerActor() != null && !Actor.isValid(actortrigger.getTriggerActor())) {
+////                actortrigger.destroy();
+////                this.allActors.remove(i);
+////            } else i++;
+//        }
+//
+//    }
+    
     public void afterDelete() {
-        for (int i = 0; i < this.allActors.size();) {
+        for (int i = 0; i < this.allActors.size(); i++) {
             ActorTrigger actortrigger = (ActorTrigger) this.allActors.get(i);
             if (actortrigger.getTriggerActors() != null) {
-                boolean validForDeletion = true;
-                for (int actorTriggerIndex = 0; actorTriggerIndex < actortrigger.getTriggerActors().size(); actorTriggerIndex++) {
-                    if (actortrigger.getTriggerActors().get(actorTriggerIndex) == null || Actor.isValid((Actor) actortrigger.getTriggerActors().get(actorTriggerIndex))) {
-                        validForDeletion = false;
-                        break;
-                    }
-                }
-                if (validForDeletion) {
-                    actortrigger.destroy();
-                    this.allActors.remove(i);
-                    continue;
+                                                
+                for (int actorTriggerIndex = 0; actorTriggerIndex < actortrigger.getTriggerActors().size();) {
+                    if (actortrigger.getTriggerActors().get(actorTriggerIndex) != null
+                            && actortrigger.getTriggerActors().get(actorTriggerIndex) instanceof ActorTrigger
+                            && !this.allActors.contains(actortrigger.getTriggerActors().get(actorTriggerIndex))) {
+                        actortrigger.getTriggerActors().remove(actorTriggerIndex);
+                    } else actorTriggerIndex++;
                 }
             }
-            i++;
-//            if (actortrigger.getTriggerActor() != null && !Actor.isValid(actortrigger.getTriggerActor())) {
-//                actortrigger.destroy();
-//                this.allActors.remove(i);
-//            } else i++;
         }
-
     }
+
 
     private ActorTrigger insert(String name, Point3d point3d, int type, boolean flag, int army, boolean btimeout, int timeout, int radius, int altitudeMin, int altitudeMax, int appliesFor, boolean bSortie, int noObjectMin, int probability,
             int altitudeDifference, String hudMessage, int messageTimeout) {
@@ -448,7 +483,7 @@ public class PlMisTrigger extends Plugin {
         if (i != this.startComboBox1) return;
         if (j < 0 || j >= this.item.length) return;
         else {
-            this.insert(null, loc.getPoint(), this.item[j].indx, flag, 2, false, 0, 1000, 0, 10000, 0, false, 1, 100, 0, "", 5);
+            this.insert(null, loc.getPoint(), this.item[j].indx, flag, 1, false, 0, 1000, 0, 10000, 0, false, 1, 100, 0, "", 5);
             return;
         }
     }
@@ -527,12 +562,14 @@ public class PlMisTrigger extends Plugin {
     }
 
     public void syncSelector() {
-        System.out.println("syncSelector");
+        // System.out.println("syncSelector");
         ActorTrigger actortrigger = (ActorTrigger) Plugin.builder.selectedActor();
         this.lstTriggerTarget.actorTriggerList = actortrigger.getTriggerActors();
         this.fillComboBox2(this.startComboBox1);
         Plugin.builder.wSelect.comboBox2.setSelected(actortrigger.getType(), true, false);
         Plugin.builder.wSelect.tabsClient.addTab(1, this.tabTrigger);
+//        Plugin.builder.wSelect.tabsClient.addTab(2, this.tabTargets);
+//        Plugin.builder.wSelect.tabsClient.addTab(3, this.tabMessage);
         this.wTriggerType.cap.set(Plugin.i18n(this.item[actortrigger.getType()].name));
         this.wHasTimeout.setChecked(actortrigger.isHasTimeout(), false);
         this.wTimeoutH.setEnable(actortrigger.isHasTimeout());
@@ -558,8 +595,9 @@ public class PlMisTrigger extends Plugin {
         }
         this.wTriggeredByObjectType.setSelected(actortrigger.getTriggeredBy(), true, false);
         this.wTriggerOnExit.setChecked(actortrigger.isTriggerOnExit(), false);
-        if (actortrigger.getTriggeredByArmy() == 2) this.wTriggeredByArmy.setSelected(0, true, false);
-        else this.wTriggeredByArmy.setSelected(1, true, false);
+//        if (actortrigger.getTriggeredByArmy() == 2) this.wTriggeredByArmy.setSelected(0, true, false);
+//        else this.wTriggeredByArmy.setSelected(1, true, false);
+        this.wTriggeredByArmy.setSelected(actortrigger.getTriggeredByArmy() - 1, true, false);
         if (actortrigger.getType() == Trigger.TYPE_MESSAGE) {
 //            this.wTriggerTargetClear.hideWindow();
 //            this.wTriggerTargetLabel.hideWindow();
@@ -600,17 +638,17 @@ public class PlMisTrigger extends Plugin {
     }
 
     public void updateSelector() {
-        System.out.println("updateSelector 1");
+        // System.out.println("updateSelector 1");
 
     }
 
     public void updateSelector(ActorTrigger actortrigger, Actor target) {
-        System.out.println("updateSelector 2 : " + actortrigger.getClass().getName() + ", " + target.getClass().getName());
+        // System.out.println("updateSelector 2 : " + actortrigger.getClass().getName() + ", " + target.getClass().getName());
 
     }
 
     public void createGUI() {
-        Plugin.builder.wSelect.metricWin = new GRegion(2.0F, 2.0F, 60.0F, 38.0F);
+//        Plugin.builder.wSelect.metricWin = new GRegion(2.0F, 2.0F, 60.0F, 38.0F);
         this.startComboBox1 = Plugin.builder.wSelect.comboBox1.size();
         Plugin.builder.wSelect.comboBox1.add(Plugin.i18n("tTrigger"));
         Plugin.builder.wSelect.comboBox1.addNotifyListener(new GNotifyListener() {
@@ -637,12 +675,16 @@ public class PlMisTrigger extends Plugin {
             this.wShowTrigger.bChecked = true;
         }
         float f = 1.0F;
-        GWindowDialogClient gwindowdialogclient = (GWindowDialogClient) Plugin.builder.wSelect.tabsClient.create(new GWindowDialogClient());
-        this.tabTrigger = Plugin.builder.wSelect.tabsClient.createTab(Plugin.i18n("tTrigger"), gwindowdialogclient);
+        GWindowDialogClient triggerMainDialog = (GWindowDialogClient) Plugin.builder.wSelect.tabsClient.create(new GWindowDialogClient());
+//        GWindowDialogClient triggerTargetDialog = (GWindowDialogClient) Plugin.builder.wSelect.tabsClient.create(new GWindowDialogClient());
+//        GWindowDialogClient triggerMessageDialog = (GWindowDialogClient) Plugin.builder.wSelect.tabsClient.create(new GWindowDialogClient());
+        this.tabTrigger = Plugin.builder.wSelect.tabsClient.createTab(Plugin.i18n("tTrigger"), triggerMainDialog);
+//        this.tabTargets = Plugin.builder.wSelect.tabsClient.createTab(Plugin.i18n("tTargets"), triggerTargetDialog);
+//        this.tabMessage = Plugin.builder.wSelect.tabsClient.createTab(Plugin.i18n("tMessage"), triggerMessageDialog);
 
-        gwindowdialogclient.addLabel(this.wTriggerType = new GWindowLabel(gwindowdialogclient, 1.0F, f, 20F, 1.3F, Plugin.i18n("lType"), null));
+        triggerMainDialog.addLabel(this.wTriggerType = new GWindowLabel(triggerMainDialog, 1.0F, f, 20F, 1.3F, Plugin.i18n("lType"), null));
         f += 2.0F;
-        gwindowdialogclient.addControl(this.wHasTimeout = new GWindowCheckBox(gwindowdialogclient, 1.0F, f, null) {
+        triggerMainDialog.addControl(this.wHasTimeout = new GWindowCheckBox(triggerMainDialog, 1.0F, f, null) {
 
             public boolean notify(int j, int k) {
                 if (j != 2) return false;
@@ -657,8 +699,8 @@ public class PlMisTrigger extends Plugin {
             }
 
         });
-        gwindowdialogclient.addLabel(new GWindowLabel(gwindowdialogclient, 3F, f, 5F, 1.3F, Plugin.i18n("TimeOut"), null));
-        gwindowdialogclient.addControl(this.wTimeoutH = new GWindowEditControl(gwindowdialogclient, 9F, f, 2.0F, 1.3F, "") {
+        triggerMainDialog.addLabel(new GWindowLabel(triggerMainDialog, 3F, f, 5F, 1.3F, Plugin.i18n("TimeOut"), null));
+        triggerMainDialog.addControl(this.wTimeoutH = new GWindowEditControl(triggerMainDialog, 9F, f, 2.0F, 1.3F, "") {
 
             public void afterCreated() {
                 super.afterCreated();
@@ -675,7 +717,7 @@ public class PlMisTrigger extends Plugin {
             }
 
         });
-        gwindowdialogclient.addControl(this.wTimeoutM = new GWindowEditControl(gwindowdialogclient, 12F, f, 2.0F, 1.3F, "") {
+        triggerMainDialog.addControl(this.wTimeoutM = new GWindowEditControl(triggerMainDialog, 12F, f, 2.0F, 1.3F, "") {
 
             public void afterCreated() {
                 super.afterCreated();
@@ -692,8 +734,8 @@ public class PlMisTrigger extends Plugin {
             }
 
         });
-        gwindowdialogclient.addLabel(this.wDeltaAltitudeLabel = new GWindowLabel(gwindowdialogclient, 23F, f, 8F, 1.3F, Plugin.i18n("AltiDiff"), null));
-        gwindowdialogclient.addControl(this.wDeltaAltitude = new GWindowEditControl(gwindowdialogclient, 32F, f, 5F, 1.3F, "0") {
+        triggerMainDialog.addLabel(this.wDeltaAltitudeLabel = new GWindowLabel(triggerMainDialog, 23F, f, 8F, 1.3F, Plugin.i18n("AltiDiff"), null));
+        triggerMainDialog.addControl(this.wDeltaAltitude = new GWindowEditControl(triggerMainDialog, 32F, f, 5F, 1.3F, "0") {
 
             public void afterCreated() {
                 super.afterCreated();
@@ -717,7 +759,7 @@ public class PlMisTrigger extends Plugin {
 
         });
         f += 2.0F;
-        gwindowdialogclient.addControl(this.wRadius = new GWindowHSliderInt(gwindowdialogclient, 0, 501, 15, 1.0F, f, 20F) {
+        triggerMainDialog.addControl(this.wRadius = new GWindowHSliderInt(triggerMainDialog, 0, 501, 15, 1.0F, f, 20F) {
 
             public void afterCreated() {
                 super.afterCreated();
@@ -739,8 +781,8 @@ public class PlMisTrigger extends Plugin {
         });
         f += 2.0F;
 //        gwindowdialogclient.addLabel(this.wRadiusLabel = new GWindowLabel(gwindowdialogclient, 1.0F, f, 20F, 1.3F, Plugin.i18n("Rayon"), null));
-        gwindowdialogclient.addLabel(new GWindowLabel(gwindowdialogclient, 1.0F, f, 3.5F, 1.3F, Plugin.i18n("Rayon"), null));
-        gwindowdialogclient.addControl(this.wRadiusEdit = new GWindowEditControl(gwindowdialogclient, 5.0F, f, 5F, 1.3F, "") {
+        triggerMainDialog.addLabel(new GWindowLabel(triggerMainDialog, 1.0F, f, 3.5F, 1.3F, Plugin.i18n("Rayon"), null));
+        triggerMainDialog.addControl(this.wRadiusEdit = new GWindowEditControl(triggerMainDialog, 5.0F, f, 5F, 1.3F, "") {
 
             public void afterCreated() {
                 super.afterCreated();
@@ -766,11 +808,11 @@ public class PlMisTrigger extends Plugin {
 
         });
 
-        gwindowdialogclient.addLabel(new GWindowLabel(gwindowdialogclient, 10.0F, f, 3F, 1.3F, "m", null));
+        triggerMainDialog.addLabel(new GWindowLabel(triggerMainDialog, 10.0F, f, 3F, 1.3F, "m", null));
         f += 2.0F;
-        gwindowdialogclient.addLabel(new GWindowLabel(gwindowdialogclient, 1.0F, f, 20F, 1.3F, Plugin.i18n("TiggerLink"), null));
+        triggerMainDialog.addLabel(new GWindowLabel(triggerMainDialog, 1.0F, f, 20F, 1.3F, Plugin.i18n("TiggerLink"), null));
         f += 2.0F;
-        gwindowdialogclient.addControl(new GWindowButton(gwindowdialogclient, 10F, f - 0.5F, 5F, 1.6F, Plugin.i18n("&Set"), null) {
+        triggerMainDialog.addControl(new GWindowButton(triggerMainDialog, 10F, f - 0.5F, 5F, 1.6F, Plugin.i18n("&Set"), null) {
 
             public boolean notify(int i, int j) {
                 if (i == 2) Plugin.builder.beginSelectTriggerLink();
@@ -778,7 +820,7 @@ public class PlMisTrigger extends Plugin {
             }
 
         });
-        gwindowdialogclient.addControl(new GWindowButton(gwindowdialogclient, 16F, f - 0.5F, 5F, 1.6F, Plugin.i18n("&Clear"), null) {
+        triggerMainDialog.addControl(new GWindowButton(triggerMainDialog, 16F, f - 0.5F, 5F, 1.6F, Plugin.i18n("&Clear"), null) {
 
             public boolean notify(int i, int j) {
                 if (i == 2) {
@@ -791,9 +833,9 @@ public class PlMisTrigger extends Plugin {
             }
 
         });
-        gwindowdialogclient.addLabel(this.wTriggerLinkLabel = new GWindowLabel(gwindowdialogclient, 1.0F, f - 0.5F, 8F, 1.3F, Plugin.i18n("NotSet"), null));
+        triggerMainDialog.addLabel(this.wTriggerLinkLabel = new GWindowLabel(triggerMainDialog, 1.0F, f - 0.5F, 8F, 1.3F, Plugin.i18n("NotSet"), null));
         f += 2.0F;
-        gwindowdialogclient.addControl(this.wTriggerOnExit = new GWindowCheckBox(gwindowdialogclient, 1.0F, f, null) {
+        triggerMainDialog.addControl(this.wTriggerOnExit = new GWindowCheckBox(triggerMainDialog, 1.0F, f, null) {
 
             public boolean notify(int j, int k) {
 //                System.out.println("wTriggerTarget notify(" + j + ", " + k + ")");
@@ -807,10 +849,10 @@ public class PlMisTrigger extends Plugin {
             }
 
         });
-        gwindowdialogclient.addLabel(new GWindowLabel(gwindowdialogclient, 3F, f, 18F, 1.3F, Plugin.i18n("TExit"), null));
+        triggerMainDialog.addLabel(new GWindowLabel(triggerMainDialog, 3F, f, 18F, 1.3F, Plugin.i18n("TExit"), null));
         f += 2.0F;
-        gwindowdialogclient.addLabel(new GWindowLabel(gwindowdialogclient, 1.0F, f, 7F, 1.3F, Plugin.i18n("TProbability"), null));
-        gwindowdialogclient.addControl(this.wProbability = new GWindowEditControl(gwindowdialogclient, 9F, f, 3F, 1.3F, "100") {
+        triggerMainDialog.addLabel(new GWindowLabel(triggerMainDialog, 1.0F, f, 7F, 1.3F, Plugin.i18n("TProbability"), null));
+        triggerMainDialog.addControl(this.wProbability = new GWindowEditControl(triggerMainDialog, 9F, f, 3F, 1.3F, "100") {
 
             public void afterCreated() {
                 super.afterCreated();
@@ -834,10 +876,10 @@ public class PlMisTrigger extends Plugin {
             }
 
         });
-        gwindowdialogclient.addLabel(new GWindowLabel(gwindowdialogclient, 13F, f, 1.0F, 1.3F, "%", null));
+        triggerMainDialog.addLabel(new GWindowLabel(triggerMainDialog, 13F, f, 1.0F, 1.3F, "%", null));
         f += 2.0F;
-        gwindowdialogclient.addLabel(new GWindowLabel(gwindowdialogclient, 1.0F, f, 7F, 1.3F, Plugin.i18n("AltiMin"), null));
-        gwindowdialogclient.addControl(this.wAltitudeMin = new GWindowEditControl(gwindowdialogclient, 9F, f, 5F, 1.3F, "0") {
+        triggerMainDialog.addLabel(new GWindowLabel(triggerMainDialog, 1.0F, f, 7F, 1.3F, Plugin.i18n("AltiMin"), null));
+        triggerMainDialog.addControl(this.wAltitudeMin = new GWindowEditControl(triggerMainDialog, 9F, f, 5F, 1.3F, "0") {
 
             public void afterCreated() {
                 super.afterCreated();
@@ -860,8 +902,8 @@ public class PlMisTrigger extends Plugin {
 
         });
         f += 2.0F;
-        gwindowdialogclient.addLabel(new GWindowLabel(gwindowdialogclient, 1.0F, f, 7F, 1.3F, Plugin.i18n("AltiMax"), null));
-        gwindowdialogclient.addControl(this.wAltitudeMax = new GWindowEditControl(gwindowdialogclient, 9F, f, 5F, 1.3F, "10000") {
+        triggerMainDialog.addLabel(new GWindowLabel(triggerMainDialog, 1.0F, f, 7F, 1.3F, Plugin.i18n("AltiMax"), null));
+        triggerMainDialog.addControl(this.wAltitudeMax = new GWindowEditControl(triggerMainDialog, 9F, f, 5F, 1.3F, "10000") {
 
             public void afterCreated() {
                 super.afterCreated();
@@ -884,8 +926,8 @@ public class PlMisTrigger extends Plugin {
 
         });
         f += 2.0F;
-        gwindowdialogclient.addLabel(new GWindowLabel(gwindowdialogclient, 1.0F, f, 7F, 1.3F, Plugin.i18n("TAvionsMIN"), null));
-        gwindowdialogclient.addControl(this.wNoObjectsMin = new GWindowEditControl(gwindowdialogclient, 9F, f, 5F, 1.3F, "1") {
+        triggerMainDialog.addLabel(new GWindowLabel(triggerMainDialog, 1.0F, f, 7F, 1.3F, Plugin.i18n("TAvionsMIN"), null));
+        triggerMainDialog.addControl(this.wNoObjectsMin = new GWindowEditControl(triggerMainDialog, 9F, f, 5F, 1.3F, "1") {
 
             public void afterCreated() {
                 super.afterCreated();
@@ -908,8 +950,8 @@ public class PlMisTrigger extends Plugin {
 
         });
         f += 2.0F;
-        gwindowdialogclient.addLabel(new GWindowLabel(gwindowdialogclient, 1.0F, f, 7F, 1.3F, Plugin.i18n("AppliesArmy"), null));
-        gwindowdialogclient.addControl(this.wTriggeredByObjectType = new GWindowComboControl(gwindowdialogclient, 9F, f, 12F) {
+        triggerMainDialog.addLabel(new GWindowLabel(triggerMainDialog, 1.0F, f, 7F, 1.3F, Plugin.i18n("AppliesArmy"), null));
+        triggerMainDialog.addControl(this.wTriggeredByObjectType = new GWindowComboControl(triggerMainDialog, 9F, f, 12F) {
 
             public void afterCreated() {
                 super.afterCreated();
@@ -943,21 +985,23 @@ public class PlMisTrigger extends Plugin {
 
         });
         f += 2.0F;
-        gwindowdialogclient.addLabel(new GWindowLabel(gwindowdialogclient, 1.0F, f, 14F, 1.3F, Plugin.i18n("TriggerArmy"), null));
-        gwindowdialogclient.addControl(this.wTriggeredByArmy = new GWindowComboControl(gwindowdialogclient, 16F, f, 5F) {
+        triggerMainDialog.addLabel(new GWindowLabel(triggerMainDialog, 1.0F, f, 14F, 1.3F, Plugin.i18n("TriggerArmy"), null));
+        triggerMainDialog.addControl(this.wTriggeredByArmy = new GWindowComboControl(triggerMainDialog, 16F, f, 5F) {
 
             public void afterCreated() {
                 super.afterCreated();
                 this.setEditable(false);
                 this.add(I18N.army(Army.name(1)));
                 this.add(I18N.army(Army.name(2)));
+                this.add(Plugin.i18n("TriggerArmyBoth"));
             }
 
             public boolean notify(int j, int k) {
                 if (j != 2) return false;
                 ActorTrigger actortrigger = (ActorTrigger) Plugin.builder.selectedActor();
-                if (this.getSelected() == 0) actortrigger.setTriggeredByArmy(2);
-                else actortrigger.setTriggeredByArmy(1);
+//                if (this.getSelected() == 0) actortrigger.setTriggeredByArmy(2);
+//                else actortrigger.setTriggeredByArmy(1);
+                actortrigger.setTriggeredByArmy(this.getSelected() + 1);
                 PlMission.setChanged();
                 return false;
             }
@@ -965,30 +1009,39 @@ public class PlMisTrigger extends Plugin {
         });
 
 //        gwindowdialogclient.addLabel(new GWindowLabel(gwindowdialogclient, 23F, 18F, 14F, 1.3F, Plugin.i18n("TiggerListTitle"), null));
-        this.lstTriggerTarget = new Table(gwindowdialogclient, Plugin.i18n("TiggerListTitle"), 23F, 18F, 34F, 12F);
+        this.lstTriggerTarget = new Table(triggerMainDialog, Plugin.i18n("TiggerListTitle"), 23F, 18F, 34F, 12F);
 
-        gwindowdialogclient.addControl(this.wTriggerTargetListAdd = new GWindowButton(gwindowdialogclient, 23F, 30.5F, 6F, 1.6F, Plugin.i18n("TriggerTargetAdd"), null) {
+        triggerMainDialog.addControl(this.wTriggerTargetListAdd = new GWindowButton(triggerMainDialog, 23F, 30.5F, 6F, 1.6F, Plugin.i18n("TriggerTargetAdd"), null) {
 
             public boolean notify(int i, int j) {
+                // System.out.println("PlMisTrigger wTriggerTargetListAdd notify(" + i + ", " + j + ")");
                 if (i == 2) Plugin.builder.beginSelectTrigger();
                 return false;
             }
 
         });
-        gwindowdialogclient.addControl(this.wTriggerTargetListDelete = new GWindowButton(gwindowdialogclient, 35F, 30.5F, 6F, 1.6F, Plugin.i18n("TriggerTargetDelete"), null) {
+        triggerMainDialog.addControl(this.wTriggerTargetListDelete = new GWindowButton(triggerMainDialog, 35F, 30.5F, 6F, 1.6F, Plugin.i18n("TriggerTargetDelete"), null) {
 
             public boolean notify(int i, int j) {
                 if (i == 2) {
+                    if (PlMisTrigger.this.lstTriggerTarget.selectRow < 0) return false;
+                    String selectedRow = (String)PlMisTrigger.this.lstTriggerTarget.getValueAt(PlMisTrigger.this.lstTriggerTarget.selectRow, 0);
+                    if (selectedRow != null) {
+                        PlMisTrigger.this.lstTriggerTarget.actorTriggerList.remove(PlMisTrigger.this.lstTriggerTarget.selectRow);
+                        // System.out.println("Trigger Target element \"" + selectedRow + "\" removed!");
+                    }
                     PlMission.setChanged();
                 }
                 return false;
             }
 
         });
-        gwindowdialogclient.addControl(this.wTriggerTargetListClear = new GWindowButton(gwindowdialogclient, 47F, 30.5F, 6F, 1.6F, Plugin.i18n("TriggerTargetClear"), null) {
+        triggerMainDialog.addControl(this.wTriggerTargetListClear = new GWindowButton(triggerMainDialog, 47F, 30.5F, 6F, 1.6F, Plugin.i18n("TriggerTargetClear"), null) {
 
             public boolean notify(int i, int j) {
                 if (i == 2) {
+                    PlMisTrigger.this.lstTriggerTarget.actorTriggerList.clear();
+                    // System.out.println("Trigger Target list cleared!");
                     PlMission.setChanged();
                 }
                 return false;
@@ -1024,8 +1077,8 @@ public class PlMisTrigger extends Plugin {
 //        });
 //        gwindowdialogclient.addLabel(this.wTriggerTargetLabel = new GWindowLabel(gwindowdialogclient, 1.0F, f - 0.5F, 8F, 1.3F, Plugin.i18n("NotSet"), null));
 
-        gwindowdialogclient.addLabel(new GWindowLabel(gwindowdialogclient, 23F, 1F, 14F, 1.3F, Plugin.i18n("TTextToShow"), null));
-        gwindowdialogclient.addControl(this.wDisplayMessage = new GWindowEditTextControl(gwindowdialogclient, 23F, 2.5F, 34F, 12F, "") {
+        triggerMainDialog.addLabel(new GWindowLabel(triggerMainDialog, 23F, 1F, 14F, 1.3F, Plugin.i18n("TTextToShow"), null));
+        triggerMainDialog.addControl(this.wDisplayMessage = new GWindowEditTextControl(triggerMainDialog, 23F, 2.5F, 34F, 12F, "") {
 
             public boolean notify(GWindow gwindow, int i, int j) {
                 if (gwindow == this.edit && i == 2 && j == 0) {
@@ -1037,24 +1090,25 @@ public class PlMisTrigger extends Plugin {
             }
 
         });
-        gwindowdialogclient.addLabel(new GWindowLabel(gwindowdialogclient, 23F, 15.5F, 8F, 1.3F, Plugin.i18n("TTextDuree"), null));
-        gwindowdialogclient.addControl(this.wDisplayTime = new GWindowEditControl(gwindowdialogclient, 32F, 15.5F, 5F, 1.3F, "5") {
+        triggerMainDialog.addLabel(new GWindowLabel(triggerMainDialog, 23F, 15.5F, 8F, 1.3F, Plugin.i18n("TTextDuree"), null));
+        triggerMainDialog.addControl(this.wDisplayTime = new GWindowEditControl(triggerMainDialog, 32F, 15.5F, 5F, 1.3F, "5") {
 
             public void afterCreated() {
                 super.afterCreated();
                 this.bNumericOnly = true;
+                this.bNumericFloat = true;
                 this.bDelayedNotify = true;
             }
 
             public boolean notify(int j, int k) {
                 if (j != 2) return false;
                 ActorTrigger actortrigger = (ActorTrigger) Plugin.builder.selectedActor();
-                int i = 1;
+                float f = 1;
                 try {
-                    i = (int) Double.parseDouble(PlMisTrigger.this.wDisplayTime.getValue());
+                    f = Float.parseFloat(PlMisTrigger.this.wDisplayTime.getValue());
                 } catch (Exception exception) {}
-                if (i < 1) i = 1;
-                actortrigger.setDisplayTime(i);
+                if (f < Time.tickLenFs()) f = Time.tickLenFs();
+                actortrigger.setDisplayTime(f);
                 PlMission.setChanged();
                 return false;
             }
@@ -1085,7 +1139,10 @@ public class PlMisTrigger extends Plugin {
     }
 
     protected ArrayList                allActors;
-    Item                               item[]       = { new Item("NewAircraftAir", Trigger.TYPE_SPAWN), new Item("NewAircraftSol", Trigger.TYPE_ACTIVATE), new Item("NewAircraftAirLevel", Trigger.TYPE_SPAWN_AIRCRAFT_RELATIVE_ALTITUDE),
+    Item                               item[]       = {
+            new Item("NewAircraftAir", Trigger.TYPE_SPAWN),
+            new Item("NewAircraftSol", Trigger.TYPE_ACTIVATE),
+            new Item("NewAircraftAirLevel",Trigger.TYPE_SPAWN_AIRCRAFT_RELATIVE_ALTITUDE),
             new Item("NewMessage", Trigger.TYPE_MESSAGE) };
     private float                      line2XYZ[];
     private Point2d                    p2d;
@@ -1096,6 +1153,8 @@ public class PlMisTrigger extends Plugin {
     private GWindowMenuItem            wShowTrigger;
     private PlMission                  pluginMission;
     private GWindowTabDialogClient.Tab tabTrigger;
+//    private GWindowTabDialogClient.Tab tabTargets;
+//    private GWindowTabDialogClient.Tab tabMessage;
     private GWindowLabel               wTriggerType;
     private GWindowCheckBox            wHasTimeout;
     private GWindowEditControl         wTimeoutH;

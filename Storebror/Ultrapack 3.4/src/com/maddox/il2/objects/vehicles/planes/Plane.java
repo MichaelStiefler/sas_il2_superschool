@@ -1282,6 +1282,10 @@ public abstract class Plane {
 
     public static class Do17Z_2 extends PlaneGeneric {}
 
+    public static class Do215B extends PlaneGeneric {}
+
+    public static class Do215BL extends PlaneGeneric {}
+
     public static class Do217_E2 extends PlaneGeneric {}
 
     public static class Do217_M1 extends PlaneGeneric {}
@@ -2312,6 +2316,8 @@ public abstract class Plane {
         new PlaneGeneric.SPAWN(Dewoitine520.class);
         new PlaneGeneric.SPAWN(Do17Z_0.class);
         new PlaneGeneric.SPAWN(Do17Z_2.class);
+        new PlaneGeneric.SPAWN(Do215B.class);
+        new PlaneGeneric.SPAWN(Do215BL.class);
         new PlaneGeneric.SPAWN(Do217_E2.class);
         new PlaneGeneric.SPAWN(Do217_M1.class);
         new PlaneGeneric.SPAWN(Do217_K1.class);

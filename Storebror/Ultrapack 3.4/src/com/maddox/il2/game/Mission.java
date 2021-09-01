@@ -1100,10 +1100,15 @@ public class Mission implements Destroy {
         int i_21_ = sectfile.vars(i);
         ArrayList arraylist = null;
         if (i_21_ > 0) arraylist = new ArrayList(i_21_);
+        
+        System.out.println("Mission loadWings...");
+        for (int t=0; t<World.cur().triggersGuard.getListTriggerAircraftSpawn().size(); t++)
+            System.out.println("Trigger Aircraft Spawn no." + (t+1) + "=" + World.cur().triggersGuard.getListTriggerAircraftSpawn().get(t).toString());
 
         for (int i_22_ = 0; i_22_ < i_21_; i_22_++) {
             this.LOADING_STEP(30 + Math.round((float) i_22_ / (float) i_21_ * 30.0F), "task.Load_aircraft");
             String string = sectfile.var(i, i_22_);
+            System.out.println("Aircraft to Spawn = " + string);
             this._loadPlayer = string.equals(this.player);
             int i_23_ = sectfile.get(string, "StartTime", 0);
             if (i_23_ > 0 && !this._loadPlayer) {
@@ -1150,7 +1155,7 @@ public class Mission implements Destroy {
     // TODO: +++ Trigger backport from HSFX 7.0.3 by SAS~Storebror +++
     public void loadWingOnTrigger(String s)
     {
-        System.out.println("loadWingOnTrigger(" + s + ")");
+        // System.out.println("loadWingOnTrigger(" + s + ")");
         if (!Mission.isSingle() && !Mission.isServer()) return;
         //if (this.net.isMirror()) return; // TODO: TEST Added by SAS~Storebror to fight dedicated Server / Client issues!
         //if (this.net.isMirror()) this.actors.add(null); // TODO: TEST Added by SAS~Storebror to fight dedicated Server / Client issues!
@@ -1558,7 +1563,7 @@ private void loadChiefs(SectFile sectfile)
 
   public void loadChiefsTrigger(String s)
   {
-      System.out.println("loadChiefsTrigger(" + s + ")");
+      // System.out.println("loadChiefsTrigger(" + s + ")");
 //      if (!Mission.isSingle() && !Mission.isServer()) return;
       try
       {
@@ -1584,7 +1589,7 @@ private void loadChiefs(SectFile sectfile)
   // TODO: --- Trigger backport from HSFX 7.0.3 by SAS~Storebror ---
       throws Exception {
       
-//      System.out.println("loadChiefs(" + sectfile.fileName() + ", " + flagTrigger + ", " + s + ")");
+      // System.out.println("loadChiefs(" + sectfile.fileName() + ", " + flagTrigger + ", " + s + ")");
   int sectIndex = sectfile.sectionIndex("Chiefs");
   if (sectIndex >= 0) {
       if (chiefsIni == null) chiefsIni = new SectFile("com/maddox/il2/objects/chief.ini");
@@ -1735,6 +1740,7 @@ private void loadChiefs(SectFile sectfile)
   // TODO: --- Trigger backport from HSFX 7.0.3 by SAS~Storebror ---
 
     private Actor loadStationaryActor(String string, String string_81_, int i, double d, double d_82_, float f, float f_83_, String string_84_, String string_85_, String string_86_) {
+        // System.out.println("loadStationaryActor(" + string + ", " + string_81_+ ", " + i + ", " + d + ", " + d_82_ + ", " + f + ", " + f_83_ + ", " + string_84_ + ", " + string_85_ + ", " + string_86_ + ") net.isMirror()" + this.net.isMirror());
         Class var_class;
         try {
             var_class = ObjIO.classForName(string_81_);
@@ -1804,26 +1810,36 @@ private void loadChiefs(SectFile sectfile)
         }
         spawnArg.netChannel = null;
         spawnArg.netIdRemote = 0;
-        if (this.net.isMirror()) {
+        if (this.net.isMirror() && !NetMissionTrack.isPlaying()) {
             spawnArg.netChannel = this.net.masterChannel();
             // TODO: Added by SAS~Storebror: Check Array bounds!
             if (this.curActor < 0 || this.curActor >= this.actors.size()) return null;
             // ---
             spawnArg.netIdRemote = ((Integer) this.actors.get(this.curActor)).intValue();
             if (spawnArg.netIdRemote == 0) {
+                // System.out.println("Mission.loadStationaryActor 00");
                 this.actors.set(this.curActor++, null);
                 return null;
             }
         }
         Actor actor = null;
         try {
+            // System.out.println("Mission.loadStationaryActor 01");
             actor = actorspawn.actorSpawn(spawnArg);
+            if (!(actorspawn instanceof NetSpawn)) { // FIXME: Nutjob to fight NetMsgSpawn Exceptions...
+                // System.out.println("Mission.loadStationaryActor 01b");
+                Reflection.setInt(actor, "flags", Reflection.getInt(actor, "flags") | 0x1000);
+            }
+            // System.out.println("Mission.loadStationaryActor 02, actor=" + (actor==null?"null":actor.getClass().getName()));
         } catch (Exception exception) {
-            System.out.println(exception.getMessage());
+            // System.out.println("Mission.loadStationaryActor Exception in actorspawn.actorSpawn(" + spawnArg.name + ")");
+            // System.out.println(exception.getMessage());
             exception.printStackTrace();
         }
-        if (this.net.isMirror()) this.actors.set(this.curActor++, actor);
+        // System.out.println("Mission.loadStationaryActor 03");
+        if (this.net.isMirror() && !NetMissionTrack.isPlaying()) this.actors.set(this.curActor++, actor);
         else this.actors.add(actor);
+        // System.out.println("Mission.loadStationaryActor 04");
 
         return actor;
     }
@@ -1869,7 +1885,7 @@ private void loadChiefs(SectFile sectfile)
 
     public void loadNStationaryTrigger(String s)
     {
-        System.out.println("loadNStationaryTrigger(" + s + ")");
+        // System.out.println("loadNStationaryTrigger(" + s + ")");
         if (!Mission.isSingle() && !Mission.isServer()) return;
 //        if (this.net.isMirror()) return; // TODO: TEST Added by SAS~Storebror to fight dedicated Server / Client issues!
 //        if (this.net.isMirror()) this.actors.add(null); // TODO: TEST Added by SAS~Storebror to fight dedicated Server / Client issues!
@@ -1947,7 +1963,7 @@ private void loadChiefs(SectFile sectfile)
 
     public void loadRocketryTrigger(String s)
     {
-        System.out.println("loadRocketryTrigger(" + s + ")");
+        // System.out.println("loadRocketryTrigger(" + s + ")");
         if (!Mission.isSingle() && !Mission.isServer()) return;
         int i = sectFile.sectionIndex("Rocket");
         if(i < 0)
@@ -1989,7 +2005,7 @@ private void loadChiefs(SectFile sectfile)
                 if(i1 == 0)
                 {
                     actors.set(curActor++, null);
-                    System.out.println("loadRocketryTrigger 1, actors size: " + this.actors.size() + ", curActor: " + this.curActor);
+                    // System.out.println("loadRocketryTrigger 1, actors size: " + this.actors.size() + ", curActor: " + this.curActor);
                     continue;
                 }
             }
@@ -2007,7 +2023,7 @@ private void loadChiefs(SectFile sectfile)
                 actors.set(curActor++, localRocketryGeneric);
             else
                 actors.add(localRocketryGeneric);
-            System.out.println("loadRocketryTrigger 2, actors size: " + this.actors.size() + ", curActor: " + this.curActor);
+            // System.out.println("loadRocketryTrigger 2, actors size: " + this.actors.size() + ", curActor: " + this.curActor);
         }
 
     }
@@ -2659,7 +2675,7 @@ private void loadChiefs(SectFile sectfile)
             }
         } catch (Exception exception) {
             exception.printStackTrace();
-            System.out.println("Bad format reseived missiion");
+            System.out.println("Bad format received mission");
         }
     }
 

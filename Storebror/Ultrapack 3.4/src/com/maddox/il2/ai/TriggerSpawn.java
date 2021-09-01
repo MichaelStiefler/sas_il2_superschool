@@ -4,25 +4,50 @@
 
 package com.maddox.il2.ai;
 
+import java.util.ArrayList;
+import java.util.StringTokenizer;
+
 import com.maddox.il2.engine.Actor;
 import com.maddox.il2.game.Mission;
 import com.maddox.sas1946.il2.util.TrueRandom;
 
 class TriggerSpawn extends Trigger {
 
-    public TriggerSpawn(String triggerName, int triggeredByArmy, int timeout, int posX, int posY, int radius, String targetActorName, int altitudeMin, int altitudeMax, int triggeredBy, boolean triggerOnExit, int noObjectsMin, int probability,
-            String linkActorName, String displayMessage, int displayTime) {
+    public TriggerSpawn(String triggerName, int triggeredByArmy, int timeout, int posX, int posY, int radius, String targetActorNames, int altitudeMin, int altitudeMax, int triggeredBy, boolean triggerOnExit, int noObjectsMin, int probability,
+            String linkActorName, String displayMessage, float displayTime) {
         super(triggerName, triggeredByArmy, timeout, posX, posY, radius, altitudeMin, altitudeMax, triggeredBy, triggerOnExit, noObjectsMin, probability, linkActorName, displayMessage, displayTime);
-        this.setTargetActorName(targetActorName);
+        this.setTargetActorNames(targetActorNames);
         this.setTriggerClass(TYPE_SPAWN);
-        if (this.getTargetActorName() == "" || this.getTargetActorName() == null) this.destroy();
-        if (this.getTargetActorName().indexOf("Static") >= 0 || this.getTargetActorName().indexOf("Rocket") >= 0) World.cur().triggersGuard.getListTriggerStaticSpawn().add(this.getTargetActorName());
-        else if (this.getTargetActorName().indexOf("Chief") >= 0) World.cur().triggersGuard.getListTriggerChiefSpawn().add(this.getTargetActorName());
-        else World.cur().triggersGuard.getListTriggerAircraftSpawn().add(this.getTargetActorName());
+        if (this.getTargetActorNames() == null || this.getTargetActorNames().size() < 1) this.destroy();
+        for (int targetActorNameIndex = 0; targetActorNameIndex < this.getTargetActorNames().size(); targetActorNameIndex++) {
+            String targetActorName = (String)this.getTargetActorNames().get(targetActorNameIndex);
+            if (targetActorName.indexOf("Static") >= 0 || targetActorName.indexOf("Rocket") >= 0) World.cur().triggersGuard.getListTriggerStaticSpawn().add(targetActorName);
+            else if (targetActorName.indexOf("Chief") >= 0) World.cur().triggersGuard.getListTriggerChiefSpawn().add(targetActorName);
+            else if (targetActorName.indexOf("Trigger") >= 0) World.cur().triggersGuard.getListTriggerTriggerActivate().add(targetActorName);
+            else World.cur().triggersGuard.getListTriggerAircraftSpawn().add(targetActorName);
+        }
+
+//        this.setTargetActorName(targetActorName);
+//        this.setTriggerClass(TYPE_SPAWN);
+//        if (this.getTargetActorName() == "" || this.getTargetActorName() == null) this.destroy();
+//        if (this.getTargetActorName().indexOf("Static") >= 0 || this.getTargetActorName().indexOf("Rocket") >= 0) World.cur().triggersGuard.getListTriggerStaticSpawn().add(this.getTargetActorName());
+//        else if (this.getTargetActorName().indexOf("Chief") >= 0) World.cur().triggersGuard.getListTriggerChiefSpawn().add(this.getTargetActorName());
+//        else World.cur().triggersGuard.getListTriggerAircraftSpawn().add(this.getTargetActorName());
     }
 
     protected boolean checkPeriodic() {
-        if (Actor.getByName(this.getTargetActorName()) == null) return super.checkPeriodic();
+        boolean allTargetActorsSpawned = true;
+        if (this.getTargetActorNames() != null && this.getTargetActorNames().size() > 0) {
+            for (int targetActorNameIndex = 0; targetActorNameIndex < this.getTargetActorNames().size(); targetActorNameIndex++) {
+                String targetActorName = (String)this.getTargetActorNames().get(targetActorNameIndex);
+                if (Actor.getByName(targetActorName) == null) {
+                    allTargetActorsSpawned = false;
+                    break;
+                }
+            }
+        }
+//        if (Actor.getByName(this.getTargetActorName()) == null) return super.checkPeriodic();
+        if (!allTargetActorsSpawned) return super.checkPeriodic();
         else {
             this.destroy();
             return false;
@@ -35,55 +60,102 @@ class TriggerSpawn extends Trigger {
     }
     
     protected void doExecute() {
-//        System.out.println("TriggerSpawn doExecute 1");
         if (this.isTriggered()) return;
         this.setTriggered(true);
-        if (this.getTargetActorName() != null && Actor.getByName(this.getTargetActorName()) == null) {
-//            System.out.println("TriggerSpawn doExecute 2");
-            if (this.getTargetActorName().indexOf("Static") >= 0) {
-//                System.out.println("TriggerSpawn doExecute 3");
-                Mission.cur().loadNStationaryTrigger(this.getTargetActorName());
+        
+        for (int targetActorNameIndex = 0; targetActorNameIndex < this.getTargetActorNames().size(); targetActorNameIndex++) {
+            String targetActorName = (String)this.getTargetActorNames().get(targetActorNameIndex);
+            if (targetActorName != null && Actor.getByName(targetActorName) == null) {
+                if (targetActorName.indexOf("Static") >= 0)
+                    Mission.cur().loadNStationaryTrigger(targetActorName);
+                else if (targetActorName.indexOf("Rocket") >= 0)
+                    Mission.cur().loadRocketryTrigger(targetActorName);
+                else if (targetActorName.indexOf("Chief") >= 0)
+                    Mission.cur().loadChiefsTrigger(targetActorName);
+                else if (targetActorName.indexOf("Trigger") > 0) {
+                    Actor triggerTargetActor = World.cur().triggersGuard.getTrigger(targetActorName);
+                    if (triggerTargetActor instanceof Trigger) {
+                        ((Trigger) triggerTargetActor).setActivated(true);
+                        // System.out.println("Trigger " + ((Trigger)triggerTargetActor).name() + " activated!");
+                    }
+                }
+                else
+                    Mission.cur().loadWingOnTrigger(targetActorName);
             }
-            else if (this.getTargetActorName().indexOf("Rocket") >= 0) {
-//                System.out.println("TriggerSpawn doExecute 4");
-                Mission.cur().loadRocketryTrigger(this.getTargetActorName());
-            }
-            else if (this.getTargetActorName().indexOf("Chief") >= 0) {
-//                System.out.println("TriggerSpawn doExecute 5");
-                Mission.cur().loadChiefsTrigger(this.getTargetActorName());
-            }
-            else {
-//                System.out.println("TriggerSpawn doExecute 6");
-                Mission.cur().loadWingOnTrigger(this.getTargetActorName());
+            Actor actor = Actor.getByName(targetActorName);
+            if (this.getLinkActorName() == "" || this.getLinkActorName() == null) {
+                if (actor != null) EventLog.onTriggerActivate(actor, this);
+                this.doSendMsg(false);
+            } else {
+                if (actor != null) EventLog.onTriggerActivateLink(actor, this);
+                this.doSendMsg(true);
             }
         }
-//        System.out.println("TriggerSpawn doExecute 7");
-        Actor actor = Actor.getByName(this.getTargetActorName());
-        if (this.getLinkActorName() == "" || this.getLinkActorName() == null) {
-            if (actor != null) EventLog.onTriggerActivate(actor, this);
-            this.doSendMsg(false);
-        } else {
-            if (actor != null) EventLog.onTriggerActivateLink(actor, this);
-            this.doSendMsg(true);
-        }
+        
+//        if (this.getTargetActorName() != null && Actor.getByName(this.getTargetActorName()) == null) {
+//            if (this.getTargetActorName().indexOf("Static") >= 0) {
+//                Mission.cur().loadNStationaryTrigger(this.getTargetActorName());
+//            }
+//            else if (this.getTargetActorName().indexOf("Rocket") >= 0) {
+//                Mission.cur().loadRocketryTrigger(this.getTargetActorName());
+//            }
+//            else if (this.getTargetActorName().indexOf("Chief") >= 0) {
+//                Mission.cur().loadChiefsTrigger(this.getTargetActorName());
+//            }
+//            else {
+//                Mission.cur().loadWingOnTrigger(this.getTargetActorName());
+//            }
+//        }
+//        Actor actor = Actor.getByName(this.getTargetActorName());
+//        if (this.getLinkActorName() == "" || this.getLinkActorName() == null) {
+//            if (actor != null) EventLog.onTriggerActivate(actor, this);
+//            this.doSendMsg(false);
+//        } else {
+//            if (actor != null) EventLog.onTriggerActivateLink(actor, this);
+//            this.doSendMsg(true);
+//        }
         super.doExecute();
     }
 
     public void destroy() {
         super.destroy();
-        if (this.getTargetActorName().indexOf("Static") >= 0 || this.getTargetActorName().indexOf("Rocket") >= 0)
-            World.cur().triggersGuard.getListTriggerStaticSpawn().remove(World.cur().triggersGuard.getListTriggerStaticSpawn().indexOf(this.getTargetActorName()));
-        else if (this.getTargetActorName().indexOf("Chief") >= 0) World.cur().triggersGuard.getListTriggerChiefSpawn().remove(World.cur().triggersGuard.getListTriggerChiefSpawn().indexOf(this.getTargetActorName()));
-        else World.cur().triggersGuard.getListTriggerAircraftSpawn().remove(World.cur().triggersGuard.getListTriggerAircraftSpawn().indexOf(this.getTargetActorName()));
+        for (int targetActorNameIndex = 0; targetActorNameIndex < this.getTargetActorNames().size(); targetActorNameIndex++) {
+            String targetActorName = (String)this.getTargetActorNames().get(targetActorNameIndex);
+            if (targetActorName.indexOf("Static") >= 0 || targetActorName.indexOf("Rocket") >= 0)
+                World.cur().triggersGuard.getListTriggerStaticSpawn().remove(World.cur().triggersGuard.getListTriggerStaticSpawn().indexOf(targetActorName));
+            else if (targetActorName.indexOf("Chief") >= 0)
+                World.cur().triggersGuard.getListTriggerChiefSpawn().remove(World.cur().triggersGuard.getListTriggerChiefSpawn().indexOf(targetActorName));
+            else if (targetActorName.indexOf("Trigger") >= 0)
+                World.cur().triggersGuard.getListTriggerTriggerActivate().remove(World.cur().triggersGuard.getListTriggerTriggerActivate().indexOf(targetActorName));
+            else World.cur().triggersGuard.getListTriggerAircraftSpawn().remove(World.cur().triggersGuard.getListTriggerAircraftSpawn().indexOf(targetActorName));
+        }
+//        if (this.getTargetActorName().indexOf("Static") >= 0 || this.getTargetActorName().indexOf("Rocket") >= 0)
+//            World.cur().triggersGuard.getListTriggerStaticSpawn().remove(World.cur().triggersGuard.getListTriggerStaticSpawn().indexOf(this.getTargetActorName()));
+//        else if (this.getTargetActorName().indexOf("Chief") >= 0) World.cur().triggersGuard.getListTriggerChiefSpawn().remove(World.cur().triggersGuard.getListTriggerChiefSpawn().indexOf(this.getTargetActorName()));
+//        else World.cur().triggersGuard.getListTriggerAircraftSpawn().remove(World.cur().triggersGuard.getListTriggerAircraftSpawn().indexOf(this.getTargetActorName()));
     }
 
-    public String getTargetActorName() {
-        return this.targetActorName;
+//    public String getTargetActorName() {
+//        return this.targetActorName;
+//    }
+//
+//    public void setTargetActorName(String targetActorName) {
+//        this.targetActorName = targetActorName;
+//    }
+//
+//    private String targetActorName;
+    
+    public ArrayList getTargetActorNames() {
+        return this.targetActorNames;
     }
 
-    public void setTargetActorName(String targetActorName) {
-        this.targetActorName = targetActorName;
+    private void setTargetActorNames(String targetActorNames) {
+        this.targetActorNames = new ArrayList();
+        StringTokenizer tokenizer = new StringTokenizer(targetActorNames, "|");
+        while (tokenizer.hasMoreTokens())
+            this.targetActorNames.add(tokenizer.nextToken());
     }
 
-    private String targetActorName;
+    private ArrayList targetActorNames;// = new ArrayList();
+
 }

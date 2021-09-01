@@ -1426,11 +1426,11 @@ public class Builder {
       //if(actor != null)
       if(!(actor instanceof ActorTrigger))
       {
-//          System.out.println("beginSelectTrigger !(actor instanceof ActorTrigger)");
+          // System.out.println("beginSelectTrigger !(actor instanceof ActorTrigger)");
           return;
       } else
       {
-//          System.out.println("beginSelectTrigger return");
+          // System.out.println("beginSelectTrigger return");
           mouseState = 8;
           viewWindow.mouseCursor = 1;
           return;
@@ -1439,27 +1439,29 @@ public class Builder {
 
   public void endSelectTrigger()
   {
-      System.out.println("endSelectTrigger 1");
+      // System.out.println("endSelectTrigger 1");
       if(mouseState != 8)
           return;
-      System.out.println("endSelectTrigger 2");
+      // System.out.println("endSelectTrigger 2");
       mouseState = 0;
       viewWindow.mouseCursor = 1;
       Actor actor = getOverActor();
-      System.out.println("endSelectTrigger actor=" + actor.getClass().getName());
+      // System.out.println("endSelectTrigger actor=" + actor.getClass().getName());
       ActorTrigger actortrigger = (ActorTrigger)selectedActor();
-      System.out.println("endSelectTrigger actortrigger=" + actortrigger.getClass().getName());
+      // System.out.println("endSelectTrigger actortrigger=" + actortrigger.getClass().getName());
       if(!Actor.isValid(actor))
           return;
-      System.out.println("endSelectTrigger 3");
+      // System.out.println("endSelectTrigger 3");
       if (!actortrigger.getTriggerActors().contains(actor)) actortrigger.addTriggerActor(actor);
       setSelected(actortrigger);
       Plugin plugin = (Plugin)Property.value(actortrigger, "builderPlugin");
-      System.out.println("endSelectTrigger plugin=" + plugin==null?"null":plugin.getClass().getName());
+      // System.out.println("endSelectTrigger plugin=" + plugin==null?"null":plugin.getClass().getName());
       if(plugin != null) {
           if (plugin instanceof PlMisTrigger) {
+              // System.out.println("endSelectTrigger 4");
               ((PlMisTrigger)plugin).updateSelector(actortrigger, actor);
           } else {
+              // System.out.println("endSelectTrigger 5");
               plugin.updateSelector();
           }
       }
@@ -1715,6 +1717,7 @@ public class Builder {
 
           public void begin()
           {
+              // System.out.println("Builder objectMove mouseState=" + mouseState);
               if(!isLoadedLandscape())
                   return;
               if(isFreeView())
@@ -1775,28 +1778,28 @@ public class Builder {
 );
       // TODO: --- Trigger backport from HSFX 7.0.3 by SAS~Storebror ---
 
-      HotKeyCmdEnv.addCmd(new HotKeyCmd(true, "objectMove") {
-            public void begin() {
-                if (Builder.this.isLoadedLandscape() && !Builder.this.isFreeView()) if (Builder.this.mouseState == 4) Builder.this.endSelectTarget();
-                else if (Builder.this.mouseState == 0) {
-                    Builder.this.mouseState = 1;
-                    Builder.this.viewWindow.mouseCursor = 7;
-                    Actor actor = Builder.this.selectNear(Builder.this.mousePosX, Builder.this.mousePosY);
-                    if (actor != null) {
-                        Builder.this.setSelected(actor);
-                        Builder.this.repaint();
-                    }
-                    Builder.this.setOverActor(null);
-                }
-            }
-
-            public void end() {
-                if (Builder.this.isLoadedLandscape() && !Builder.this.isFreeView() && Builder.this.mouseState == 1) {
-                    Builder.this.mouseState = 0;
-                    Builder.this.viewWindow.mouseCursor = 1;
-                }
-            }
-        });
+//      HotKeyCmdEnv.addCmd(new HotKeyCmd(true, "objectMove") {
+//            public void begin() {
+//                if (Builder.this.isLoadedLandscape() && !Builder.this.isFreeView()) if (Builder.this.mouseState == 4) Builder.this.endSelectTarget();
+//                else if (Builder.this.mouseState == 0) {
+//                    Builder.this.mouseState = 1;
+//                    Builder.this.viewWindow.mouseCursor = 7;
+//                    Actor actor = Builder.this.selectNear(Builder.this.mousePosX, Builder.this.mousePosY);
+//                    if (actor != null) {
+//                        Builder.this.setSelected(actor);
+//                        Builder.this.repaint();
+//                    }
+//                    Builder.this.setOverActor(null);
+//                }
+//            }
+//
+//            public void end() {
+//                if (Builder.this.isLoadedLandscape() && !Builder.this.isFreeView() && Builder.this.mouseState == 1) {
+//                    Builder.this.mouseState = 0;
+//                    Builder.this.viewWindow.mouseCursor = 1;
+//                }
+//            }
+//        });
         HotKeyCmdEnv.addCmd(new HotKeyCmd(true, "worldZoom") {
             public void begin() {
                 if (Builder.this.isLoadedLandscape() && !Builder.this.isFreeView() && Builder.this.mouseState == 0) {
@@ -2563,6 +2566,8 @@ public class Builder {
 
                     // TODO: +++ Trigger backport from HSFX 7.0.3 by SAS~Storebror +++
                     else if (tab.cap.caption.equals(Plugin.i18n("tTrigger"))) Plugin.builder.wSelect.setMetricSize(60, 38);
+                    else if (tab.cap.caption.equals(Plugin.i18n("tTargets"))) Plugin.builder.wSelect.setMetricSize(37, 20);
+                    else if (tab.cap.caption.equals(Plugin.i18n("tMessage"))) Plugin.builder.wSelect.setMetricSize(37, 20);
                     // TODO: --- Trigger backport from HSFX 7.0.3 by SAS~Storebror ---
 
                     Builder.zutiLastTabCaption = tab.cap.caption;

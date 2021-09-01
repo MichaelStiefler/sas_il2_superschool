@@ -3,39 +3,16 @@ package com.maddox.il2.objects.air;
 import com.maddox.rts.Property;
 
 public class Do17Z_2 extends Do17 {
-
-    protected void moveBayDoor(float f) {
-        if (f < 0.02F) {
-            this.hierMesh().chunkVisible("Bay_D0", true);
-            this.hierMesh().chunkVisible("BayL01_D0", false);
-            this.hierMesh().chunkVisible("BayR01_D0", false);
-        } else {
-            this.hierMesh().chunkVisible("Bay_D0", false);
-            this.hierMesh().chunkVisible("BayL01_D0", true);
-            this.hierMesh().chunkVisible("BayR01_D0", true);
-            this.hierMesh().chunkSetAngles("BayL01_D0", 0.0F, Aircraft.cvt(f, 0.04F, 0.7F, 0.0F, 120.5F), 0.0F);
-            this.hierMesh().chunkSetAngles("BayR01_D0", 0.0F, Aircraft.cvt(f, 0.04F, 0.7F, 0.0F, -120.5F), 0.0F);
-        }
-    }
-
-    public void doWoundPilot(int paramInt, float paramFloat) {
-        switch (paramInt) {
-            case 1:
-                this.FM.turret[0].setHealth(paramFloat);
-                break;
-
+    
+    public void doWoundPilot(int i, float f) {
+        super.doWoundPilot(i, f);
+        switch (i) {
             case 2:
-                this.FM.turret[1].setHealth(paramFloat);
-                this.FM.turret[3].setHealth(paramFloat);
-                this.FM.turret[4].setHealth(paramFloat);
+                this.FM.turret[3].setHealth(f);
+                this.FM.turret[4].setHealth(f);
                 break;
-
-            case 3:
-                this.FM.turret[2].setHealth(paramFloat);
-                // fall through
-
             case 4:
-                this.FM.turret[5].setHealth(paramFloat);
+                this.FM.turret[5].setHealth(f);
                 break;
         }
     }

@@ -1,8 +1,6 @@
 /*4.10.1 class*/
 package com.maddox.il2.ai.air;
 
-import java.text.DecimalFormat;
-
 import com.maddox.JGP.Point3d;
 import com.maddox.JGP.Vector3d;
 import com.maddox.il2.ai.Airport;
@@ -15,7 +13,6 @@ import com.maddox.il2.fm.Autopilotage;
 import com.maddox.il2.fm.Controls;
 import com.maddox.il2.fm.FMMath;
 import com.maddox.il2.fm.FlightModel;
-import com.maddox.il2.game.HUD;
 import com.maddox.il2.game.Main;
 import com.maddox.il2.game.Mission;
 import com.maddox.il2.objects.air.Aircraft;
@@ -327,7 +324,7 @@ public class AutopilotAI extends Autopilotage {
             }
             if (aEARAFFP != 0F && d > 200D && this.FM.getVertSpeed() < 0F && aEARAF != aEARAFFP) {
                 aEARAF = aEARAFFP;
-                if (this.FM.actor == World.getPlayerAircraft()) System.out.println("(0) AEARAF reset to " + aEARAF);
+//                if (this.FM.actor == World.getPlayerAircraft()) System.out.println("(0) AEARAF reset to " + aEARAF);
             }
             // ------------------------------------------------------
 
@@ -363,23 +360,23 @@ public class AutopilotAI extends Autopilotage {
             // TODO: +++ Fighting AI climbing above Waypoint altitude
             if (d < -20D && this.FM.getVertSpeed() > 0F && this.Ev > 0F && aEARAF > 1E-5F) {
                 aEARAF *= CommonTools.smoothCvt((float)d, -100F, -20F, 0.999F, 0.9999F);
-                if (this.FM.actor == World.getPlayerAircraft()) System.out.println("(-) AEARAF adjusted to " + aEARAF);
+//                if (this.FM.actor == World.getPlayerAircraft()) System.out.println("(-) AEARAF adjusted to " + aEARAF);
             } else if (d > 20D && this.FM.getVertSpeed() < 0F && this.Ev < 0F && aEARAF < 3.3E-4F) {
                 aEARAF /= CommonTools.smoothCvt((float)d, 20F, 100F, 0.9999F, 0.9995F);
-                if (this.FM.actor == World.getPlayerAircraft()) System.out.println("(+) AEARAF adjusted to " + aEARAF);
+//                if (this.FM.actor == World.getPlayerAircraft()) System.out.println("(+) AEARAF adjusted to " + aEARAF);
             }
             // ------------------------------------------------------
 
-            if (this.FM.actor == World.getPlayerAircraft()) {
-                DecimalFormat df = new DecimalFormat("0.00");
-                HUD.training("EC:" + df.format(this.FM.CT.ElevatorControl) + 
-                        " VS:" + df.format(this.FM.getVertSpeed()) + 
-                        " ALT:" + df.format(this.FM.getAltitude()) + 
-                        " SA:" + df.format(this.SA) +
-                        " EV:" + df.format(this.Ev) +
-                        " AF:" + df.format(aEARAF / 3.3E-4F) +
-                        " M:" + df.format(this.FM.M.getFullMass()));
-            }
+//            if (this.FM.actor == World.getPlayerAircraft()) {
+//                DecimalFormat df = new DecimalFormat("0.00");
+//                HUD.training("EC:" + df.format(this.FM.CT.ElevatorControl) + 
+//                        " VS:" + df.format(this.FM.getVertSpeed()) + 
+//                        " ALT:" + df.format(this.FM.getAltitude()) + 
+//                        " SA:" + df.format(this.SA) +
+//                        " EV:" + df.format(this.Ev) +
+//                        " AF:" + df.format(aEARAF / 3.3E-4F) +
+//                        " M:" + df.format(this.FM.M.getFullMass()));
+//            }
         }
         float f_10_ = 0.0F;
         if (this.bStabDirection || this.bWayPoint) {

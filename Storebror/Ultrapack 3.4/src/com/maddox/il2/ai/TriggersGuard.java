@@ -123,7 +123,13 @@ public class TriggersGuard {
     public Trigger getTriggerTarget(String target) {
         for (Iterator e = this.triggers.iterator(); e.hasNext();) {
             Trigger trigger = (Trigger) e.next();
-            if (trigger instanceof TriggerSpawnAircraftRelativeAltitude && trigger.isTriggered() && trigger.getTargetActorName().equals(target)) return trigger;
+//            if (trigger instanceof TriggerSpawnAircraftRelativeAltitude && trigger.isTriggered() && trigger.getTargetActorName().equals(target)) return trigger;
+            if (trigger instanceof TriggerSpawnAircraftRelativeAltitude && trigger.isTriggered() && trigger.getTargetActorNames() != null && trigger.getTargetActorNames().size() > 0) {
+                for (int targetActorNameIndex = 0; targetActorNameIndex < trigger.getTargetActorNames().size(); targetActorNameIndex++) {
+                    String targetActorName = (String)trigger.getTargetActorNames().get(targetActorNameIndex);
+                    if (targetActorName.equals(target)) return trigger;
+                }
+            }
         }
 
         return null;

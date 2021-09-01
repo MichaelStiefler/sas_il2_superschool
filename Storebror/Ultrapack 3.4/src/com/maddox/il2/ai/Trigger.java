@@ -15,10 +15,12 @@ import com.maddox.il2.game.HUD;
 import com.maddox.il2.game.Main;
 import com.maddox.il2.game.Main3D;
 import com.maddox.il2.game.Mission;
+import com.maddox.il2.net.NetMissionTrack;
 import com.maddox.il2.net.NetUser;
 import com.maddox.rts.NetEnv;
 import com.maddox.rts.NetMsgGuaranted;
 import com.maddox.rts.NetMsgInput;
+import com.maddox.rts.Time;
 import com.maddox.util.NumberTokenizer;
 import com.maddox.util.UnicodeTo8bit;
 
@@ -77,7 +79,7 @@ public class Trigger extends Actor {
     }
 
     protected Trigger(String triggerName, int triggeredByArmy, int timeout, int posX, int posY, int radius, int altitudeMin, int altitudeMax, int triggeredBy, boolean triggerOnExit, int noObjectsMin, int probability, String linkActorName,
-            String displayMessage, int displayTime) {
+            String displayMessage, float displayTime) {
 //        System.out.println("Trigger(" + triggerName + ", " + triggeredByArmy + ", " + timeout + ", " + posX + ", " + posY + ", " + radius + ", " + altitudeMin + ", " + altitudeMax + ", " + triggeredBy + ", " + hasTriggerActor + ", " + noObjectsMin + ", "
 //                + probability + ", " + linkActorName + ", " + displayMessage + ", " + displayTime + ")");
         this.setTriggered(false);
@@ -100,7 +102,7 @@ public class Trigger extends Actor {
         this.setDisplayTime(displayTime);
         this.setMessageAltitude(-1);
         this.setActivated(true);
-        System.out.println("Trigger " + this.name() + " created!");
+        // System.out.println("Trigger " + this.name() + " created!");
         World.cur().triggersGuard.addTrigger(this);
     }
 
@@ -132,7 +134,7 @@ public class Trigger extends Actor {
         boolean hasTriggerLink = numbertokenizer.next(0) == 1;
         String linkActorName = null;
         if (hasTriggerLink) linkActorName = numbertokenizer.next(null);
-        int displayTime = numbertokenizer.next(5, 1, 60);
+        float displayTime = numbertokenizer.next(5F, Time.tickConstLenFs(), Float.MAX_VALUE);
         String displayMessage = "";
         while (numbertokenizer.hasMoreElements()) {
             displayMessage = displayMessage + numbertokenizer.next(null);
@@ -165,7 +167,7 @@ public class Trigger extends Actor {
     public static final void checkLinkedTriggerActivation() {
         for (int triggerIndex=0; triggerIndex < World.cur().triggersGuard.getTriggers().size(); triggerIndex++) {
             Trigger trigger = (Trigger)World.cur().triggersGuard.getTriggers().get(triggerIndex);
-            System.out.println("Checking Trigger " + trigger.name());
+            // System.out.println("Checking Trigger " + trigger.name());
 //            if (trigger.getTriggerClass() == Trigger.TYPE_ACTIVATE
 //                    && trigger.getTargetActorName() != null
 //                    && trigger.getTargetActorName().length() > 0
@@ -190,12 +192,12 @@ public class Trigger extends Actor {
                 for (int targetActorNamesIndex = 0; targetActorNamesIndex < trigger.getTargetActorNames().size(); targetActorNamesIndex++) {
                     String targetActorName = (String)trigger.getTargetActorNames().get(targetActorNamesIndex);
                     if (targetActorName.indexOf("Trigger") < 0) continue;
-                    System.out.println("TargetActorName is " + targetActorName);
+                    // System.out.println("TargetActorName is " + targetActorName);
                     Actor triggerTargetActor = World.cur().triggersGuard.getTrigger(targetActorName);
-                    System.out.println("triggerTargetActor is " + (triggerTargetActor==null?"null":triggerTargetActor.getClass().getName()));
+                    // System.out.println("triggerTargetActor is " + (triggerTargetActor==null?"null":triggerTargetActor.getClass().getName()));
                     if (triggerTargetActor instanceof Trigger) {
                         ((Trigger)triggerTargetActor).setActivated(false);
-                        System.out.println("Trigger " + ((Trigger)triggerTargetActor).name() + " deactivated!");
+                        // System.out.println("Trigger " + ((Trigger)triggerTargetActor).name() + " deactivated!");
                     }
                 }
                 
@@ -316,7 +318,10 @@ public class Trigger extends Actor {
             Point2d point2d = new Point2d(p2dTemp);
 //            Point2d point2d = new Point2d(bLink ? this.getPosLink() : this.getPosTrigger());
 //            if (Main.cur().netServerParams.isMaster()) ((NetUser) NetEnv.host()).replicateTriggerMsg(this.prepareTextArmy(1), this.prepareTextArmy(2), (float) point2d.x, (float) point2d.y, this.getMessageAltitude(), this.getDisplayTime());
-            if (Config.isUSE_RENDER()) HUD.addMsgToWaitingList(prepareTextKeyWords(this.prepareTextArmy(World.getPlayerArmy()), point2d, this.getMessageAltitude()), this.getDisplayTime() * 1000);
+            if (Config.isUSE_RENDER()) {
+//                HUD.clearWaitingList();
+                HUD.addMsgToWaitingList(prepareTextKeyWords(this.prepareTextArmy(World.getPlayerArmy()), point2d, this.getMessageAltitude()), this.getDisplayTime());
+            }
         }
     }
 
@@ -440,11 +445,11 @@ public class Trigger extends Actor {
         this.displayMessage = displayMessage;
     }
 
-    public int getDisplayTime() {
+    public float getDisplayTime() {
         return this.displayTime;
     }
 
-    public void setDisplayTime(int displayTime) {
+    public void setDisplayTime(float displayTime) {
         this.displayTime = displayTime;
     }
 
@@ -471,6 +476,16 @@ public class Trigger extends Actor {
     public void setActivated(boolean activated) {
         this.activated = activated;
     }
+    
+    private static boolean netServerParamsIsNull;
+    private static boolean missionIsSingle;
+    private static boolean missionIsNet;
+    private static boolean hostIsNetUser;
+    private static boolean netUserIsMirrored;
+    private static boolean trackIsRecording;
+    private static boolean trackIsQuickRecording;
+    private static boolean trackIsPlaying;
+    
 
     public static void getReplicatedTrigger(NetMsgInput netmsginput) {
 //        Exception test = new Exception("getReplicatedTrigger");
@@ -480,7 +495,7 @@ public class Trigger extends Actor {
             int triggerClass = netmsginput.readByte();
             String triggerName = netmsginput.read255();
             Trigger trigger = World.cur().triggersGuard.getTrigger(triggerName);
-//            System.out.println("Trigger " + triggerName + " = " + trigger);
+            // System.out.println(("Trigger " + triggerName + " = " + trigger);
             if (trigger != null && !trigger.isDestroyed()) {
                 switch(triggerClass) {
                     case TYPE_SPAWN:
@@ -488,7 +503,7 @@ public class Trigger extends Actor {
                     case TYPE_SPAWN_AIRCRAFT_RELATIVE_ALTITUDE:
                     case TYPE_MESSAGE:
                         trigger.setMessageAltitude(netmsginput.readInt());
-                        trigger.setDisplayTime(netmsginput.readInt());
+                        trigger.setDisplayTime(netmsginput.readFloat());
                         trigger.setPosTrigger(new Point2d(netmsginput.readDouble(), netmsginput.readDouble()));
 //                        if (trigger.getLinkActorName() != null && trigger.getLinkActorName().length() > 0) {
 //                            trigger.setLinkActorName(netmsginput.read255());
@@ -509,9 +524,44 @@ public class Trigger extends Actor {
     }
 
     public void replicateTrigger() {
+        boolean newNetServerParamsIsNull = Main.cur().netServerParams == null;
+        boolean newMissionIsSingle= Mission.isSingle();
+        boolean newMissionIsNet = Mission.isNet();
+        boolean newHostIsNetUser = NetEnv.host() instanceof NetUser;
+        boolean newNetUserIsMirrored = newHostIsNetUser?((NetUser) NetEnv.host()).isMirrored():false;
+        boolean newTrackIsRecording = NetMissionTrack.isRecording();
+        boolean newTrackIsQuickRecording = NetMissionTrack.isQuickRecording();
+        boolean newTrackIsPlaying = NetMissionTrack.isPlaying();
+        
+        if (netServerParamsIsNull != newNetServerParamsIsNull
+                || missionIsSingle != newMissionIsSingle
+                || missionIsNet != newMissionIsNet
+                || hostIsNetUser != newHostIsNetUser
+                || netUserIsMirrored != newNetUserIsMirrored
+                || trackIsRecording != newTrackIsRecording
+                || trackIsQuickRecording != newTrackIsQuickRecording
+                || trackIsPlaying != newTrackIsPlaying) {
+//             System.out.println(("netServerParamsIsNull = " + newNetServerParamsIsNull +
+//                    ", missionIsSingle = " + newMissionIsSingle +
+//                    ", missionIsNet = " + newMissionIsNet +
+//                    ", hostIsNetUser = " + newHostIsNetUser +
+//                    ", netUserIsMirrored = " + newNetUserIsMirrored +
+//                    ", trackIsRecording = " + newTrackIsRecording +
+//                    ", trackIsQuickRecording = " + newTrackIsQuickRecording +
+//                    ", trackIsPlaying = " + newTrackIsPlaying);
+            netServerParamsIsNull = newNetServerParamsIsNull;
+            missionIsSingle = newMissionIsSingle;
+            missionIsNet = newMissionIsNet;
+            hostIsNetUser = newHostIsNetUser;
+            netUserIsMirrored = newNetUserIsMirrored;
+            trackIsRecording = newTrackIsRecording;
+            trackIsQuickRecording = newTrackIsQuickRecording;
+            trackIsPlaying = newTrackIsPlaying;
+        }
+        
 //        Exception test = new Exception("replicateTrigger");
 //        test.printStackTrace();
-        if (Main.cur().netServerParams == null || Mission.isSingle()) return;
+        if (Main.cur().netServerParams == null || (Mission.isSingle() && !NetMissionTrack.isRecording())) return;
 //        System.out.println("replicateTrigger 1");
         if (!(NetEnv.host() instanceof NetUser)) return;
 //        System.out.println("replicateTrigger 2");
@@ -529,7 +579,7 @@ public class Trigger extends Actor {
                 case TYPE_SPAWN_AIRCRAFT_RELATIVE_ALTITUDE:
                 case TYPE_MESSAGE:
                     netmsgguaranted.writeInt(this.getMessageAltitude());
-                    netmsgguaranted.writeInt(this.getDisplayTime());
+                    netmsgguaranted.writeFloat(this.getDisplayTime());
                     if (this.getLinkActorName() != null && this.getLinkActorName().length() > 0) {
 //                        netmsgguaranted.write255(this.getLinkActorName());
                         Point2d p2dTemp = this.getPosLink();
@@ -578,7 +628,7 @@ public class Trigger extends Actor {
     private String          linkActorName;
     private Point2d         lastPosLink;
     private String          displayMessage;
-    private int             displayTime;
+    private float           displayTime;
     private int             messageAltitude;
     private int             triggerClass;
     private boolean         activated;

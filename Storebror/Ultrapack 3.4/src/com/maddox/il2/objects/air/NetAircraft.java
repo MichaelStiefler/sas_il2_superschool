@@ -844,11 +844,12 @@ public abstract class NetAircraft extends SndAircraft {
             f = (Time.tickNext() - this.tcur) * 0.0010F;
             if (!(f < 0.0010F)) {
                 this.tcur = Time.tickNext();
-                if (!this.ghostDetected && !(Main.cur() instanceof DServer) && this.tupdate > 0L && this.tcur > this.tupdate && this.tcur - this.tupdate > 10000L) {
-                    this.tupdate = tcur;
+                if (!this.ghostDetected && !(Main.cur() instanceof DServer) && !NetMissionTrack.isPlaying() && this.tupdate > 0L && this.tcur > this.tupdate && this.tcur - this.tupdate > 10000L) {
+//                    this.tupdate = tcur;
                     this.ghostDetected = true;
                     if (Config.cur.ini.get("Mods", "destroyGhostPlanes", 1) != 0) {
                         System.out.println("Destroying Ghost Plane: " + this.hashCode() + " (" + this.netName + "), Tick Diff to last Update: " + (this.tcur - this.tupdate));
+//                        System.out.println("tupdate=" + tupdate + ", tcur=" + tcur);
                         try {
                             NetAircraft.this.destroy();
                         } catch (Exception e) {
@@ -858,6 +859,7 @@ public abstract class NetAircraft extends SndAircraft {
                     } else {
                         System.out.println("Possible Ghost Plane: " + this.hashCode() + " (" + this.netName + "), Tick Diff to last Update: " + (this.tcur - this.tupdate) + " - not destroyed because of conf.ini destroyGhostPlanes=0");
                     }
+                    this.tupdate = tcur;
                 }
                 NetAircraft.this.FM.CT.update(f, 50.0F, NetAircraft.this.FM.EI, false, NetAircraft.this.isFMTrackMirror());
                 NetAircraft.this.FM.Gears.ground(NetAircraft.this.FM, false, this.bGround);

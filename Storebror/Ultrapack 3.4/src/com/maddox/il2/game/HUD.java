@@ -91,7 +91,7 @@ public class HUD {
     private String            logCenter;
     private long              logCenterTime;
     // TODO: +++ Trigger backport from HSFX 7.0.3 by SAS~Storebror +++
-    private long              logTriggerTime;
+    private static long       logTriggerTime;
     private static ArrayList  msgWaitingList;
     // TODO: --- Trigger backport from HSFX 7.0.3 by SAS~Storebror ---
     private String            logIntro;
@@ -973,23 +973,28 @@ public class HUD {
             ttfont.output(i, (this.viewDX - f) / 2.0F, this.viewDY * 0.75F, 0.0F, this.logCenter);
         }
         // TODO: +++ Trigger backport from HSFX 7.0.3 by SAS~Storebror +++
-        if(msgWaitingList.size() > 0)
+        if(msgWaitingList.size() > 0) {
+            TTFont ttfont1 = fntCenter;
+            float f1 = ttfont1.width(((MsgWaiting)msgWaitingList.get(0)).getMsg());
+            int j1 = 0xff0000ff;
+            int i2 = 255 - (int)(((double)(l - logTriggerTime) / (double)((MsgWaiting)msgWaitingList.get(0)).getLast()) * 255D);
+            j1 |= i2 << 8;
+            float logPosX = ((float)viewDX - f1) / 2.0F;
+            float logPosY = (float)viewDY * 0.75F - 3 * ttfont1.height();
             if(logTriggerTime != 0L && l > logTriggerTime + (long)((MsgWaiting)msgWaitingList.get(0)).getLast())
             {
 //                System.out.println("HUD removing \"" + ((MsgWaiting)msgWaitingList.get(0)).getMsg() + "\" (" + ((MsgWaiting)msgWaitingList.get(0)).getLast() + "ms)");
+                ttfont1.output(j1, logPosX, logPosY, 0.0F, "");
                 msgWaitingList.remove(0);
                 logTriggerTime = 0L;
             } else
             {
                 if(logTriggerTime == 0L)
                     logTriggerTime = l;
-                TTFont ttfont1 = fntCenter;
-                float f1 = ttfont1.width(((MsgWaiting)msgWaitingList.get(0)).getMsg());
-                int j1 = 0xff0000ff;
-                int i2 = 255 - (int)(((double)(l - logTriggerTime) / (double)((MsgWaiting)msgWaitingList.get(0)).getLast()) * 255D);
-                j1 |= i2 << 8;
-                ttfont1.output(j1, ((float)viewDX - f1) / 2.0F, (float)viewDY * 0.75F, 0.0F, ((MsgWaiting)msgWaitingList.get(0)).getMsg());
+                ttfont1.output(j1, logPosX , logPosY, 0.0F, ((MsgWaiting)msgWaitingList.get(0)).getMsg());
+//                ttfont1.output(j1, logPosX , logPosY, 0.0F, ((MsgWaiting)msgWaitingList.get(0)).getMsg() + " " + logTriggerTime + "-" + (logTriggerTime + (long)((MsgWaiting)msgWaitingList.get(0)).getLast()));
             }
+        }
         // TODO: --- Trigger backport from HSFX 7.0.3 by SAS~Storebror ---
         if (this.logIntroESC != null) {
             TTFont ttfont = TTFont.font[0];
@@ -1498,17 +1503,18 @@ public class HUD {
     }
     
     // TODO: +++ Trigger backport from HSFX 7.0.3 by SAS~Storebror +++
-    public static void addMsgToWaitingList(String s, int i)
+    public static void addMsgToWaitingList(String s, float f)
     {
 //        System.out.println("addMsgToWaitingList (" + s + ", " + i + ")");
         if (msgWaitingList == null) msgWaitingList = new ArrayList();
-        msgWaitingList.add(new MsgWaiting(s, i));
+        msgWaitingList.add(new MsgWaiting(s, (int)(f * 1000F)));
     }
     public static void clearWaitingList()
     {
 //        System.out.println("clearWaitingList");
         if (msgWaitingList == null) msgWaitingList = new ArrayList();
         msgWaitingList.clear();
+        logTriggerTime = 0L;
     }
     // TODO: --- Trigger backport from HSFX 7.0.3 by SAS~Storebror ---
 }
