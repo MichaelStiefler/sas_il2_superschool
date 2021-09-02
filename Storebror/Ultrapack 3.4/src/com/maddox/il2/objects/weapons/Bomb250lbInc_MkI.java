@@ -2,11 +2,9 @@ package com.maddox.il2.objects.weapons;
 
 import com.maddox.rts.Property;
 
-public class Bomb250lbInc_MkI extends Bomb
-{
+public class Bomb250lbInc_MkI extends Bomb {
 
-    static 
-    {
+    static {
         Class class1 = Bomb250lbInc_MkI.class;
         Property.set(class1, "mesh", "3do/arms/250lbInc_MkI/mono.sim");
         Property.set(class1, "radius", 48F);
@@ -15,8 +13,6 @@ public class Bomb250lbInc_MkI extends Bomb
         Property.set(class1, "kalibr", 0.3F);
         Property.set(class1, "massa", 110F);
         Property.set(class1, "sound", "weapon.bomb_mid");
-        Property.set(class1, "fuze", ((Object) (new Object[] {
-            Fuze_No36.class
-        })));
+        Property.set(class1, "fuze", ((new Object[] { Fuze_No36.class })));
     }
 }

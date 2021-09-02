@@ -3,11 +3,9 @@ package com.maddox.il2.objects.weapons;
 import com.maddox.JGP.Color3f;
 import com.maddox.rts.Property;
 
-public class RocketRP3_Mk5_60 extends Rocket
-{
+public class RocketRP3_Mk5_60 extends Rocket {
 
-    static 
-    {
+    static {
         Class class1 = RocketRP3_Mk5_60.class;
         Property.set(class1, "mesh", "3DO/Arms/RP3_Mk5_60/mono.sim");
         Property.set(class1, "sprite", "3DO/Effects/Rocket/firesprite.eff");
