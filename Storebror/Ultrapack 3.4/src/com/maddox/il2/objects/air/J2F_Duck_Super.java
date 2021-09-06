@@ -3,13 +3,16 @@ package com.maddox.il2.objects.air;
 import com.maddox.JGP.Point3d;
 import com.maddox.JGP.Vector3d;
 import com.maddox.il2.ai.Shot;
+import com.maddox.il2.ai.World;
 import com.maddox.il2.engine.Actor;
 import com.maddox.il2.engine.Config;
 import com.maddox.il2.engine.Eff3DActor;
 import com.maddox.il2.engine.Engine;
 import com.maddox.il2.engine.HierMesh;
 import com.maddox.il2.engine.Orient;
+import com.maddox.il2.game.HUD;
 import com.maddox.il2.game.Main3D;
+import com.maddox.il2.objects.Wreckage;
 import com.maddox.rts.Property;
 import com.maddox.sas1946.il2.util.Reflection;
 
@@ -151,6 +154,7 @@ public class J2F_Duck_Super extends Scheme1 implements TypeScout, TypeAmphibious
             this.FM.CT.AirBrakeControl = 1.0F;
             this.startWithGearDown = false;
         }
+        this.checkWaterGearCollision();
     }
 
     public void setOnGround(Point3d point3d, Orient orient, Vector3d vector3d) {
@@ -229,15 +233,49 @@ public class J2F_Duck_Super extends Scheme1 implements TypeScout, TypeAmphibious
     }
 
     protected void moveGearAmf(float f) {
-        float f1 = Aircraft.cvt(f, 0.01F, 0.91F, 0.0F, 1.0F);
-        J2F_Duck_Super.moveGearAmf(this.hierMesh(), f1, 0, true);
-        J2F_Duck_Super.moveGearAmf(this.hierMesh(), f1, 1, true);
+        if (this.FM.Gears.onGround() && World.land().isWater(this.pos.getAbsPoint().x, this.pos.getAbsPoint().y)) {
+            if (f > lastGearPos && this.FM.CT.AirBrakeControl > 0F) {
+                this.FM.CT.AirBrakeControl = 0F;
+                HUD.log("DivebrakeOFF");
+                return;
+            }
+        }
+        J2F_Duck_Super.moveGearAmf(this.hierMesh(), f);
+        lastGearPos = f;
     }
+    
+    private void checkWaterGearCollision() {
+        if (this.FM.Gears.onGround() && World.land().isWater(this.pos.getAbsPoint().x, this.pos.getAbsPoint().y) && lastGearPos > 0.5F) {
+            for (int i=1; i<7; i++) {
+                this.doWreck("GearL" + i + "_D0");
+                this.doWreck("GearR" + i + "_D0");
+            }
+            this.FM.CT.bHasAirBrakeControl = false;
+            Reflection.setFloat(this.FM.CT, "airBrake", 0F);
+            this.FM.CT.AirBrakeControl = 0F;
+        }
+    }
+    
+    private void doWreck(String s)
+    {
+        if(hierMesh().chunkFindCheck(s) != -1)
+        {
+            hierMesh().hideSubTrees(s);
+            Wreckage wreckage = new Wreckage(this, hierMesh().chunkFind(s));
+            wreckage.collide(true);
+            Vector3d vector3d = new Vector3d();
+            vector3d.set(FM.Vwld);
+            vector3d.z = Math.abs(vector3d.z);
+            wreckage.setSpeed(vector3d);
+        }
+    }
+
 
     public static boolean bChangedPit = false;
     protected float       arrestor;
     protected float       flapps;
     private boolean       startWithGearDown;
+    private float         lastGearPos = 0F;
 
     static {
         Class class1 = J2F_Duck_Super.class;
