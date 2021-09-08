@@ -4,6 +4,7 @@ import com.maddox.JGP.Point3d;
 import com.maddox.il2.ai.BulletEmitter;
 import com.maddox.il2.ai.RangeRandom;
 import com.maddox.il2.engine.Actor;
+import com.maddox.il2.engine.ActorPosMove;
 import com.maddox.il2.engine.Config;
 import com.maddox.il2.engine.HierMesh;
 import com.maddox.il2.engine.HookNamed;
@@ -394,6 +395,23 @@ public class BombGun extends Interpolate implements BulletEmitter {
 
     protected RangeRandom armingRnd = new RangeRandom(TrueRandom.nextLong());
     // ------------------------------------
+
+    public void updateHook(String s)
+    {
+        this.bullets(Property.intValue(this.getClass(), "bullets", 1));
+        this.hook = (HookNamed)this.actor.findHook(s);
+        try
+        {
+            this.bomb.pos.destroy();
+            this.bomb.pos = new ActorPosMove(this.bomb);
+            this.bomb.pos.setBase(this.actor, this.hook, false);
+            this.bomb.pos.changeHookToRel();
+            this.bomb.pos.resetAsBase();
+            this.bomb.visibilityAsBase(true);
+            this.bomb.pos.setUpdateEnable(false);
+        }
+        catch(Exception e) { }
+    }
 
     protected boolean     ready;
     protected Bomb        bomb;

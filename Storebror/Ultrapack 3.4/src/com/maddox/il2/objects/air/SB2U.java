@@ -1,92 +1,160 @@
 package com.maddox.il2.objects.air;
 
-import java.io.IOException;
+import com.maddox.JGP.Point3d;
+import com.maddox.il2.ai.Shot;
+import com.maddox.il2.ai.World;
+import com.maddox.il2.fm.RealFlightModel;
+import com.maddox.il2.objects.weapons.BombGun;
+import com.maddox.rts.Time;
 
-import com.maddox.rts.NetMsgGuaranted;
-import com.maddox.rts.NetMsgInput;
-import com.maddox.rts.Property;
+public abstract class SB2U extends SB2Uxyz implements TypeHaveBombReleaseGear {
 
-public class SB2U extends SB2Uxyz implements TypeStormovik, TypeDiveBomber {
+    public SB2U() {
+        this.isReleased = false;
+        this.isExtendedStart = false;
+        this.isExtended = false;
+        this.tickConstLenFs = 0.0F;
+        this.armAngle = 0.0F;
+        this.oldArmAngle = 0.0F;
+        this.bombHookName = null;
+        this.diveMechStage = 0;
+        this.bNDives = false;
+        this.bDropsBombs = false;
+    }
 
-    public boolean turretAngles(int i, float af[]) {
-        boolean flag = super.turretAngles(i, af);
-        float f = -af[0];
-        float f1 = af[1];
-        switch (i) {
-            case 0:
-                if (f < -31F) {
-                    f = -31F;
-                    flag = false;
+    public void update(float f) {
+        super.update(f);
+        this.moveArm();
+        if ((this == World.getPlayerAircraft()) && (this.FM instanceof RealFlightModel)) {
+            if (((RealFlightModel) this.FM).isRealMode()) {
+                switch (this.diveMechStage) {
+                    case 0:
+                        if (this.bNDives && (this.FM.CT.AirBrakeControl == 1.0F) && (this.FM.CT.AirBrakeControl == 0.0F)) {
+                            this.diveMechStage++;
+                            this.bNDives = false;
+                        } else {
+                            this.bNDives = (this.FM.CT.AirBrakeControl != 1.0F) && (this.FM.CT.AirBrakeControl != 0.0F);
+                        }
+                        break;
+
+                    case 1:
+                        this.FM.CT.setTrimElevatorControl(-0.65F);
+                        this.FM.CT.trimElevator = -0.65F;
+                        if ((this.FM.CT.AirBrakeControl == 0.0F) || this.FM.CT.saveWeaponControl[5] || ((this.FM.CT.Weapons[5] != null) && (this.FM.CT.Weapons[5][this.FM.CT.Weapons[5].length - 1].countBullets() == 0) && !(this instanceof SB2U))) {
+                            if (this.FM.CT.AirBrakeControl == 0.0F) {
+                                this.diveMechStage++;
+                            }
+                            if ((this.FM.CT.Weapons[5] != null) && (this.FM.CT.Weapons[5][this.FM.CT.Weapons[5].length - 1].countBullets() == 0)) {
+                                this.diveMechStage++;
+                            }
+                        }
+                        break;
+
+                    case 2:
+                        if (this.FM.isTick(41, 0)) {
+                            this.FM.CT.setTrimElevatorControl(0.85F);
+                            this.FM.CT.trimElevator = 0.85F;
+                        }
+                        if ((this.FM.CT.AirBrakeControl == 0.0F) || (this.FM.Or.getTangage() > 0.0F)) {
+                            this.diveMechStage++;
+                        }
+                        break;
+
+                    case 3:
+                        this.FM.CT.setTrimElevatorControl(0.0F);
+                        this.FM.CT.trimElevator = 0.0F;
+                        this.diveMechStage = 0;
+                        break;
                 }
-                if (f > 31F) {
-                    f = 31F;
-                    flag = false;
-                }
-                if (f1 < -10F) {
-                    f1 = -10F;
-                    flag = false;
-                }
-                if (f1 > 52F) {
-                    f1 = 52F;
-                    flag = false;
-                }
-                break;
+            } else {
+                this.FM.CT.setTrimElevatorControl(0.0F);
+                this.FM.CT.trimElevator = 0.0F;
+            }
         }
-        af[0] = -f;
-        af[1] = f1;
-        return flag;
+        if (this.bDropsBombs && this.FM.isTick(3, 0) && (this.FM.CT.Weapons[5] != null) && (this.FM.CT.Weapons[3][this.FM.CT.Weapons[5].length - 1] != null) && this.FM.CT.Weapons[3][this.FM.CT.Weapons[5].length - 1].haveBullets()) {
+            this.FM.CT.WeaponControl[5] = true;
+        }
     }
 
-    public boolean typeDiveBomberToggleAutomation() {
-        return false;
+    public boolean waitRelease() {
+        if ((this.bombGun == null) || !this.bombGun.isShots()) {
+            return true;
+        }
+        this.isExtendedStart = true;
+        if (this.tickConstLenFs == 0.0F) {
+            this.tickConstLenFs = Time.tickConstLenFs();
+        }
+        return this.isReleased;
     }
 
-    public void typeDiveBomberAdjAltitudeReset() {
+    private void moveArm() {
+        if (!this.isExtendedStart) {
+            return;
+        }
+        if (!this.isExtended) {
+            this.armAngle += 90F * this.tickConstLenFs;
+        }
+        if (this.armAngle >= 90F) {
+            this.isReleased = true;
+            this.isExtended = true;
+        } else if (this.FM.getOverload() > 1.0F) {
+            this.isReleased = true;
+        }
+        if (this.isReleased && this.isExtended && (this.armAngle > 0.0F)) {
+            this.armAngle -= 180F * this.tickConstLenFs;
+        }
+        if (this.oldArmAngle != this.armAngle) {
+            try {
+                this.hierMesh().chunkSetAngles("Arm1_D0", 0.0F, this.armAngle, 0.0F);
+                this.hierMesh().chunkSetAngles("Arm2_D0", 0.0F, -this.armAngle, 0.0F);
+                this.bombGun.updateHook(this.bombHookName);
+            } catch (Exception exception) {
+            }
+            this.oldArmAngle = this.armAngle;
+        }
     }
 
-    public void typeDiveBomberAdjAltitudePlus() {
+    protected void moveAirBrake(float f) {
+        this.hierMesh().chunkSetAngles("Flap_D0", 0.0F, 0.0F, 45F * Math.max(f, this.FM.CT.getFlap()));
     }
 
-    public void typeDiveBomberAdjAltitudeMinus() {
+    protected void hitBone(String s, Shot shot, Point3d point3d) {
+        super.hitBone(s, shot, point3d);
+        if (s.startsWith("xxmgun")) {
+            if (s.endsWith("3")) {
+                this.debuggunnery("Cowling Gun: Disabled..");
+                this.FM.AS.setJamBullets(0, 2);
+            }
+            if (s.endsWith("4")) {
+                this.debuggunnery("Cowling Gun: Disabled..");
+                this.FM.AS.setJamBullets(0, 3);
+            }
+            if (s.endsWith("5")) {
+                this.debuggunnery("Cowling Gun: Disabled..");
+                this.FM.AS.setJamBullets(0, 4);
+            }
+        }
     }
 
-    public void typeDiveBomberAdjVelocityReset() {
+    public void onAircraftLoaded() {
+        super.onAircraftLoaded();
+        try {
+            this.bombHookName = "_ExternalBomb01";
+            this.bombGun = (BombGun) this.getBulletEmitterByHookName(this.bombHookName);
+        } catch (Exception exception) {
+            this.bombGun = null;
+        }
     }
 
-    public void typeDiveBomberAdjVelocityPlus() {
-    }
-
-    public void typeDiveBomberAdjVelocityMinus() {
-    }
-
-    public void typeDiveBomberAdjDiveAngleReset() {
-    }
-
-    public void typeDiveBomberAdjDiveAnglePlus() {
-    }
-
-    public void typeDiveBomberAdjDiveAngleMinus() {
-    }
-
-    public void typeDiveBomberReplicateToNet(NetMsgGuaranted netmsgguaranted) throws IOException {
-    }
-
-    public void typeDiveBomberReplicateFromNet(NetMsgInput netmsginput) throws IOException {
-    }
-
-    static {
-        Class class1 = SB2U.class;
-        new NetAircraft.SPAWN(class1);
-        Property.set(class1, "iconFar_shortClassName", "SB2U");
-        Property.set(class1, "meshName", "3DO/Plane/SB2U(Multi1)/hier.him");
-        Property.set(class1, "PaintScheme", new PaintSchemeBMPar00());
-        Property.set(class1, "yearService", 1940F);
-        Property.set(class1, "yearExpired", 1946.5F);
-        Property.set(class1, "FlightModel", "FlightModels/SB2U.fmd");
-        Property.set(class1, "cockpitClass", new Class[] { CockpitSB2U.class });
-        Property.set(class1, "LOSElevation", 0.84305F);
-        Aircraft.weaponTriggersRegister(class1, new int[] { 10, 0, 0, 9, 3, 9, 3, 9, 3, 3, 3, 9, 3, 3, 3, 3, 3, 3 });
-        Aircraft.weaponHooksRegister(class1, new String[] { "_MGUN01", "_MGUN02", "_MGUN03", "_ExternalDev01", "_ExternalBomb01", "_ExternalDev02", "_ExternalBomb02", "_ExternalDev03", "_ExternalBomb03", "_ExternalBomb04", "_ExternalBomb05",
-                "_ExternalDev04", "_ExternalBomb06", "_ExternalBomb07", "_ExternalBomb08", "_ExternalBomb09", "_ExternalBomb10", "_ExternalBomb11" });
-    }
+    boolean         isReleased;
+    boolean         isExtendedStart;
+    boolean         isExtended;
+    float           tickConstLenFs;
+    float           armAngle;
+    float           oldArmAngle;
+    BombGun         bombGun;
+    String          bombHookName;
+    public int      diveMechStage;
+    public boolean  bNDives;
+    private boolean bDropsBombs;
 }
