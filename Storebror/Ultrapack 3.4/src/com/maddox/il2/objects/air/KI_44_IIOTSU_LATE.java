@@ -2,9 +2,9 @@ package com.maddox.il2.objects.air;
 
 import com.maddox.rts.Property;
 
-public class KI_44_IIKO extends KI_44_II {
+public class KI_44_IIOTSU_LATE extends KI_44_II {
 
-    public KI_44_IIKO() {
+    public KI_44_IIOTSU_LATE() {
         this.flapps = 0.0F;
     }
 
@@ -23,7 +23,7 @@ public class KI_44_IIKO extends KI_44_II {
     private float flapps;
 
     static {
-        Class class1 = KI_44_IIKO.class;
+        Class class1 = KI_44_IIOTSU_LATE.class;
         new NetAircraft.SPAWN(class1);
         Property.set(class1, "iconFar_shortClassName", "Ki-44");
         Property.set(class1, "meshName", "3DO/Plane/Ki-44-II(Ko)(Multi1)/hier.him");
@@ -32,7 +32,7 @@ public class KI_44_IIKO extends KI_44_II {
         Property.set(class1, "PaintScheme_ja", new PaintSchemeFCSPar05());
         Property.set(class1, "yearService", 1942F);
         Property.set(class1, "yearExpired", 1945.5F);
-        Property.set(class1, "FlightModel", "FlightModels/Ki-44-IIko.fmd");
+        Property.set(class1, "FlightModel", "FlightModels/Ki-44-II.fmd");
         Property.set(class1, "cockpitClass", new Class[] { CockpitKI_44_II_ko.class });
         Property.set(class1, "LOSElevation", 0.4252F);
         Aircraft.weaponTriggersRegister(class1, new int[] { 0, 0, 1, 1, 9, 9, 3, 3, 9, 9 });
