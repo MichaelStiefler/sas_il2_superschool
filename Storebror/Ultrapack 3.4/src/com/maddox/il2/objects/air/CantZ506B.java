@@ -8,11 +8,11 @@ import com.maddox.rts.NetMsgGuaranted;
 import com.maddox.rts.NetMsgInput;
 import com.maddox.rts.Property;
 
-public class CantZ1007bis extends CantZ1007 implements TypeBomber, TypeTransport {
+public class CantZ506B extends CantZ506 implements TypeBomber, TypeTransport, TypeSailPlane, TypeSeaPlane {
 
-    public CantZ1007bis() {
-        this.fSightCurAltitude = 850F;
-        this.fSightCurSpeed = 150F;
+    public CantZ506B() {
+        super.fSightCurAltitude = 850F;
+        super.fSightCurSpeed = 150F;
     }
 
     public boolean turretAngles(int i, float af[]) {
@@ -43,12 +43,12 @@ public class CantZ1007bis extends CantZ1007 implements TypeBomber, TypeTransport
                 break;
 
             case 0:
-                if (f1 < -7F) {
-                    f1 = -7F;
+                if (f1 < -4F) {
+                    f1 = -4F;
                     flag = false;
                 }
-                if (f1 > 80F) {
-                    f1 = 80F;
+                if (f1 > 75F) {
+                    f1 = 75F;
                     flag = false;
                 }
                 break;
@@ -212,20 +212,36 @@ public class CantZ1007bis extends CantZ1007 implements TypeBomber, TypeTransport
         this.fSightCurSideslip = netmsginput.readFloat();
     }
 
-    public float fSightCurAltitude;
-    public float fSightCurSpeed;
+    public void onAircraftLoaded() {
+        super.onAircraftLoaded();
+        if (this.thisWeaponsName.equals("Rescue")) {
+            this.hierMesh().chunkVisible("Turret1B_D0", false);
+            this.hierMesh().chunkVisible("Turret1C_D0", false);
+            this.hierMesh().chunkVisible("Turret2A_D0", false);
+            this.hierMesh().chunkVisible("Turret2B_D0", false);
+            this.hierMesh().chunkVisible("Turret3A_D0", false);
+            this.hierMesh().chunkVisible("Turret3B_D0", false);
+            this.hierMesh().chunkVisible("Turret4A_D0", false);
+            this.hierMesh().chunkVisible("Turret4B_D0", false);
+            this.FM.M.massEmpty -= 140F;
+            return;
+        } else {
+            return;
+        }
+    }
 
     static {
-        Class class1 = CantZ1007bis.class;
+        Class class1 = CantZ506B.class;
         new NetAircraft.SPAWN(class1);
-        Property.set(class1, "iconFar_shortClassName", "CantZ-1007");
-        Property.set(class1, "meshName", "3do/plane/CantZ1007bis(it)/hier.him");
+        Property.set(class1, "iconFar_shortClassName", "CantZ-506");
+        Property.set(class1, "meshName", "3do/plane/CantZ506B(multi)/hier.him");
         Property.set(class1, "PaintScheme", new PaintSchemeBMPar09());
-        Property.set(class1, "yearService", 1940F);
+        Property.set(class1, "yearService", 1939F);
         Property.set(class1, "yearExpired", 1945.5F);
-        Property.set(class1, "FlightModel", "FlightModels/CantZ-1007.fmd");
-        Property.set(class1, "cockpitClass", new Class[] { CockpitCant.class, CockpitCant_Bombardier.class, CockpitCant_TGunner.class, CockpitCant_RGunner.class, CockpitCant_BGunner.class });
-        Aircraft.weaponTriggersRegister(class1, new int[] { 10, 11, 12, 13, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3 });
-        Aircraft.weaponHooksRegister(class1, new String[] { "_MGUN01", "_MGUN02", "_MGUN03", "_MGUN04", "_BombSpawn01", "_BombSpawn02", "_BombSpawn03", "_BombSpawn04", "_BombSpawn05", "_BombSpawn06", "_BombSpawn07", "_BombSpawn08", "_BombSpawn09", "_BombSpawn10", "_BombSpawn11", "_BombSpawn12", "_BombSpawn13", "_BombSpawn14", "_BombSpawn15", "_BombSpawn16", "_BombSpawn17", "_BombSpawn18", "_BombSpawn19", "_BombSpawn20", "_ExternalBomb01", "_ExternalBomb02", "_ExternalBomb03", "_ExternalBomb04", "_ExternalBomb05", "_ExternalBomb06", "_ExternalBomb07", "_ExternalBomb08", "_ExternalBomb09", "_ExternalBomb10" });
+        Property.set(class1, "FlightModel", "FlightModels/CantZ-506.fmd");
+        Property.set(class1, "cockpitClass", new Class[] { CockpitCantZ.class, CockpitCantZ506B_Bombardier.class, CockpitCant_TGunner.class, CockpitCant_RGunner.class, CockpitCantZ_BGunner.class });
+        Property.set(class1, "LOSElevation", 0.73425F);
+        Aircraft.weaponTriggersRegister(class1, new int[] { 10, 11, 12, 13, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3 });
+        Aircraft.weaponHooksRegister(class1, new String[] { "_MGUN01", "_MGUN02", "_MGUN03", "_MGUN04", "_BombSpawn01", "_BombSpawn02", "_BombSpawn03", "_BombSpawn04", "_BombSpawn05", "_BombSpawn06", "_BombSpawn07", "_BombSpawn08", "_BombSpawn09", "_BombSpawn10", "_BombSpawn11", "_BombSpawn12", "_BombSpawn13", "_BombSpawn14", "_BombSpawn15", "_BombSpawn16", "_BombSpawn17", "_BombSpawn18", "_BombSpawn19", "_BombSpawn20" });
     }
 }

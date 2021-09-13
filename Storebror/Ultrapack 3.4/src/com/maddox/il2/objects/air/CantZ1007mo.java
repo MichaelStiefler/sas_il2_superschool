@@ -8,9 +8,9 @@ import com.maddox.rts.NetMsgGuaranted;
 import com.maddox.rts.NetMsgInput;
 import com.maddox.rts.Property;
 
-public class CantZ1007bis extends CantZ1007 implements TypeBomber, TypeTransport {
+public class CantZ1007mo extends CantZ1007 implements TypeBomber, TypeTransport {
 
-    public CantZ1007bis() {
+    public CantZ1007mo() {
         this.fSightCurAltitude = 850F;
         this.fSightCurSpeed = 150F;
     }
@@ -216,15 +216,16 @@ public class CantZ1007bis extends CantZ1007 implements TypeBomber, TypeTransport
     public float fSightCurSpeed;
 
     static {
-        Class class1 = CantZ1007bis.class;
+        Class class1 = CantZ1007mo.class;
         new NetAircraft.SPAWN(class1);
         Property.set(class1, "iconFar_shortClassName", "CantZ-1007");
-        Property.set(class1, "meshName", "3do/plane/CantZ1007bis(it)/hier.him");
+        Property.set(class1, "meshName", "3do/plane/CantZ1007mono(it)/hier.him");
         Property.set(class1, "PaintScheme", new PaintSchemeBMPar09());
         Property.set(class1, "yearService", 1940F);
         Property.set(class1, "yearExpired", 1945.5F);
         Property.set(class1, "FlightModel", "FlightModels/CantZ-1007.fmd");
         Property.set(class1, "cockpitClass", new Class[] { CockpitCant.class, CockpitCant_Bombardier.class, CockpitCant_TGunner.class, CockpitCant_RGunner.class, CockpitCant_BGunner.class });
+        Property.set(class1, "LOSElevation", 0.73425F);
         Aircraft.weaponTriggersRegister(class1, new int[] { 10, 11, 12, 13, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3 });
         Aircraft.weaponHooksRegister(class1, new String[] { "_MGUN01", "_MGUN02", "_MGUN03", "_MGUN04", "_BombSpawn01", "_BombSpawn02", "_BombSpawn03", "_BombSpawn04", "_BombSpawn05", "_BombSpawn06", "_BombSpawn07", "_BombSpawn08", "_BombSpawn09", "_BombSpawn10", "_BombSpawn11", "_BombSpawn12", "_BombSpawn13", "_BombSpawn14", "_BombSpawn15", "_BombSpawn16", "_BombSpawn17", "_BombSpawn18", "_BombSpawn19", "_BombSpawn20", "_ExternalBomb01", "_ExternalBomb02", "_ExternalBomb03", "_ExternalBomb04", "_ExternalBomb05", "_ExternalBomb06", "_ExternalBomb07", "_ExternalBomb08", "_ExternalBomb09", "_ExternalBomb10" });
     }
