@@ -8,7 +8,7 @@ import com.maddox.il2.engine.HierMesh;
 import com.maddox.il2.game.Main3D;
 import com.maddox.rts.Property;
 
-public class CA_X extends Scheme1 implements TypeFighter {
+public abstract class CA_X extends Scheme1 implements TypeFighter {
 
     public static void moveGear(HierMesh hiermesh, float f) {
         hiermesh.chunkSetAngles("GearL2_D0", 0.0F, 90F * f, 0.0F);

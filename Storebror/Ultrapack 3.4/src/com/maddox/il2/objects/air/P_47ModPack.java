@@ -55,9 +55,22 @@ public class P_47ModPack extends P_47 {
     public void update(float f) {
         super.update(f);
 
-        if (this.FM instanceof RealFlightModel && ((RealFlightModel) this.FM).isRealMode()) {
-            float f2 = this.FM.EI.engines[0].getRPM();
-            if (f2 < 1000F && f2 > 100F) ((RealFlightModel) this.FM).producedShakeLevel = (1000F - f2) / 8000F;
+        if ((this.FM instanceof RealFlightModel) && ((RealFlightModel) this.FM).isRealMode()) {
+            RealFlightModel realFlightModel = (RealFlightModel) this.FM;
+            float rpm = this.FM.EI.engines[0].getRPM();
+            if (rpm > 30) {
+                if (rpm < 300F) {
+                    realFlightModel.producedShakeLevel = Math.max(realFlightModel.producedShakeLevel, (1500F - rpm) / 3000F);
+                } else if (rpm < 1000F) {
+                    realFlightModel.producedShakeLevel = Math.max(realFlightModel.producedShakeLevel, (1500F - rpm) / 8000F);
+                } else if (rpm < 1500F) {
+                    realFlightModel.producedShakeLevel = Math.max(realFlightModel.producedShakeLevel, 0.07F);
+                } else if (rpm < 2000F) {
+                    realFlightModel.producedShakeLevel = Math.max(realFlightModel.producedShakeLevel, 0.05F);
+                } else if (rpm < 2300F) {
+                    realFlightModel.producedShakeLevel = Math.max(realFlightModel.producedShakeLevel, 0.04F);
+                }
+            }
         }
 
         if (this.hasRwr && this == World.getPlayerAircraft()) try {

@@ -79,61 +79,24 @@ public class Do_26xyz extends Scheme4 implements TypeScout, TypeSeaPlane, TypeTr
         this.kangle3 = 0.95F * this.kangle3 + 0.05F * this.FM.EI.engines[3].getControlRadiator();
         if (this.kangle3 > 1.0F) this.kangle3 = 1.0F;
         this.hierMesh().chunkSetAngles("Cowflap3", 0.0F, 0.0F, 21F * this.kangle3);
-        if (this.FM instanceof RealFlightModel && ((RealFlightModel) this.FM).isRealMode()) {
-            float f1 = this.FM.EI.engines[0].getRPM();
-            if (f1 < 300F && f1 > 30F) ((RealFlightModel) this.FM).producedShakeLevel = (1500F - f1) / 3000F;
-            float f4 = this.FM.EI.engines[0].getRPM();
-            if (f4 < 1000F && f4 > 301F) ((RealFlightModel) this.FM).producedShakeLevel = (1500F - f4) / 8000F;
-            float f7 = this.FM.EI.engines[0].getRPM();
-            if (f7 > 1001F && f7 < 1500F) ((RealFlightModel) this.FM).producedShakeLevel = 0.07F;
-            float f10 = this.FM.EI.engines[0].getRPM();
-            if (f10 > 1501F && f10 < 2000F) ((RealFlightModel) this.FM).producedShakeLevel = 0.05F;
-            float f13 = this.FM.EI.engines[0].getRPM();
-            if (f13 > 2001F && f13 < 2500F) ((RealFlightModel) this.FM).producedShakeLevel = 0.04F;
-            float f16 = this.FM.EI.engines[0].getRPM();
-            if (f16 > 2501F) ((RealFlightModel) this.FM).producedShakeLevel = 0.03F;
-        }
-        if (this.FM instanceof RealFlightModel && ((RealFlightModel) this.FM).isRealMode()) {
-            float f2 = this.FM.EI.engines[1].getRPM();
-            if (f2 < 300F && f2 > 30F) ((RealFlightModel) this.FM).producedShakeLevel = (1500F - f2) / 3000F;
-            float f5 = this.FM.EI.engines[1].getRPM();
-            if (f5 < 1000F && f5 > 301F) ((RealFlightModel) this.FM).producedShakeLevel = (1500F - f5) / 8000F;
-            float f8 = this.FM.EI.engines[1].getRPM();
-            if (f8 > 1001F && f8 < 1500F) ((RealFlightModel) this.FM).producedShakeLevel = 0.07F;
-            float f11 = this.FM.EI.engines[1].getRPM();
-            if (f11 > 1501F && f11 < 2000F) ((RealFlightModel) this.FM).producedShakeLevel = 0.05F;
-            float f14 = this.FM.EI.engines[1].getRPM();
-            if (f14 > 2001F && f14 < 2500F) ((RealFlightModel) this.FM).producedShakeLevel = 0.04F;
-            float f17 = this.FM.EI.engines[1].getRPM();
-            if (f17 > 2501F) ((RealFlightModel) this.FM).producedShakeLevel = 0.03F;
-        }
-        if (this.FM instanceof RealFlightModel && ((RealFlightModel) this.FM).isRealMode()) {
-            float f3 = this.FM.EI.engines[2].getRPM();
-            if (f3 < 300F && f3 > 30F) ((RealFlightModel) this.FM).producedShakeLevel = (1500F - f3) / 3000F;
-            float f6 = this.FM.EI.engines[2].getRPM();
-            if (f6 < 1000F && f6 > 301F) ((RealFlightModel) this.FM).producedShakeLevel = (1500F - f6) / 8000F;
-            float f9 = this.FM.EI.engines[2].getRPM();
-            if (f9 > 1001F && f9 < 1500F) ((RealFlightModel) this.FM).producedShakeLevel = 0.07F;
-            float f12 = this.FM.EI.engines[2].getRPM();
-            if (f12 > 1501F && f12 < 2000F) ((RealFlightModel) this.FM).producedShakeLevel = 0.05F;
-            float f15 = this.FM.EI.engines[2].getRPM();
-            if (f15 > 2001F && f15 < 2500F) ((RealFlightModel) this.FM).producedShakeLevel = 0.04F;
-            float f18 = this.FM.EI.engines[2].getRPM();
-            if (f18 > 2501F) ((RealFlightModel) this.FM).producedShakeLevel = 0.03F;
-        }
-        if (this.FM instanceof RealFlightModel && ((RealFlightModel) this.FM).isRealMode()) {
-            float f31 = this.FM.EI.engines[3].getRPM();
-            if (f31 < 300F && f31 > 30F) ((RealFlightModel) this.FM).producedShakeLevel = (1500F - f31) / 3000F;
-            float f61 = this.FM.EI.engines[3].getRPM();
-            if (f61 < 1000F && f61 > 301F) ((RealFlightModel) this.FM).producedShakeLevel = (1500F - f61) / 8000F;
-            float f91 = this.FM.EI.engines[3].getRPM();
-            if (f91 > 1001F && f91 < 1500F) ((RealFlightModel) this.FM).producedShakeLevel = 0.07F;
-            float f121 = this.FM.EI.engines[3].getRPM();
-            if (f121 > 1501F && f121 < 2000F) ((RealFlightModel) this.FM).producedShakeLevel = 0.05F;
-            float f151 = this.FM.EI.engines[3].getRPM();
-            if (f151 > 2001F && f151 < 2500F) ((RealFlightModel) this.FM).producedShakeLevel = 0.04F;
-            float f181 = this.FM.EI.engines[3].getRPM();
-            if (f181 > 2501F) ((RealFlightModel) this.FM).producedShakeLevel = 0.03F;
+        if ((this.FM instanceof RealFlightModel) && ((RealFlightModel) this.FM).isRealMode()) {
+            for (int engineIndex = 0; engineIndex < 4; engineIndex++) {
+                RealFlightModel realFlightModel = (RealFlightModel) this.FM;
+                float rpm = this.FM.EI.engines[engineIndex].getRPM();
+                if (rpm > 30) {
+                    if (rpm < 300F) {
+                        realFlightModel.producedShakeLevel = Math.max(realFlightModel.producedShakeLevel, (1500F - rpm) / 3000F);
+                    } else if (rpm < 1000F) {
+                        realFlightModel.producedShakeLevel = Math.max(realFlightModel.producedShakeLevel, (1500F - rpm) / 8000F);
+                    } else if (rpm < 1500F) {
+                        realFlightModel.producedShakeLevel = Math.max(realFlightModel.producedShakeLevel, 0.07F);
+                    } else if (rpm < 2000F) {
+                        realFlightModel.producedShakeLevel = Math.max(realFlightModel.producedShakeLevel, 0.05F);
+                    } else if (rpm < 2300F) {
+                        realFlightModel.producedShakeLevel = Math.max(realFlightModel.producedShakeLevel, 0.04F);
+                    }
+                }
+            }
         }
     }
 

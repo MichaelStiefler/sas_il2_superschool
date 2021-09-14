@@ -102,9 +102,20 @@ public abstract class SB2Uxyz extends Scheme1 implements TypeStormovik, TypeDive
             }
         }
         if ((this.FM instanceof RealFlightModel) && ((RealFlightModel) this.FM).isRealMode()) {
-            float f4 = this.FM.EI.engines[0].getRPM();
-            if ((f4 < 1000F) && (f4 > 30F)) {
-                ((RealFlightModel) this.FM).producedShakeLevel = (1500F - f4) / 8000F;
+            RealFlightModel realFlightModel = (RealFlightModel) this.FM;
+            float rpm = this.FM.EI.engines[0].getRPM();
+            if (rpm > 30) {
+                if (rpm < 300F) {
+                    realFlightModel.producedShakeLevel = Math.max(realFlightModel.producedShakeLevel, (1500F - rpm) / 3000F);
+                } else if (rpm < 1000F) {
+                    realFlightModel.producedShakeLevel = Math.max(realFlightModel.producedShakeLevel, (1500F - rpm) / 8000F);
+                } else if (rpm < 1500F) {
+                    realFlightModel.producedShakeLevel = Math.max(realFlightModel.producedShakeLevel, 0.07F);
+                } else if (rpm < 2000F) {
+                    realFlightModel.producedShakeLevel = Math.max(realFlightModel.producedShakeLevel, 0.05F);
+                } else if (rpm < 2300F) {
+                    realFlightModel.producedShakeLevel = Math.max(realFlightModel.producedShakeLevel, 0.04F);
+                }
             }
         }
         if ((this.FM.getSpeedKMH() > 250F) && (this.FM.getVertSpeed() > 0.0F) && (this.FM.getAltitude() < 5000F)) {

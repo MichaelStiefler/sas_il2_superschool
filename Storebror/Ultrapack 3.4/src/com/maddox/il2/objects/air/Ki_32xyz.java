@@ -309,29 +309,20 @@ public abstract class Ki_32xyz extends Scheme1 implements TypeBomber, TypeStormo
             this.hierMesh().chunkSetAngles("Cowflap4_D0", 0.0F, 27F * f1, 0.0F);
         }
         if ((this.FM instanceof RealFlightModel) && ((RealFlightModel) this.FM).isRealMode()) {
-            float f4 = this.FM.EI.engines[0].getRPM();
-            if ((f4 < 499F) && (f4 > 30F)) {
-                ((RealFlightModel) this.FM).producedShakeLevel = (1500F - f4) / 3000F;
-            }
-            float f5 = this.FM.EI.engines[0].getRPM();
-            if ((f5 < 1000F) && (f5 > 500F)) {
-                ((RealFlightModel) this.FM).producedShakeLevel = (1500F - f5) / 8000F;
-            }
-            float f7 = this.FM.EI.engines[0].getRPM();
-            if ((f7 > 1001F) && (f7 < 1500F)) {
-                ((RealFlightModel) this.FM).producedShakeLevel = 0.07F;
-            }
-            float f8 = this.FM.EI.engines[0].getRPM();
-            if ((f8 > 1501F) && (f8 < 2000F)) {
-                ((RealFlightModel) this.FM).producedShakeLevel = 0.05F;
-            }
-            float f9 = this.FM.EI.engines[0].getRPM();
-            if ((f9 > 2001F) && (f9 < 2500F)) {
-                ((RealFlightModel) this.FM).producedShakeLevel = 0.04F;
-            }
-            float f10 = this.FM.EI.engines[0].getRPM();
-            if (f10 > 2501F) {
-                ((RealFlightModel) this.FM).producedShakeLevel = 0.03F;
+            RealFlightModel realFlightModel = (RealFlightModel) this.FM;
+            float rpm = this.FM.EI.engines[0].getRPM();
+            if (rpm > 30) {
+                if (rpm < 300F) {
+                    realFlightModel.producedShakeLevel = Math.max(realFlightModel.producedShakeLevel, (1500F - rpm) / 3000F);
+                } else if (rpm < 1000F) {
+                    realFlightModel.producedShakeLevel = Math.max(realFlightModel.producedShakeLevel, (1500F - rpm) / 8000F);
+                } else if (rpm < 1500F) {
+                    realFlightModel.producedShakeLevel = Math.max(realFlightModel.producedShakeLevel, 0.07F);
+                } else if (rpm < 2000F) {
+                    realFlightModel.producedShakeLevel = Math.max(realFlightModel.producedShakeLevel, 0.05F);
+                } else if (rpm < 2300F) {
+                    realFlightModel.producedShakeLevel = Math.max(realFlightModel.producedShakeLevel, 0.04F);
+                }
             }
         }
         if (this.FM.getSpeedKMH() > 780F) {
