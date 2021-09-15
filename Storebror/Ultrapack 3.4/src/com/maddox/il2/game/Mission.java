@@ -1101,14 +1101,14 @@ public class Mission implements Destroy {
         ArrayList arraylist = null;
         if (i_21_ > 0) arraylist = new ArrayList(i_21_);
         
-        System.out.println("Mission loadWings...");
+//        System.out.println("Mission loadWings...");
         for (int t=0; t<World.cur().triggersGuard.getListTriggerAircraftSpawn().size(); t++)
             System.out.println("Trigger Aircraft Spawn no." + (t+1) + "=" + World.cur().triggersGuard.getListTriggerAircraftSpawn().get(t).toString());
 
         for (int i_22_ = 0; i_22_ < i_21_; i_22_++) {
             this.LOADING_STEP(30 + Math.round((float) i_22_ / (float) i_21_ * 30.0F), "task.Load_aircraft");
             String string = sectfile.var(i, i_22_);
-            System.out.println("Aircraft to Spawn = " + string);
+//            System.out.println("Aircraft to Spawn = " + string);
             this._loadPlayer = string.equals(this.player);
             int i_23_ = sectfile.get(string, "StartTime", 0);
             if (i_23_ > 0 && !this._loadPlayer) {
