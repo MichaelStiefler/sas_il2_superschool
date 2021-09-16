@@ -25,7 +25,6 @@ public class Potez540 extends Potez54x implements TypeBomber, TypeTransport {
 
     public void update(float f) {
         super.update(f);
-        this.onAircraftLoaded();
         if (this.FM.isPlayers()) {
             if (!Main3D.cur3D().isViewOutside()) {
                 this.hierMesh().chunkVisible("CF_D0", false);

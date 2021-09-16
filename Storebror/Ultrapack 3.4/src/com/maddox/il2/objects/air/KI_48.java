@@ -696,7 +696,6 @@ public abstract class KI_48 extends Scheme2 {
     }
 
     public void update(float f) {
-//        this.onAircraftLoaded();
         if (this.FM.isPlayers()) if (!Main3D.cur3D().isViewOutside()) {
             this.hierMesh().chunkVisible("Turret1B_D0", false);
             this.hierMesh().chunkVisible("Turret2B_D0", false);

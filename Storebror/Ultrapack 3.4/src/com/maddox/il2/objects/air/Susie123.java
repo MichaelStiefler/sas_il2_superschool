@@ -139,7 +139,6 @@ public abstract class Susie123 extends Scheme1 implements TypeStormovik, TypeDiv
                 this.moveArrestorHook(f1);
             }
         }
-        this.onAircraftLoaded();
         if (this.FM.isPlayers()) {
             if (!Main3D.cur3D().isViewOutside()) {
                 this.hierMesh().chunkVisible("AroneL_D0", false);

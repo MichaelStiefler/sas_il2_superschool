@@ -1307,10 +1307,10 @@ public class GUIAirArming extends GameState {
                 File skinsFile = afile[skinsListIndex].getCanonicalFile();
                 if (skinsFile.isFile()) {
                     String skinsFileName = skinsFile.getName();
-                    System.out.println("Skin filename = " + skinsFileName);
+//                    System.out.println("Skin filename = " + skinsFileName);
                     if (FileTools.isSymbolicLink(skinsFile.getPath())) {
                         skinsFile = new File(HomePath.toFileSystemName(FileTools.resolveSymbolicLink(skinsFile.getPath()), 0));
-                        System.out.println("...is symbolic link, resolved filename = " + skinsFile.getName());
+//                        System.out.println("...is symbolic link, resolved filename = " + skinsFile.getName());
                     }
                     String skinsFileNameLowerCase = skinsFileName.toLowerCase();
                     if (skinsFileNameLowerCase.endsWith(".bmp") && skinsFileNameLowerCase.length() + aircraftName.length() <= 122) {
@@ -1318,7 +1318,7 @@ public class GUIAirArming extends GameState {
                         if (!Mission.isNet() || Math.abs(skinsFileSize - 263036) < 200 || Math.abs(skinsFileSize - 1049176) < 500) this.cSkin.add(skinsFileName);
                         else System.out.println("Skin not added to the list, skinsFileSize=" + skinsFileSize + " (should by < 200), Math.abs(skinsFileSize - 263036)=" + (Math.abs(skinsFileSize - 263036)) + ", Math.abs(skinsFileSize - 1049176)=" + (Math.abs(skinsFileSize - 1049176)) + " (should by < 500)");
                     } else {
-                        System.out.println("...skinsFileNameLowerCase.length() + aircraftName.length() = " + (skinsFileNameLowerCase.length() + aircraftName.length()));
+//                        System.out.println("...skinsFileNameLowerCase.length() + aircraftName.length() = " + (skinsFileNameLowerCase.length() + aircraftName.length()));
                     }
                 }
             }

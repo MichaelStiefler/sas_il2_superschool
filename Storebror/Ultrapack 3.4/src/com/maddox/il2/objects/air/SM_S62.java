@@ -105,7 +105,6 @@ public class SM_S62 extends Scheme1 implements TypeTransport, TypeBomber, TypeSa
 
     public void update(float f) {
         super.update(f);
-        this.onAircraftLoaded();
         for (int i = 0; i < 3; i++) {
             for (int j = 0; j < 2; j++) {
                 if (this.FM.Gears.clpGearEff[i][j] != null) {

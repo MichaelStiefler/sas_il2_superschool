@@ -473,7 +473,6 @@ public abstract class B7A extends Scheme1 implements TypeStormovik, TypeDiveBomb
             this.hierMesh().chunkSetAngles("Pilot2_D0", this.turretMove * 180F, 0.0F, 0.0F);
             this.hierMesh().chunkSetAngles("Sheet_D0", 0.0F, this.turretMove * 180F, 0.0F);
         }
-        this.onAircraftLoaded();
         if (this.FM.isPlayers()) {
             if (!Main3D.cur3D().isViewOutside()) {
                 this.hierMesh().chunkVisible("Blister6_D0", false);

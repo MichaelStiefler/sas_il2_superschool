@@ -11,7 +11,6 @@ public class Hind extends HartXYZ {
 
     public void update(float f) {
         super.update(f);
-        this.onAircraftLoaded();
         if (this.FM.isPlayers()) {
             if (!Main3D.cur3D().isViewOutside()) {
                 this.hierMesh().chunkVisible("Blister1_D0", false);
