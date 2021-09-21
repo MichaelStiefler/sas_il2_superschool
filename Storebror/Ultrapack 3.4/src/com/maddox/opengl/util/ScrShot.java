@@ -15,6 +15,11 @@ public class ScrShot {
         this.getScreenShot(this.screenshotType, this.scrName(0), this.scrName(1), (int) (this.jpgQuality * 100F));
     }
 
+    public void grab(String fileName) {
+        System.out.println("Screenshot: " + fileName);
+        this.getScreenShot(this.screenshotType, SCREENSHOTS_DIR + fileName + types[0], SCREENSHOTS_DIR + fileName + types[1], (int) (this.jpgQuality * 100F));
+    }
+
     private String scrName(int type) {
         Calendar calendar = Calendar.getInstance();
         calendar.add(Calendar.MINUTE, CommonTools.getTimeZoneBiasMinutes());

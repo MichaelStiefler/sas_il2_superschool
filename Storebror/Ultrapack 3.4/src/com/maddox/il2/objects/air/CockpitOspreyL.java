@@ -7,6 +7,7 @@ import com.maddox.il2.ai.WayPoint;
 import com.maddox.il2.ai.World;
 import com.maddox.il2.engine.HierMesh;
 import com.maddox.il2.engine.InterpolateRef;
+import com.maddox.il2.engine.Mat;
 import com.maddox.il2.engine.hotkey.HookPilot;
 import com.maddox.il2.fm.Pitot;
 import com.maddox.il2.game.Main3D;
@@ -70,7 +71,7 @@ public class CockpitOspreyL extends CockpitPilot {
         } else {
             waypoint.getP(this.tmpP);
             this.tmpV.sub(this.tmpP, this.fm.Loc);
-            return (float) (57.295779513082323D * Math.atan2(-this.tmpV.y, this.tmpV.x));
+            return (float) (Math.toDegrees(Math.atan2(-this.tmpV.y, this.tmpV.x)));
         }
     }
 
@@ -247,7 +248,7 @@ public class CockpitOspreyL extends CockpitPilot {
             this.mesh.chunkVisible("STRELKA_GOS_FAF", false);
         }
         HierMesh hiermesh = this.aircraft().hierMesh();
-        com.maddox.il2.engine.Mat mat = hiermesh.material(hiermesh.materialFind("Gloss1D0o"));
+        Mat mat = hiermesh.material(hiermesh.materialFind("Gloss1D0o"));
         this.mesh.materialReplace("Gloss1D0o", mat);
     }
 

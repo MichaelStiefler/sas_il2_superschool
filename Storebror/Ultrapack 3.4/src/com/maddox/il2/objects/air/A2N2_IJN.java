@@ -9,7 +9,7 @@ public class A2N2_IJN extends A2N_23 {
         Property.set(class1, "iconFar_shortClassName", "Bi-Plane");
         Property.set(class1, "meshName", "3DO/Plane/Nakajima-A2N2(Multi1)/hier.him");
         Property.set(class1, "PaintScheme", new PaintSchemeFMPar01());
-        Property.set(class1, "yearService", 1938F);
+        Property.set(class1, "yearService", 1932F);
         Property.set(class1, "yearExpired", 1946F);
         Property.set(class1, "FlightModel", "FlightModels/Nakajima-A2N2.fmd");
         Property.set(class1, "cockpitClass", new Class[] { CockpitNaka_A2N.class });

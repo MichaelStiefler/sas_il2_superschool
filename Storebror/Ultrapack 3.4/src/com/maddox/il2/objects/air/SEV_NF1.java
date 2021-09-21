@@ -3,13 +3,9 @@ package com.maddox.il2.objects.air;
 import com.maddox.il2.engine.Eff3DActor;
 import com.maddox.rts.Property;
 
-public class BF2C extends Hawk_3xyz {
-    public BF2C() {
-        this.arrestor = 0.0F;
-    }
-
+public class SEV_NF1 extends SEVNF1xyz {
     public void moveArrestorHook(float f) {
-        this.hierMesh().chunkSetAngles("Hook1_D0", 0.0F, -40F * f, 0.0F);
+        this.hierMesh().chunkSetAngles("Hook1_D0", 0.0F, -30F * f, 0.0F);
         this.arrestor = f;
     }
 
@@ -21,7 +17,7 @@ public class BF2C extends Hawk_3xyz {
                 this.arrestor = (0.8F * this.arrestor) + (0.2F * f1);
                 this.moveArrestorHook(this.arrestor);
             } else {
-                float f2 = (-42F * this.FM.Gears.arrestorVSink) / 37F;
+                float f2 = (-42F * this.FM.Gears.arrestorVSink) / 30F;
                 if ((f2 < 0.0F) && (this.FM.getSpeedKMH() > 60F)) {
                     Eff3DActor.New(this, this.FM.Gears.arrestorHook, null, 1.0F, "3DO/Effects/Fireworks/04_Sparks.eff", 0.1F);
                 }
@@ -46,17 +42,17 @@ public class BF2C extends Hawk_3xyz {
     protected float arrestor;
 
     static {
-        Class class1 = BF2C.class;
+        Class class1 = SEV_NF1.class;
         new NetAircraft.SPAWN(class1);
-        Property.set(class1, "iconFar_shortClassName", "BF2C");
-        Property.set(class1, "meshName", "3DO/Plane/BF2C/BF2C_hier.him");
+        Property.set(class1, "iconFar_shortClassName", "Seversky");
+        Property.set(class1, "meshName", "3DO/Plane/SEV-NF1(Multi1)/hier.him");
         Property.set(class1, "PaintScheme", new PaintSchemeFMPar02());
-        Property.set(class1, "yearService", 1933F);
-        Property.set(class1, "yearExpired", 1942F);
-        Property.set(class1, "FlightModel", "FlightModels/Hawk3_nav.fmd");
-        Property.set(class1, "cockpitClass", new Class[] { CockpitHawk_3.class });
-        Property.set(class1, "LOSElevation", 0.84305F);
-        Aircraft.weaponTriggersRegister(class1, new int[] { 1, 0, 3, 3, 9, 9, 3});
-        Aircraft.weaponHooksRegister(class1, new String[] { "_MGUN01", "_MGUN02", "_ExternalBomb01", "_ExternalBomb02", "_ExternalDev01", "_ExternalDev02", "_ExternalBomb05" });
+        Property.set(class1, "yearService", 1935F);
+        Property.set(class1, "yearExpired", 1943.5F);
+        Property.set(class1, "FlightModel", "FlightModels/SEV-NF1.fmd");
+        Property.set(class1, "cockpitClass", new Class[] { CockpitP_35_NF1.class });
+        Property.set(class1, "LOSElevation", 0.9119F);
+        Aircraft.weaponTriggersRegister(class1, new int[] { 0, 0, 1, 1, 3, 3, 3, 3 });
+        Aircraft.weaponHooksRegister(class1, new String[] { "_MGUN01", "_MGUN02", "_MGUN03", "_MGUN04", "_ExternalBomb01", "_ExternalBomb02", "_ExternalBomb07", "_ExternalBomb08" });
     }
 }

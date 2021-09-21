@@ -126,8 +126,8 @@ public class P_47ModPack extends P_47 {
             Aircraft.xyz[1] = CommonTools.smoothCvt(f, 0.01F, 0.99F, 0.0F, 0.85F);
             Aircraft.xyz[2] = -CommonTools.smoothCvt(f, 0.01F, 0.99F, 0.0F, 0.025F);
         } else if (this instanceof P_47D27 || this instanceof P_47D || this instanceof ThunderboltMkII) {
-            Aircraft.xyz[1] = CommonTools.smoothCvt(f, 0.01F, 0.99F, 0.0F, 0.65F);
-            Aircraft.xyz[2] = -CommonTools.smoothCvt(f, 0.01F, 0.99F, 0.0F, 0.025F);
+            Aircraft.xyz[2] = -CommonTools.smoothCvt(f, 0.01F, 0.99F, 0.0F, 0.65F);
+            Aircraft.xyz[1] = CommonTools.smoothCvt(f, 0.01F, 0.99F, 0.0F, 0.025F);
         } else Aircraft.xyz[2] = -CommonTools.smoothCvt(f, 0.01F, 0.99F, 0.0F, 0.65F);
         this.hierMesh().chunkSetLocate("Blister1_D0", Aircraft.xyz, Aircraft.ypr);
         if (Config.isUSE_RENDER()) {

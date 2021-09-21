@@ -26,6 +26,7 @@ import com.maddox.il2.tools.BridgesGenerator;
 import com.maddox.rts.HomePath;
 import com.maddox.rts.MsgAction;
 import com.maddox.rts.Property;
+import com.maddox.rts.SFSInputStream;
 import com.maddox.rts.SectFile;
 
 public class PlMapLoad extends Plugin {
@@ -263,6 +264,20 @@ public class PlMapLoad extends Plugin {
             PathFind.b[i_16_].type = bridge.__type;
         }
         PathFind.setMoverType(0);
+        
+//        //FIXME: loop through maps
+////        new ScrShot("" + land.i18nName).grab("" + land.i18nName);
+//        int mapIndex = landLoaded;
+//        while (mapIndex < lands.size() - 1) {
+//            mapIndex++;
+//            Land nextLand = (Land)lands.get(mapIndex);
+//            if (nextLand.keyName.startsWith("*")) continue;
+//            System.out.println("### Auto-Loading Map " + nextLand.i18nName + "(" + nextLand.fileName + ")");
+//            //guiMapLoad(nextLand);
+//            this.nextMapLoad(nextLand);
+//            break;
+//        }
+//        
         return true;
     }
 
@@ -344,18 +359,39 @@ public class PlMapLoad extends Plugin {
         };
     }
 
+//    // FIXME!
+//    
+//    Land landNew;
+//    
+//    public void nextMapLoad(Land landNew) {
+//        this.landNew = landNew;
+//        int index = PlMapLoad.this.landNew.indx - 2;
+//        System.out.println("nextMapLoad index = " + index);
+//        if (index < 0) index = 0;
+//        Land scrLand = (Land)PlMapLoad.lands.get(index);
+//        DecimalFormat df = new DecimalFormat("000 ");
+//        Plugin.doRenderMap2D();
+//        new ScrShot("" + df.format(index) + scrLand.i18nName).grab("" + df.format(index) + scrLand.i18nName);
+//        PlMapLoad.this.guiMapLoad(PlMapLoad.this.landNew);
+//    }
+
     public void configure() {
         SectFile sectfile = new SectFile("maps/all.ini", 0);
-        int i = sectfile.sectionIndex("all");
-        if (i >= 0) {
-            int i_19_ = sectfile.vars(i);
-            for (int i_20_ = 0; i_20_ < i_19_; i_20_++) {
+        int sectionIndex = sectfile.sectionIndex("all");
+        if (sectionIndex >= 0) {
+            int numVars = sectfile.vars(sectionIndex);
+            for (int varIndex = 0; varIndex < numVars; varIndex++) {
                 Land land = new Land();
-                land.indx = i_20_;
-                land.keyName = sectfile.var(i, i_20_);
-                land.fileName = sectfile.value(i, i_20_);
+                land.indx = varIndex;
+                land.keyName = sectfile.var(sectionIndex, varIndex);
+                land.fileName = sectfile.value(sectionIndex, varIndex);
                 land.dirName = land.fileName.substring(0, land.fileName.lastIndexOf("/"));
                 land.i18nName = I18N.map(land.keyName);
+                try {
+                    new SFSInputStream("maps/" + land.fileName).close();
+                } catch (Throwable t) {
+                    System.out.println("### Coudln't find map " + land.i18nName + " load.ini file " + land.fileName + "!!!###");
+                }
                 lands.add(land);
             }
         }
