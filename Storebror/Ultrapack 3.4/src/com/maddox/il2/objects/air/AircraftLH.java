@@ -1,11 +1,14 @@
 /* Here because of obfuscation reasons */
 package com.maddox.il2.objects.air;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
 
+import com.maddox.JGP.Point3f;
+import com.maddox.JGP.Vector3f;
 import com.maddox.il2.ai.Explosion;
 import com.maddox.il2.ai.Shot;
 import com.maddox.il2.ai.World;
@@ -15,6 +18,8 @@ import com.maddox.il2.engine.Config;
 import com.maddox.il2.engine.Orient;
 import com.maddox.il2.engine.hotkey.HookPilot;
 import com.maddox.il2.fm.AircraftState;
+import com.maddox.il2.fm.Motor;
+import com.maddox.il2.fm.RealFlightModel;
 import com.maddox.il2.game.HUD;
 import com.maddox.il2.game.Main;
 import com.maddox.il2.game.Main3D;
@@ -134,6 +139,7 @@ public abstract class AircraftLH extends Aircraft {
             this.setHeadAngles(-HookPilot.current.o.getAzimut(), HookPilot.current.o.getTangage());
         else if (this.FM instanceof Maneuver) this.headTurn(f, (Maneuver) this.FM);
         this.movePilotsHead(this.viewAzimut, this.viewTangage);
+        this.applyEngineShake();
     }
 
     public float[] getHeadPos() {
@@ -412,4 +418,56 @@ public abstract class AircraftLH extends Aircraft {
     }
     // ---
    
+    // +++ Engine Shake on Startup / Damage - Backport from SAS Modact / Engine Mod / He-177 / Westland Whirlwind +++
+    // --------------------------------------------------------------------------------------------------------------
+    private static float fShakeThreshold = 0.2F; // Shake Threshold, apply no shake if shake level would be lower than this value
+    private static float fMaxShake = 0.4F; // Maximum Shake Level
+    private static float fStartupShakeLevel = 0.5F; // Max. Startup Shake Level in range 0.0F - 1.0F
+    private float[] fEngineShakeLevel = null; // Array of current shake levels per engine
+    
+    public void applyEngineShake() {
+        if (!this.FM.isPlayers() || !(this.FM instanceof RealFlightModel)) return; // don't shake for non-player aircraft.
+        if (this.fEngineShakeLevel == null) this.fEngineShakeLevel = new float[this.FM.EI.getNum()]; // initialize damaged engines array if necessary.
+        Arrays.fill(this.fEngineShakeLevel, 0.0F); // initialize Engine Shake Level Array
+        for (int i = 0; i < this.FM.EI.getNum(); i++) { // check each engine's stage
+            if (this.FM.EI.engines[i].getType() > Motor._E_TYPE_RADIAL) continue; // shake applies to piston engines only
+            if (this.FM.EI.engines[i].getStage() < Motor._E_STAGE_CATCH_UP) continue; // engine is not running, no shake
+            if (this.FM.EI.engines[i].getStage() > Motor._E_STAGE_NOMINAL) {
+                if (this.FM.EI.engines[i].getRPM() == 0.0F) continue; // engine is not running, no shake
+            }
+            if (this.FM.EI.engines[i].getStage() < Motor._E_STAGE_CATCH_FIRE) this.fEngineShakeLevel[i] = fStartupShakeLevel * (float) (this.FM.EI.engines[i].getStage()) / 5.0F; // engine is starting, set specified startup shake level
+            else {
+                this.fEngineShakeLevel[i] = 1.0F - this.FM.EI.engines[i].getReadyness(); // engine is running, set shake level according to damage
+                float engineRpm = this.FM.EI.engines[i].getRPM();
+                if (engineRpm < 1000F && engineRpm > 100F && this.FM.EI.engines[i].getControlThrottle() < 0.01F) this.fEngineShakeLevel[i] += (1000F - engineRpm) / 10000F + fShakeThreshold;
+                if (this.fEngineShakeLevel[i] < fShakeThreshold) this.fEngineShakeLevel[i] = 0.0F; // only take shake levels into account which exceed the threshold shake setting
+            }
+            // Shake whole aircraft, not just inside the cockpit.
+            if (this.fEngineShakeLevel[i] == 0.0F) continue; // don't apply aircraft shake force vector if there's no shake to apply
+            Point3f theEnginePos = this.FM.EI.engines[i].getEnginePos(); // get engine position
+            Vector3f theEngineShake = new Vector3f(World.Rnd().nextFloat(-1.0F, 1.0F), World.Rnd().nextFloat(-1.0F, 1.0F), World.Rnd().nextFloat(-1.0F, 1.0F)); // generate random shake force vector
+            float fShakeFactor = (float) Math.pow(this.FM.M.massEmpty, 0.3F) / (float) this.FM.EI.getNum() * 10000F * fMaxShake; // calculate shake force, must fit for aircraft weight etc.
+            theEngineShake.scale(this.fEngineShakeLevel[i] * fShakeFactor); // scale random shake vector accordingly
+            Vector3f theEngineMomentum = new Vector3f(); // instantiate the damage shake moment
+            theEngineMomentum.cross(theEnginePos, theEngineShake); // damage shake momentum is the vector's cartesian product between engine pos and random shake force
+            this.FM.producedAM.x += theEngineMomentum.x; // apply x-axis turn momentum only
+        }
+
+        float fTotalShake = 0.0F; // aggregated shake level of all engines
+        int iShakeWeightFactor = 1 << (this.FM.EI.getNum() - 1); // weighted shake, engine with highest shake level counts most
+        if (this.FM.EI.getNum() == 1) { // single engine aircraft, the engine's shake level equals total shake level
+            fTotalShake = this.fEngineShakeLevel[0];
+        } else { // multi engine aircraft, take all shake level into account (weighted)
+            Arrays.sort(fEngineShakeLevel); // sort shake level array (sorts in ascending order)
+            for (int i = this.FM.EI.getNum() - 1; i >= 0; i--) { // go through the list of engine shake levels in descending order
+                if (this.fEngineShakeLevel[i] == 0.0F) break; // no more engine shake? exit loop.
+                fTotalShake += this.fEngineShakeLevel[i] * (float) iShakeWeightFactor; // add weighted total shake
+                iShakeWeightFactor >>= 1; // reduce weight factor by 2
+            }
+            fTotalShake /= (float) ((1 << this.FM.EI.getNum()) - 1); // adjust total shake to 0.0F through 1.0F again.
+        }
+        if (((RealFlightModel) this.FM).producedShakeLevel < fTotalShake * fMaxShake) // if in-cockpit shake is stronger already, do nothing.
+            ((RealFlightModel) this.FM).producedShakeLevel = fTotalShake * fMaxShake; // apply shake level according to max shake level setting.
+    }
+    
 }

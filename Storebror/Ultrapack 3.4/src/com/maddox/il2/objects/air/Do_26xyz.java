@@ -4,7 +4,6 @@ import com.maddox.JGP.Point3d;
 import com.maddox.il2.ai.Shot;
 import com.maddox.il2.ai.World;
 import com.maddox.il2.engine.HierMesh;
-import com.maddox.il2.fm.RealFlightModel;
 import com.maddox.rts.Property;
 
 public class Do_26xyz extends Scheme4 implements TypeScout, TypeSeaPlane, TypeTransport {
@@ -79,25 +78,6 @@ public class Do_26xyz extends Scheme4 implements TypeScout, TypeSeaPlane, TypeTr
         this.kangle3 = 0.95F * this.kangle3 + 0.05F * this.FM.EI.engines[3].getControlRadiator();
         if (this.kangle3 > 1.0F) this.kangle3 = 1.0F;
         this.hierMesh().chunkSetAngles("Cowflap3", 0.0F, 0.0F, 21F * this.kangle3);
-        if ((this.FM instanceof RealFlightModel) && ((RealFlightModel) this.FM).isRealMode()) {
-            for (int engineIndex = 0; engineIndex < 4; engineIndex++) {
-                RealFlightModel realFlightModel = (RealFlightModel) this.FM;
-                float rpm = this.FM.EI.engines[engineIndex].getRPM();
-                if (rpm > 30) {
-                    if (rpm < 300F) {
-                        realFlightModel.producedShakeLevel = Math.max(realFlightModel.producedShakeLevel, (1500F - rpm) / 3000F);
-                    } else if (rpm < 1000F) {
-                        realFlightModel.producedShakeLevel = Math.max(realFlightModel.producedShakeLevel, (1500F - rpm) / 8000F);
-                    } else if (rpm < 1500F) {
-                        realFlightModel.producedShakeLevel = Math.max(realFlightModel.producedShakeLevel, 0.07F);
-                    } else if (rpm < 2000F) {
-                        realFlightModel.producedShakeLevel = Math.max(realFlightModel.producedShakeLevel, 0.05F);
-                    } else if (rpm < 2300F) {
-                        realFlightModel.producedShakeLevel = Math.max(realFlightModel.producedShakeLevel, 0.04F);
-                    }
-                }
-            }
-        }
     }
 
     protected void hitBone(String s, Shot shot, Point3d point3d) {

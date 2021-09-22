@@ -82,26 +82,6 @@ public abstract class Potezxyz extends Scheme2 {
     }
 
     public void update(float f) {
-        if ((this.FM instanceof RealFlightModel) && ((RealFlightModel) this.FM).isRealMode()) {
-            for (int engineIndex = 0; engineIndex < 2; engineIndex++) {
-                RealFlightModel realFlightModel = (RealFlightModel) this.FM;
-                float rpm = this.FM.EI.engines[engineIndex].getRPM();
-                if (rpm > 30) {
-                    if (rpm < 300F) {
-                        realFlightModel.producedShakeLevel = Math.max(realFlightModel.producedShakeLevel, (1500F - rpm) / 3000F);
-                    } else if (rpm < 1000F) {
-                        realFlightModel.producedShakeLevel = Math.max(realFlightModel.producedShakeLevel, (1500F - rpm) / 8000F);
-                    } else if (rpm < 1500F) {
-                        realFlightModel.producedShakeLevel = Math.max(realFlightModel.producedShakeLevel, 0.07F);
-                    } else if (rpm < 2000F) {
-                        realFlightModel.producedShakeLevel = Math.max(realFlightModel.producedShakeLevel, 0.05F);
-                    } else if (rpm < 2300F) {
-                        realFlightModel.producedShakeLevel = Math.max(realFlightModel.producedShakeLevel, 0.04F);
-                    }
-                }
-            }
-        }
-        if (this.FM.getSpeedKMH() > 250F && this.FM.getVertSpeed() > 0.0F && this.FM.getAltitude() < 5000F) this.FM.producedAF.x += 20F * (250F - this.FM.getSpeedKMH());
         if (this.FM.isPlayers() && this.FM.Sq.squareElevators > 0.0F) {
             RealFlightModel realflightmodel = (RealFlightModel) this.FM;
             if (realflightmodel.RealMode && realflightmodel.indSpeed > 120F) {
@@ -118,7 +98,7 @@ public abstract class Potezxyz extends Scheme2 {
         if (s.startsWith("xx")) {
             if (s.startsWith("xxarmor")) {
                 this.debuggunnery("Armor: Hit..");
-                if (s.endsWith("p1")) if (Math.abs(point3d.y) > 0.231D) this.getEnergyPastArmor(8.585D / (Math.abs(Aircraft.v1.y) + 9.9999997473787516E-005D), shot);
+                if (s.endsWith("p1")) if (Math.abs(point3d.y) > 0.231D) this.getEnergyPastArmor(8.585D / (Math.abs(Aircraft.v1.y) + 0.00001D), shot);
                 else this.getEnergyPastArmor(1.0F, shot);
             } else if (s.startsWith("xxeng")) {
                 int i = s.charAt(5) - 49;

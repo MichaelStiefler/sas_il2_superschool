@@ -6,7 +6,6 @@ import com.maddox.JGP.Point3d;
 import com.maddox.il2.ai.Shot;
 import com.maddox.il2.ai.World;
 import com.maddox.il2.engine.Actor;
-import com.maddox.il2.fm.RealFlightModel;
 import com.maddox.il2.game.AircraftHotKeys;
 import com.maddox.il2.game.HUD;
 import com.maddox.rts.NetMsgGuaranted;
@@ -53,25 +52,6 @@ public abstract class PBM extends Scheme2 implements TypeBomber, TypeScout, Type
     }
 
     public void update(float f) {
-        if ((this.FM instanceof RealFlightModel) && ((RealFlightModel) this.FM).isRealMode()) {
-            for (int engineIndex = 0; engineIndex < 2; engineIndex++) {
-                RealFlightModel realFlightModel = (RealFlightModel) this.FM;
-                float rpm = this.FM.EI.engines[engineIndex].getRPM();
-                if (rpm > 30) {
-                    if (rpm < 300F) {
-                        realFlightModel.producedShakeLevel = Math.max(realFlightModel.producedShakeLevel, (1500F - rpm) / 3000F);
-                    } else if (rpm < 1000F) {
-                        realFlightModel.producedShakeLevel = Math.max(realFlightModel.producedShakeLevel, (1500F - rpm) / 8000F);
-                    } else if (rpm < 1500F) {
-                        realFlightModel.producedShakeLevel = Math.max(realFlightModel.producedShakeLevel, 0.07F);
-                    } else if (rpm < 2000F) {
-                        realFlightModel.producedShakeLevel = Math.max(realFlightModel.producedShakeLevel, 0.05F);
-                    } else if (rpm < 2300F) {
-                        realFlightModel.producedShakeLevel = Math.max(realFlightModel.producedShakeLevel, 0.04F);
-                    }
-                }
-            }
-        }
         super.update(f);
         for (int i = 0; i < 3; i++) {
             for (int j = 0; j < 2; j++) {
@@ -83,10 +63,6 @@ public abstract class PBM extends Scheme2 implements TypeBomber, TypeScout, Type
                 }
             }
 
-        }
-
-        if ((this.FM.getSpeedKMH() > 250F) && (this.FM.getVertSpeed() > 0.0F) && (this.FM.getAltitude() < 5000F)) {
-            this.FM.producedAF.x += 20F * (250F - this.FM.getSpeedKMH());
         }
         if (this.FM.isPlayers() && (this.FM.Sq.squareElevators > 0.0F)) {
             if ((this.FM.getSpeedKMH() > 300F) && (this.FM.getSpeedKMH() < 400F)) {

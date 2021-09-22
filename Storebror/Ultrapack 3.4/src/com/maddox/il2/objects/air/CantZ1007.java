@@ -226,7 +226,7 @@ public abstract class CantZ1007 extends Scheme6 {
     }
 
     protected void mydebuggunnery(String s) {
-        System.out.println(s);
+//        System.out.println(s);
     }
 
     protected void setControlDamage(Shot shot, int i) {

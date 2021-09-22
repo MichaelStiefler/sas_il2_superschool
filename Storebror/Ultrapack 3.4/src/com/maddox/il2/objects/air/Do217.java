@@ -415,7 +415,7 @@ public abstract class Do217 extends Scheme2 implements TypeBomber, TypeTransport
     }
 
     protected void mydebuggunnery(String s) {
-        System.out.println(s);
+//        System.out.println(s);
     }
 
     protected void setControlDamage(Shot shot, int i) {

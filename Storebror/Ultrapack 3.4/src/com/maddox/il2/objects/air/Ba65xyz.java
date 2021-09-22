@@ -335,26 +335,6 @@ public abstract class Ba65xyz extends Scheme1 implements TypeFighter, TypeStormo
     }
 
     public void update(float f) {
-        if ((this.FM instanceof RealFlightModel) && ((RealFlightModel) this.FM).isRealMode()) {
-            RealFlightModel realFlightModel = (RealFlightModel) this.FM;
-            float rpm = this.FM.EI.engines[0].getRPM();
-            if (rpm > 30) {
-                if (rpm < 300F) {
-                    realFlightModel.producedShakeLevel = Math.max(realFlightModel.producedShakeLevel, (1500F - rpm) / 3000F);
-                } else if (rpm < 1000F) {
-                    realFlightModel.producedShakeLevel = Math.max(realFlightModel.producedShakeLevel, (1500F - rpm) / 8000F);
-                } else if (rpm < 1500F) {
-                    realFlightModel.producedShakeLevel = Math.max(realFlightModel.producedShakeLevel, 0.07F);
-                } else if (rpm < 2000F) {
-                    realFlightModel.producedShakeLevel = Math.max(realFlightModel.producedShakeLevel, 0.05F);
-                } else if (rpm < 2300F) {
-                    realFlightModel.producedShakeLevel = Math.max(realFlightModel.producedShakeLevel, 0.04F);
-                }
-            }
-        }
-        if ((this.FM.getSpeedKMH() > 250F) && (this.FM.getVertSpeed() > 0.0F) && (this.FM.getAltitude() < 5000F)) {
-            this.FM.producedAF.x += 20F * (250F - this.FM.getSpeedKMH());
-        }
         if (this.FM.isPlayers() && (this.FM.Sq.squareElevators > 0.0F)) {
             RealFlightModel realflightmodel = (RealFlightModel) this.FM;
             if (realflightmodel.RealMode && (realflightmodel.indSpeed > 120F)) {

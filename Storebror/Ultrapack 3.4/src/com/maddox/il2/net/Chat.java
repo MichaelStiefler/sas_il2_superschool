@@ -9,6 +9,7 @@ import java.util.StringTokenizer;
 
 import com.maddox.il2.ai.World;
 import com.maddox.il2.engine.Config;
+import com.maddox.il2.game.DServer;
 import com.maddox.il2.game.HUD;
 import com.maddox.il2.game.Main;
 import com.maddox.il2.objects.air.Aircraft;
@@ -150,13 +151,19 @@ public class Chat extends NetObj {
                 // TODO: +++ Auto Login / FBDj Admin Mod +++
                 this.checkServerLoginMessage(chatmessage);
             // TODO: --- Auto Login / FBDj Admin Mod ---
-            else System.out.println("Chat: --- " + chatmessage.msg);
+            else if (isValidForLogging(chatmessage.msg)) System.out.println("Chat: --- " + chatmessage.msg);
         }
+    }
+    
+    private boolean isValidForLogging(String message) {
+        if (message.toLowerCase().startsWith("!login") && !(Main.cur() instanceof DServer)) return false;
+        if (message.toLowerCase().startsWith("!slap") && !(Main.cur() instanceof DServer)) return false;
+        return true;
     }
 
     // TODO: +++ Auto Login / FBDj Admin Mod +++
     public void checkServerLoginMessage(ChatMessage chatmessage) {
-        System.out.println("Chat: " + chatmessage.from.shortName() + ": \t" + chatmessage.msg);
+        if (isValidForLogging(chatmessage.msg)) System.out.println("Chat: " + chatmessage.from.shortName() + ": \t" + chatmessage.msg);
         if (chatmessage.from.shortName().equals("Server")) if (chatmessage.msg.endsWith("using admin name. Must login or will be kicked!")) {
             List receiverList = new ArrayList();
             receiverList.add(chatmessage.from);
@@ -167,7 +174,7 @@ public class Chat extends NetObj {
     // TODO: --- Auto Login / FBDj Admin Mod ---
 
     public static void sendLogRnd(int i, String s, Aircraft aircraft, Aircraft aircraft1) {
-        sendLog(i, s + (int) (Math.random() * 2D + 1.3999999999999999D), aircraft, aircraft1);
+        sendLog(i, s + (int) (Math.random() * 2D + 1.4D), aircraft, aircraft1);
     }
 
     public static void sendLog(int i, String s, Aircraft aircraft, Aircraft aircraft1) {

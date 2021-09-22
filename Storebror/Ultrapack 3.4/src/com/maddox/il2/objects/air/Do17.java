@@ -332,7 +332,7 @@ public abstract class Do17 extends FLAME2_SCHEME2a implements TypeBomber, TypeTr
     }
 
     protected void mydebuggunnery(String paramString) {
-        System.out.println(paramString);
+//        System.out.println(paramString);
     }
 
     protected void setControlDamage(Shot paramShot, int paramInt) {

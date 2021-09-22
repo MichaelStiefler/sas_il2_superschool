@@ -412,35 +412,6 @@ public abstract class ANF_LMxyz extends Scheme1 implements TypeScout {
     }
 
     public void update(float f) {
-        if ((this.FM instanceof RealFlightModel) && ((RealFlightModel) this.FM).isRealMode()) {
-            float f1 = this.FM.EI.engines[0].getRPM();
-            if ((f1 < 300F) && (f1 > 30F)) {
-                ((RealFlightModel) this.FM).producedShakeLevel = (1500F - f1) / 3000F;
-            }
-            float f5 = this.FM.EI.engines[0].getRPM();
-            if ((f5 < 1000F) && (f5 > 301F)) {
-                ((RealFlightModel) this.FM).producedShakeLevel = (1500F - f5) / 8000F;
-            }
-            float f6 = this.FM.EI.engines[0].getRPM();
-            if ((f6 > 1001F) && (f6 < 1500F)) {
-                ((RealFlightModel) this.FM).producedShakeLevel = 0.07F;
-            }
-            float f8 = this.FM.EI.engines[0].getRPM();
-            if ((f8 > 1501F) && (f8 < 2000F)) {
-                ((RealFlightModel) this.FM).producedShakeLevel = 0.05F;
-            }
-            float f9 = this.FM.EI.engines[0].getRPM();
-            if ((f9 > 2001F) && (f9 < 2500F)) {
-                ((RealFlightModel) this.FM).producedShakeLevel = 0.04F;
-            }
-            float f10 = this.FM.EI.engines[0].getRPM();
-            if (f10 > 2501F) {
-                ((RealFlightModel) this.FM).producedShakeLevel = 0.03F;
-            }
-        }
-        if ((this.FM.getSpeedKMH() > 250F) && (this.FM.getVertSpeed() > 0.0F) && (this.FM.getAltitude() < 5000F)) {
-            this.FM.producedAF.x += 20F * (250F - this.FM.getSpeedKMH());
-        }
         if (this.FM.isPlayers() && (this.FM.Sq.squareElevators > 0.0F)) {
             RealFlightModel realflightmodel = (RealFlightModel) this.FM;
             if (realflightmodel.RealMode && (realflightmodel.indSpeed > 120F)) {

@@ -4,7 +4,6 @@ import com.maddox.JGP.Point3f;
 import com.maddox.JGP.Vector3f;
 import com.maddox.il2.ai.World;
 import com.maddox.il2.engine.Config;
-import com.maddox.il2.fm.RealFlightModel;
 import com.maddox.il2.game.HUD;
 import com.maddox.il2.game.Main3D;
 import com.maddox.il2.game.Mission;
@@ -54,25 +53,6 @@ public class P_47ModPack extends P_47 {
 
     public void update(float f) {
         super.update(f);
-
-        if ((this.FM instanceof RealFlightModel) && ((RealFlightModel) this.FM).isRealMode()) {
-            RealFlightModel realFlightModel = (RealFlightModel) this.FM;
-            float rpm = this.FM.EI.engines[0].getRPM();
-            if (rpm > 30) {
-                if (rpm < 300F) {
-                    realFlightModel.producedShakeLevel = Math.max(realFlightModel.producedShakeLevel, (1500F - rpm) / 3000F);
-                } else if (rpm < 1000F) {
-                    realFlightModel.producedShakeLevel = Math.max(realFlightModel.producedShakeLevel, (1500F - rpm) / 8000F);
-                } else if (rpm < 1500F) {
-                    realFlightModel.producedShakeLevel = Math.max(realFlightModel.producedShakeLevel, 0.07F);
-                } else if (rpm < 2000F) {
-                    realFlightModel.producedShakeLevel = Math.max(realFlightModel.producedShakeLevel, 0.05F);
-                } else if (rpm < 2300F) {
-                    realFlightModel.producedShakeLevel = Math.max(realFlightModel.producedShakeLevel, 0.04F);
-                }
-            }
-        }
-
         if (this.hasRwr && this == World.getPlayerAircraft()) try {
             if (this.FM.CT.BrakeControl == 1.0F) {
                 if (!this.oldBreakControl) {

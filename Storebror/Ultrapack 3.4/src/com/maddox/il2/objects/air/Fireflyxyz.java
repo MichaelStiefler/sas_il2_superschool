@@ -6,7 +6,6 @@ import com.maddox.il2.ai.World;
 import com.maddox.il2.engine.Config;
 import com.maddox.il2.engine.Eff3DActor;
 import com.maddox.il2.engine.HierMesh;
-import com.maddox.il2.fm.RealFlightModel;
 import com.maddox.il2.game.Main3D;
 import com.maddox.rts.Property;
 
@@ -96,48 +95,6 @@ public class Fireflyxyz extends Scheme1 implements TypeFighter, TypeTNBFighter, 
         } else {
             this.hierMesh().chunkSetAngles("Scoop", 0.0F, 0.0F, 20F * this.FM.EI.engines[0].getControlRadiator());
         }
-        if (this.FM instanceof RealFlightModel) {
-            RealFlightModel realFlightModel = (RealFlightModel) this.FM;
-            if (realFlightModel.isRealMode()) {
-                float rpm = this.FM.EI.engines[0].getRPM();
-                if (rpm > 30F) {
-                    if (rpm < 300F) {
-                        realFlightModel.producedShakeLevel = (1500F - rpm) / 3000F;
-                    } else if (rpm < 1000F) {
-                        realFlightModel.producedShakeLevel = (1500F - rpm) / 8000F;
-                    } else if (rpm < 1500F) {
-                        realFlightModel.producedShakeLevel = 0.07F;
-                    } else if (rpm < 2000F) {
-                        realFlightModel.producedShakeLevel = 0.05F;
-                    }
-
-                    // TODO: By SAS~Storebror: Get rid of this constant shaking when engine is revved up!
-//                    else if(rpm < 2500F)
-//                        realFlightModel.producedShakeLevel = 0.04F;
-//                    else
-//                        realFlightModel.producedShakeLevel = 0.03F;
-                }
-            }
-        }
-        // TODO: By SAS~Storebror: FUCK JAVA FM MESSUP! FUCK IT! DAMN... FUCK IT! WTF?
-//        if(this.FM.getSpeedKMH() > 250F && this.FM.getVertSpeed() > 0.0F && this.FM.getAltitude() < 5000F)
-//            FM.producedAF.x += 20F * (250F - this.FM.getSpeedKMH());
-//        if(this.FM.isPlayers() && FM.Sq.squareElevators > 0.0F)
-//        {
-//            RealFlightModel realFlightModel = (RealFlightModel)this.FM;
-//            if(realFlightModel.isRealMode() && realFlightModel.indSpeed > 120F)
-//            {
-//                float f5 = 1.0F + 0.005F * (120F - realFlightModel.indSpeed);
-//                if(f5 < 0.0F)
-//                    f5 = 0.0F;
-//                this.FM.SensPitch = 0.59F * f5;
-//                if(realFlightModel.indSpeed > 120F)
-//                    FM.producedAM.y -= 1720F * (120F - realFlightModel.indSpeed);
-//            } else
-//            {
-//                this.FM.SensPitch = 0.63F;
-//            }
-//        }
     }
 
     protected void moveElevator(float f) {
