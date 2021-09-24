@@ -24,7 +24,7 @@ public class A1N2_IJN extends GLADIATOR {
     static {
         Class class1 = A1N2_IJN.class;
         new NetAircraft.SPAWN(class1);
-        Property.set(class1, "iconFar_shortClassName", "Gladiator");
+        Property.set(class1, "iconFar_shortClassName", "A1N2");
         Property.set(class1, "meshName", "3DO/Plane/Nakajima-A1N2(Multi1)/hier.him");
         Property.set(class1, "PaintScheme", new PaintSchemeFMPar01());
         Property.set(class1, "originCountry", PaintScheme.countryJapan);
