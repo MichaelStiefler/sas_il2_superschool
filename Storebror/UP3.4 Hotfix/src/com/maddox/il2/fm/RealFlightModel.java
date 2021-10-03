@@ -499,7 +499,7 @@ public class RealFlightModel extends Pilot {
             float fMachDrag = this.Ss.getDragFactorForMach(this.Mach);
             fDragFactor = (float) Math.sqrt(fMachDrag);
             fDragParasiteFactor = (float) Math.pow(fMachDrag, 5D);
-        } else
+        }// else
 //        if(this.Ss.getDragFactorForMach(this.Mach) <= 1.0F);
             if (this.Mach > 0.8F) this.Mach = 0.8F;
         this.Kq = 1.0F / (float) Math.sqrt(1.0F - this.Mach * this.Mach);

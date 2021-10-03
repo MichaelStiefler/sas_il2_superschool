@@ -690,7 +690,7 @@ public class Config {
     private static final String   MIN_PATCH_LEVEL       = "0".intern();
     private static final String   MAX_PATCH_LEVEL       = "0".intern();
     private static final String   PATCH_LEVEL           = "0".intern();
-    private static final String   HOTFIX_VERSION        = "7".intern();
+    private static final String   HOTFIX_VERSION        = "8".intern();
     private static final String[] PATCHLEVEL_G          = { "0".intern() };
     private static final String[] PATCHLEVEL_Y          = { "9".intern() };
 
