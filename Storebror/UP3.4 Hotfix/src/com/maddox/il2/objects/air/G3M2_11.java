@@ -111,7 +111,7 @@ public class G3M2_11 extends G3M implements TypeBomber {
     }
 
     public void doWoundPilot(int i, float f) {
-        if ((i > 0) && (i < 4)) {
+        if (this.FM.turret != null && (i > 0) && (i < this.FM.turret.length)) {
             this.FM.turret[i].setHealth(f);
         }
     }
