@@ -5,6 +5,7 @@ import com.maddox.il2.ai.BulletEmitter;
 import com.maddox.il2.ai.World;
 import com.maddox.il2.ai.air.Maneuver;
 import com.maddox.il2.ai.air.Pilot;
+import com.maddox.il2.engine.HierMesh;
 import com.maddox.il2.fm.RealFlightModel;
 import com.maddox.il2.objects.electronics.RadarLiSN2;
 import com.maddox.il2.objects.weapons.MGunBK5_AP;
@@ -13,7 +14,7 @@ import com.maddox.il2.objects.weapons.MGunMK214A;
 import com.maddox.rts.Property;
 import com.maddox.rts.Time;
 
-public class ME_410B extends ME_210 implements TypeBNZFighter, TypeStormovik, TypeStormovikArmored, TypeX4Carrier, TypeRadarLiSN2Carrier {
+public class ME_410B extends ME_210 implements TypeBNZFighter, TypeStormovik, TypeStormovikArmored, TypeX4Carrier, TypeRadarLiSN2Carrier, TypeRadarFuG200Carrier {
 
     public ME_410B() {
         this.bToFire = false;
@@ -31,63 +32,90 @@ public class ME_410B extends ME_210 implements TypeBNZFighter, TypeStormovik, Ty
         if (this.FM.CT.Weapons[1] != null) {
             this.g1 = this.FM.CT.Weapons[1][0];
         }
-        if (super.thisWeaponsName.endsWith("DTK")) {
-            this.hierMesh().chunkVisible("Rack_L", true);
-            this.hierMesh().chunkVisible("Rack_R", true);
-        } else {
-            this.hierMesh().chunkVisible("Rack_L", false);
-            this.hierMesh().chunkVisible("Rack_R", false);
-        }
-        if (super.thisWeaponsName.startsWith("NJ") || super.thisWeaponsName.startsWith("nj")) {
+        if (thisWeaponsName.toLowerCase().startsWith("nj")) {
             this.FM.M.massEmpty += 60F;
-            this.hierMesh().chunkVisible("Fug1_D0", true);
-            this.hierMesh().chunkVisible("Fug200_D0", true);
-            this.hierMesh().chunkVisible("RadarOp_D0", true);
-            this.hierMesh().chunkVisible("Radar_Set_D0", true);
-            this.hierMesh().chunkVisible("Pilot2_D0", false);
-            this.hierMesh().chunkVisible("HMask2_D0", false);
-        } else {
-            this.hierMesh().chunkVisible("Fug1_D0", false);
-            this.hierMesh().chunkVisible("Fug200_D0", false);
-            this.hierMesh().chunkVisible("RadarOp_D0", false);
-            this.hierMesh().chunkVisible("Radar_Set_D0", false);
-            this.hierMesh().chunkVisible("Pilot2_D0", true);
-            this.hierMesh().chunkVisible("HMask2_D0", true);
         }
-        if (super.thisWeaponsName.startsWith("NJ_SMuzik")) {
-            this.hierMesh().chunkVisible("Turret1A_D0", false);
-            this.hierMesh().chunkVisible("Turret1B_D0", false);
-            this.hierMesh().chunkVisible("Turret2A_D0", false);
-            this.hierMesh().chunkVisible("Turret2B_D0", false);
-        } else {
-            this.hierMesh().chunkVisible("Turret1A_D0", true);
-            this.hierMesh().chunkVisible("Turret1B_D0", true);
-            this.hierMesh().chunkVisible("Turret2A_D0", true);
-            this.hierMesh().chunkVisible("Turret2B_D0", true);
-        }
-        if (super.thisWeaponsName.startsWith("SEA")) {
+        if (thisWeaponsName.startsWith("SEA")) {
             this.FM.M.massEmpty += 30F;
-            this.hierMesh().chunkVisible("Fug1C_D0", true);
-            this.hierMesh().chunkVisible("Fug1L_D0", true);
-            this.hierMesh().chunkVisible("Fug1R_D0", true);
-        } else {
-            this.hierMesh().chunkVisible("Fug1C_D0", false);
-            this.hierMesh().chunkVisible("Fug1L_D0", false);
-            this.hierMesh().chunkVisible("Fug1R_D0", false);
         }
-        if (super.thisWeaponsName.startsWith("ZFR4")) {
-            this.hierMesh().chunkVisible("Telescope", true);
-        } else {
-            this.hierMesh().chunkVisible("Telescope", false);
-        }
-        if (super.thisWeaponsName.startsWith("U4") || super.thisWeaponsName.startsWith("ZFR4_U4")) {
-            this.hierMesh().chunkVisible("BK5_BARREL", true);
+        if (thisWeaponsName.startsWith("U4") || thisWeaponsName.startsWith("ZFR4_U4")) {
             this.FM.M.massEmpty += 540F;
+        }
+        prepareWeapons(this.hierMesh(), this.thisWeaponsName);
+    }
+    
+    public static void prepareWeapons(HierMesh hierMesh, String thisWeaponsName) {
+        if (thisWeaponsName.endsWith("DTK")) {
+            hierMesh.chunkVisible("Rack_L", true);
+            hierMesh.chunkVisible("Rack_R", true);
         } else {
-            this.hierMesh().chunkVisible("BK5_BARREL", false);
+            hierMesh.chunkVisible("Rack_L", false);
+            hierMesh.chunkVisible("Rack_R", false);
+        }
+        if (thisWeaponsName.toLowerCase().startsWith("nj")) {
+            hierMesh.chunkVisible("RadarOp_D0", true);
+            hierMesh.chunkVisible("Radar_Set_D0", true);
+            hierMesh.chunkVisible("Pilot2_D0", false);
+            hierMesh.chunkVisible("HMask2_D0", false);
+            String thisWeaponsNamePart = thisWeaponsName.substring(thisWeaponsName.toLowerCase().startsWith("nj_smuzik")?10:3);
+            if (thisWeaponsNamePart.startsWith("SN2b")) {
+                hierMesh.chunkVisible("Fug1_D0", true);
+                hierMesh.chunkVisible("Fug200_D0", true);
+                hierMesh.chunkVisible("Fug200d_D0", false);
+            } else if (thisWeaponsNamePart.startsWith("SN2c")) {
+                hierMesh.chunkVisible("Fug1_D0", false);
+                hierMesh.chunkVisible("Fug200_D0", true);
+                hierMesh.chunkVisible("Fug200d_D0", false);
+            } else if (thisWeaponsNamePart.startsWith("SN2d")) {
+                hierMesh.chunkVisible("Fug1_D0", false);
+                hierMesh.chunkVisible("Fug200_D0", false);
+                hierMesh.chunkVisible("Fug200d_D0", true);
+            } else {
+                hierMesh.chunkVisible("Fug1_D0", false);
+                hierMesh.chunkVisible("Fug200_D0", false);
+                hierMesh.chunkVisible("Fug200d_D0", false);
+            }
+        } else {
+            hierMesh.chunkVisible("Fug1_D0", false);
+            hierMesh.chunkVisible("Fug200_D0", false);
+            hierMesh.chunkVisible("Fug200d_D0", false);
+            hierMesh.chunkVisible("RadarOp_D0", false);
+            hierMesh.chunkVisible("Radar_Set_D0", false);
+            hierMesh.chunkVisible("Pilot2_D0", true);
+            hierMesh.chunkVisible("HMask2_D0", true);
+        }
+        if (thisWeaponsName.toLowerCase().startsWith("nj_smuzik")) {
+            hierMesh.chunkVisible("Turret1A_D0", false);
+            hierMesh.chunkVisible("Turret1B_D0", false);
+            hierMesh.chunkVisible("Turret2A_D0", false);
+            hierMesh.chunkVisible("Turret2B_D0", false);
+        } else {
+            hierMesh.chunkVisible("Turret1A_D0", true);
+            hierMesh.chunkVisible("Turret1B_D0", true);
+            hierMesh.chunkVisible("Turret2A_D0", true);
+            hierMesh.chunkVisible("Turret2B_D0", true);
+        }
+        if (thisWeaponsName.startsWith("SEA")) {
+            hierMesh.chunkVisible("Fug1C_D0", true);
+            hierMesh.chunkVisible("Fug1L_D0", true);
+            hierMesh.chunkVisible("Fug1R_D0", true);
+        } else {
+            hierMesh.chunkVisible("Fug1C_D0", false);
+            hierMesh.chunkVisible("Fug1L_D0", false);
+            hierMesh.chunkVisible("Fug1R_D0", false);
+        }
+        if (thisWeaponsName.startsWith("ZFR4")) {
+            hierMesh.chunkVisible("Telescope", true);
+        } else {
+            hierMesh.chunkVisible("Telescope", false);
+        }
+        if (thisWeaponsName.startsWith("U4") || thisWeaponsName.startsWith("ZFR4_U4")) {
+            hierMesh.chunkVisible("BK5_BARREL", true);
+        } else {
+            hierMesh.chunkVisible("BK5_BARREL", false);
         }
     }
-
+    
     public void update(float paramFloat) {
         if ((this.g1 != null) && (this.oldbullets != this.g1.countBullets()) && ((this.getGunByHookName("_CANNON03") instanceof MGunBK5_AP) || (this.getGunByHookName("_CANNON03") instanceof MGunBK5_HE))) {
             switch (this.phase) {
@@ -286,7 +314,6 @@ public class ME_410B extends ME_210 implements TypeBNZFighter, TypeStormovik, Ty
         Property.set(class1, "PaintScheme", new PaintSchemeFMPar05());
         Property.set(class1, "yearService", 1943F);
         Property.set(class1, "yearExpired", 1945.5F);
-//        Property.set(class1, "FlightModel", "FlightModels/Me-410B.fmd:ME210410_FM");
         Property.set(class1, "FlightModel", "FlightModels/Me-410B.fmd");
         Property.set(class1, "cockpitClass", new Class[] { CockpitME_410B.class, CockpitMe_410_Tubesight.class, CockpitMe_410_Radar.class, CockpitMe_410_Gunner.class });
         Property.set(class1, "LOSElevation", 0.66895F);

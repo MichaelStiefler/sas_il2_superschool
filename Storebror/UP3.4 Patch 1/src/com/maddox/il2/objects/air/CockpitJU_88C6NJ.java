@@ -85,6 +85,7 @@ public class CockpitJU_88C6NJ extends CockpitPilot {
             if (!this.aircraft().thisWeaponsName.startsWith("SN")) {
                 this.mesh.hideSubTrees("RadarBox");
                 this.mesh.hideSubTrees("RadarHook");
+                this.mesh.hideSubTrees("Radar");
             }
             return true;
         } else {

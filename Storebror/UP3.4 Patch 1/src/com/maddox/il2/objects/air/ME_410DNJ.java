@@ -6,6 +6,7 @@ import com.maddox.JGP.Point3d;
 import com.maddox.il2.ai.World;
 import com.maddox.il2.ai.air.Pilot;
 import com.maddox.il2.engine.Actor;
+import com.maddox.il2.engine.HierMesh;
 import com.maddox.il2.fm.RealFlightModel;
 import com.maddox.il2.game.AircraftHotKeys;
 import com.maddox.il2.game.HUD;
@@ -30,6 +31,33 @@ public class ME_410DNJ extends ME_210 implements TypeFighter, TypeBNZFighter, Ty
         this.fSightCurAltitude = 850F;
         this.fSightCurSpeed = 150F;
         this.fSightCurReadyness = 0.0F;
+    }
+
+    public void onAircraftLoaded() {
+        super.onAircraftLoaded();
+        prepareWeapons(this.hierMesh(), this.thisWeaponsName);
+    }
+
+    public static void prepareWeapons(HierMesh hierMesh, String thisWeaponsName) {
+        if (thisWeaponsName.startsWith("SN2b") || thisWeaponsName.equals("default") || thisWeaponsName.equals("none")) {
+            hierMesh.chunkVisible("Fug1_D0", true);
+            hierMesh.chunkVisible("Fug200_D0", true);
+            hierMesh.chunkVisible("Fug200d_D0", false);
+        }
+        else if (thisWeaponsName.startsWith("SN2c")) {
+            hierMesh.chunkVisible("Fug1_D0", false);
+            hierMesh.chunkVisible("Fug200_D0", true);
+            hierMesh.chunkVisible("Fug200d_D0", false);
+        }
+        else if (thisWeaponsName.startsWith("SN2d")) {
+            hierMesh.chunkVisible("Fug1_D0", false);
+            hierMesh.chunkVisible("Fug200_D0", false);
+            hierMesh.chunkVisible("Fug200d_D0", true);
+        } else {
+            hierMesh.chunkVisible("Fug1_D0", false);
+            hierMesh.chunkVisible("Fug200_D0", false);
+            hierMesh.chunkVisible("Fug200d_D0", false);
+        }
     }
 
     protected void nextDMGLevel(String s, int i, Actor actor) {
