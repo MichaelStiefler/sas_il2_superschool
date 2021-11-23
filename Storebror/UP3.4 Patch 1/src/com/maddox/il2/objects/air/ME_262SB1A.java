@@ -51,16 +51,34 @@ public class ME_262SB1A extends ME_262 implements TypeStormovik, TypeX4Carrier, 
 
     public void onAircraftLoaded() {
         super.onAircraftLoaded();
-        if (this.thisWeaponsName.equalsIgnoreCase("default") || this.thisWeaponsName.equalsIgnoreCase("24r4m")) {
-            this.hierMesh().chunkVisible("PylonL_D0", false);
-            this.hierMesh().chunkVisible("PylonR_D0", false);
-        } else if (this.thisWeaponsName.toLowerCase().startsWith("1x")) {
-            this.hierMesh().chunkVisible("PylonR_D0", false);
+        prepareWeapons(this.hierMesh(), this.thisWeaponsName);
+    }
+
+    public static void prepareWeapons(HierMesh hierMesh, String thisWeaponsName) {
+        if (thisWeaponsName.equalsIgnoreCase("default")
+                || thisWeaponsName.equalsIgnoreCase("pb1")
+                || thisWeaponsName.equalsIgnoreCase("pb2")
+                || thisWeaponsName.equalsIgnoreCase("24r4m")
+                || thisWeaponsName.equalsIgnoreCase("none")) {
+            hierMesh.chunkVisible("PylonL_D0", false);
+            hierMesh.chunkVisible("PylonR_D0", false);
+        } else if (thisWeaponsName.toLowerCase().startsWith("1x")) {
+            hierMesh.chunkVisible("PylonL_D0", true);
+            hierMesh.chunkVisible("PylonR_D0", false);
+        } else {
+            hierMesh.chunkVisible("PylonL_D0", true);
+            hierMesh.chunkVisible("PylonR_D0", true);
         }
 
-        if ((this.thisWeaponsName.toLowerCase().indexOf("wfrgr") < 0) && (this.thisWeaponsName.toLowerCase().indexOf("r4m") < 0)) {
-            this.hierMesh().hideSubTrees("Antenna_L_D0");
-            this.hierMesh().hideSubTrees("Antenna_R_D0");
+        if ((thisWeaponsName.toLowerCase().indexOf("wfrgr") < 0) && (thisWeaponsName.toLowerCase().indexOf("r4m") < 0)) {
+            hierMesh.hideSubTrees("Antenna_L_D0");
+            hierMesh.hideSubTrees("Antenna_R_D0");
+        } else {
+            String[] chunks = { "Antenna_L_D0", "Antenna_Aa_D0", "Antenna_Aaa_D0", "Antenna_Aab_D0", "Antenna_Ab_D0", "Antenna_Aba_D0", "Antenna_Abb_D0",
+                    "Antenna_R_D0", "Antenna_Ac_D0", "Antenna_Aca_D0", "Antenna_Acb_D0", "Antenna_Ad_D0", "Antenna_Ada_D0", "Antenna_Adb_D0"};
+            for (int chunkIndex=0; chunkIndex<chunks.length; chunkIndex++) {
+                hierMesh.chunkVisible(chunks[chunkIndex], true);
+            }
         }
     }
 
@@ -322,7 +340,7 @@ public class ME_262SB1A extends ME_262 implements TypeStormovik, TypeX4Carrier, 
         Property.set(class1, "PaintScheme", new PaintSchemeBMPar05());
         Property.set(class1, "yearService", 1944.1F);
         Property.set(class1, "yearExpired", 1945.5F);
-        Property.set(class1, "FlightModel", "FlightModels/Me-262SB1a.fmd:Me-262SB");
+        Property.set(class1, "FlightModel", "FlightModels/Me-262SB1a.fmd");
         Property.set(class1, "cockpitClass", new Class[] { CockpitME_262Sb.class });
         Property.set(class1, "LOSElevation", 0.74615F);
         Aircraft.weaponTriggersRegister(class1, new int[] { 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 9, 9, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 9, 9, 9, 9 });

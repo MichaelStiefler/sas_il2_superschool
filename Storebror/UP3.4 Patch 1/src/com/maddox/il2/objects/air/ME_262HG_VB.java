@@ -341,7 +341,7 @@ public class ME_262HG_VB extends ME_262 implements TypeX4Carrier, TypeRadarLiSN2
         Property.set(class1, "PaintScheme", new PaintSchemeFMPar05());
         Property.set(class1, "yearService", 1944.1F);
         Property.set(class1, "yearExpired", 1945.5F);
-        Property.set(class1, "FlightModel", "FlightModels/Me-262HG-VB.fmd:Me262HGV_FM");
+        Property.set(class1, "FlightModel", "FlightModels/Me-262HG-VB.fmd");
 // Property.set(class1, "cockpitClass", new Class[] { CockpitME_262HG_VB.class, CockpitME_262HG_VB_Rear.class, CockpitME_262HG_VB_FuG_224.class });
         Property.set(class1, "cockpitClass", new Class[] { CockpitME_262HG_VB.class, CockpitME_262HG_VB_Rear.class });
         Property.set(class1, "LOSElevation", 0.7498F);
