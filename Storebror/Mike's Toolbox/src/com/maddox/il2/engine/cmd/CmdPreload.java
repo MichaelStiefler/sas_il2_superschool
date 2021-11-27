@@ -13,7 +13,9 @@ import java.io.PrintWriter;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
@@ -30,6 +32,7 @@ import com.maddox.il2.fm.Atmosphere;
 import com.maddox.il2.fm.Controls;
 import com.maddox.il2.fm.EnginesInterface;
 import com.maddox.il2.fm.FlightModel;
+import com.maddox.il2.fm.FlightModelMain;
 import com.maddox.il2.fm.Mass;
 import com.maddox.il2.fm.Motor;
 import com.maddox.il2.fm.Polares;
@@ -193,30 +196,30 @@ public class CmdPreload extends Cmd {
         if (map.containsKey(CmdPreload.LIST_LOADOUTS)) {
             this.ListLoadouts(Cmd.arg(map, CmdPreload.LIST_LOADOUTS, 0, CmdPreload.LISTMODE_PADDED_CLASSNAME_SORTED));
         }
-        if (map.containsKey("FMINFO")) {
+        if (map.containsKey(FMINFO)) {
             if (Mission.isNet() && (NetEnv.hosts().size() > 1)) {
                 System.out.println("Network mission detected, disabling fm debug.");
             } else {
                 CmdPreload.readConfig();
-                if (map.containsKey("SWITCH")) {
+                if (map.containsKey(SWITCH)) {
                     if (!Maneuver.showFM) {
                         Maneuver.showFM = true;
                     } else {
                         Maneuver.showFM = false;
                     }
-                } else if (map.containsKey("DUMP") && Actor.isAlive(World.getPlayerAircraft()) && !World.isPlayerParatrooper() && !World.isPlayerDead()) {
+                } else if (map.containsKey(DUMP) && Actor.isAlive(World.getPlayerAircraft()) && !World.isPlayerParatrooper() && !World.isPlayerDead()) {
                     CmdPreload.dumpFlightModel(World.getPlayerAircraft().getClass().getName(), false);
 //                    FlightModel flightmodel = World.getPlayerFM();
 //                    if (flightmodel != null)
 //                        flightmodel.drawData();
-                } else if (map.containsKey("DMPALL") && Actor.isAlive(World.getPlayerAircraft()) && !World.isPlayerParatrooper() && !World.isPlayerDead()) {
+                } else if (map.containsKey(DMPALL) && Actor.isAlive(World.getPlayerAircraft()) && !World.isPlayerParatrooper() && !World.isPlayerDead()) {
                     //dumpDesc = Reflection.getString(Config.class, "VERSION");
                     CmdPreload.dumpStart = 0;
-                    if (Cmd.nargs(map, "DMPALL") > 1) {
-                        CmdPreload.dumpStart = Cmd.arg(map, "DMPALL", 1, 0);
-                        CmdPreload.dumpDesc = Cmd.arg(map, "DMPALL", 0);
-                    } else if (Cmd.nargs(map, "DMPALL") > 0) {
-                        String arg0 = Cmd.arg(map, "DMPALL", 0);
+                    if (Cmd.nargs(map, DMPALL) > 1) {
+                        CmdPreload.dumpStart = Cmd.arg(map, DMPALL, 1, 0);
+                        CmdPreload.dumpDesc = Cmd.arg(map, DMPALL, 0);
+                    } else if (Cmd.nargs(map, DMPALL) > 0) {
+                        String arg0 = Cmd.arg(map, DMPALL, 0);
                         try {
                             int intArg0 = Integer.parseInt(arg0);
                             CmdPreload.dumpStart = intArg0;
@@ -226,19 +229,23 @@ public class CmdPreload extends Cmd {
                     }
                     CmdPreload.dumpAllFlightModels();
                     RTSConf.setRequestExitApp(true);
-                } else if (map.containsKey("DMPLIST") && Actor.isAlive(World.getPlayerAircraft()) && !World.isPlayerParatrooper() && !World.isPlayerDead()) {
+                } else if (map.containsKey(DMPLIST) && Actor.isAlive(World.getPlayerAircraft()) && !World.isPlayerParatrooper() && !World.isPlayerDead()) {
                     //dumpDesc = Reflection.getString(Config.class, "VERSION");
                     CmdPreload.dumpFlightModelsFromList();
                     RTSConf.setRequestExitApp(true);
-                } else if (map.containsKey("FMDMP") && Actor.isAlive(World.getPlayerAircraft()) && !World.isPlayerParatrooper() && !World.isPlayerDead()) {
+                } else if (map.containsKey(FMDMP) && Actor.isAlive(World.getPlayerAircraft()) && !World.isPlayerParatrooper() && !World.isPlayerDead()) {
 //                  iFuelLevel = 100;
-                    if (Cmd.nargs(map, "FMDMP") > 0) {
-                        CmdPreload.dumpFlightModel(Cmd.arg(map, "FMDMP", 0), true);
+                    if (Cmd.nargs(map, FMDMP) > 0) {
+                        CmdPreload.dumpFlightModel(Cmd.arg(map, FMDMP, 0), true);
                         RTSConf.setRequestExitApp(true);
                     } else {
                         CmdPreload.dumpFlightModel(World.getPlayerAircraft().getClass().getName(), true);
                         RTSConf.setRequestExitApp(true);
                     }
+                } else if (map.containsKey(DMPFILES)) {
+                    System.out.println("Generating Flight Model File Parameter Matrix...");
+                    this.dumpFmFiles();
+                    System.out.println("Flight Model File Parameter Matrix generated!");
                 }
             }
         }
@@ -272,6 +279,7 @@ public class CmdPreload extends Cmd {
         this.param.put(CmdPreload.SWITCH, null);
         this.param.put(CmdPreload.DUMP, null);
         this.param.put(CmdPreload.DMPALL, null);
+        this.param.put(CmdPreload.DMPFILES, null);
         this.param.put(CmdPreload.DMPLIST, null);
         this.param.put(CmdPreload.FMDMP, null);
         this.param.put(CmdPreload.COD, null);
@@ -2788,6 +2796,432 @@ public class CmdPreload extends Cmd {
         if (origin.equalsIgnoreCase(PaintScheme.countryUSA)) return "USAAF";
         return "Unknown";       
     }
+    
+    
+    
+    public void dumpFmFiles() {
+        SectFile airIniSectfile = new SectFile("com/maddox/il2/objects/air.ini");
+        int maxCrewFunction = 0;
+        int maxFlapStage = 0;
+        int maxEngine = 0;
+        int maxVarWingStage = 0;
+        
+        try {
+            PrintWriter pwErrors = new PrintWriter(new BufferedWriter(new FileWriter(HomePath.toFileSystemName("FlightModels/errors.txt", 0))));
+            for (int sectionIndex = 0; sectionIndex < airIniSectfile.sections(); sectionIndex++) {
+                for (int varsIndex = 0; varsIndex < airIniSectfile.vars(sectionIndex); varsIndex++) {
+                    NumberTokenizer numbertokenizer = new NumberTokenizer(airIniSectfile.value(sectionIndex, varsIndex));
+                    String airplaneName = numbertokenizer.next((String) null);
+                    Class airplaneClass = null;
+                    try {
+                        airplaneClass = ObjIO.classForName(airplaneName);
+                    } catch (Exception exception) {
+                        System.out.println("Class '" + airplaneName + "' not found");
+                        continue;
+                    }
+                    if (!airplaneName.startsWith("air.")) {
+                        airplaneName = "###ERROR### " + airplaneName + " ###ERROR###";
+                        pwErrors.println(airplaneName);
+                    }
+                    airplaneName = airplaneName.substring(4);
+                    if (airplaneName.toLowerCase().startsWith("placeholder")) {
+                        continue;
+                    }
+                    String aircraftFmFile = Property.stringValue(airplaneClass, "FlightModel", null);
+                    SectFile aircraftFmSectFile = FlightModelMain.sectFile(aircraftFmFile);
+                    
+                    int crewFunction = 0;
+                    int flapStage = 0;
+                    int engine = 0;
+                    int varWingStage = 0;
+                    
+                    for (int i=0; i<100; i++) {
+                        if (aircraftFmSectFile.get("Aircraft", "CrewFunction" + i, -1) != -1) crewFunction = i;
+                    }
+                    
+                    for (int i=0; i<100; i++) {
+                        if (aircraftFmSectFile.get("Controls", "CFlapStage" + i, -1.0F) != -1.0F) flapStage = i;
+                    }
+                    
+                    for (int i=0; i<100; i++) {
+                        if (aircraftFmSectFile.get("Controls", "CVarWingStage" + i, -1.0F) != -1.0F) varWingStage = i;
+                    }
+                    
+                    for (int i=0; i<100; i++) {
+                        if (aircraftFmSectFile.get("Engine", "Engine" + i + "Family", "").length() > 0) engine = i;
+                    }
+                    
+                    if (crewFunction > maxCrewFunction) maxCrewFunction = crewFunction;
+                    if (flapStage > maxFlapStage) maxFlapStage = flapStage;
+                    if (engine > maxEngine) maxEngine = engine;
+                    if (varWingStage > maxVarWingStage) maxVarWingStage = varWingStage;
+                }
+            }
+            pwErrors.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        
+        String[] aircraft1 = {"Type", "Crew", "Wingspan", "Length", "Seaplane", "Canard", "Jet", "JetHiV"};
+        String[] aircraft2 = {"FormationDefault", "FormationOffset", "FormationScaleCoeff"};
+        String[] aircraftValues = new String[aircraft1.length + aircraft2.length + maxCrewFunction];
+        int aircraftValueIndex = 0;
+        for (int i=0; i<aircraft1.length; i++) aircraftValues[aircraftValueIndex++] = aircraft1[i];
+        for (int i=0; i<maxCrewFunction; i++) aircraftValues[aircraftValueIndex++] = "CrewFunction" + i;
+        for (int i=0; i<aircraft2.length; i++) aircraftValues[aircraftValueIndex++] = aircraft2[i];
+        
+        String[] controls1 = {"CAileron", "CAileronTrim", "CElevator", "CElevatorTrim", "CRudder", "CRudderTrim", "CFlap", "CFlapPos"};
+        String[] controls2 = {"CFlapStageMax", "CDiveBrake", "CInterceptor", "CEngine", "CVectoredThrust", "CUndercarriage", "GearPeriod", "WingPeriod", "CockpitDoorPeriod", "AirBrakePeriod", "CLockTailwheel", "CStabilizer", "CArrestorHook", "CWingFold", "CCockpitDoor", "CBayDoors", "CBombBay", "CAileronThreshold", "CRudderThreshold", "CElevatorThreshold", "DefaultAileronTrim", "DefaultElevatorTrim", "DefaultRudderTrim", "CFlapTakeoffGroundRatio", "CFlapTakeoffCarrierRatio", "CTargetPitchDegreeAITakeoffRotation", "CTargetPitchDegreeAITakeoffClimb", "CTargetPitchDegreeAIApproach", "AILandingWPDownwindSpd", "AILandingWPGearDown", "AILandingWPHookDown", "AILandingWPFlapFullDown", "AILandingWPFlapHalfDown", "AILandingWP360OverHeadApproach", "AILandingWP360PitchPlus", "CLimitModeOfAilerons", "CLimitThresholdSpeedKMH", "CLimitRatioAileron", "CLimitRatioElevatorPlus", "CLimitRatioElevatorMinus", "CLimitRatioElevatorMinusALWAYS", "CLimitRatioAITakeoffElevatorPlus", "CLimitRatioRudder", "CFlapStageText", "CFlapBlown", "CVarWing", "CVarWingPos", "CVarWingStageMax"};
+        String[] controls3 = {"CVarWingStageText", "CVarIncidence", "CCatLaunchBar", "CRefuel", "CDragChute", "CDiffBrake", "cElectricProp", "OnlineCockpitDoor", "OnlineArrestorHook", "OnlineWingFold", "OnlineBombBay"};
+        String[] controlsValues = new String[controls1.length + controls2.length + controls3.length + maxFlapStage + maxVarWingStage];
+        int controlsValueIndex = 0;
+        for (int i=0; i<controls1.length; i++) controlsValues[controlsValueIndex++] = controls1[i];
+        for (int i=0; i<maxFlapStage; i++) controlsValues[controlsValueIndex++] = "CFlapStage" + i;
+        for (int i=0; i<controls2.length; i++) controlsValues[controlsValueIndex++] = controls2[i];
+        for (int i=0; i<maxVarWingStage; i++) controlsValues[controlsValueIndex++] = "CVarWingStage" + i;
+        for (int i=0; i<controls3.length; i++) controlsValues[controlsValueIndex++] = controls3[i];
+        
+        String[] engineValues = new String[maxEngine * 11];
+        int engineValueIndex = 0;
+        for (int i=0; i<maxEngine; i++) {
+            engineValues[engineValueIndex++] = "Engine" + i + "Family";
+            engineValues[engineValueIndex++] = "Engine" + i + "SubModel";
+        }
+        for (int i=0; i<maxEngine; i++) {
+            engineValues[engineValueIndex++] = "Position" + i + "x";
+            engineValues[engineValueIndex++] = "Position" + i + "y";
+            engineValues[engineValueIndex++] = "Position" + i + "z";
+            engineValues[engineValueIndex++] = "PropPosition" + i + "x";
+            engineValues[engineValueIndex++] = "PropPosition" + i + "y";
+            engineValues[engineValueIndex++] = "PropPosition" + i + "z";
+            engineValues[engineValueIndex++] = "Vector" + i + "x";
+            engineValues[engineValueIndex++] = "Vector" + i + "y";
+            engineValues[engineValueIndex++] = "Vector" + i + "z";
+        }
+        
+        
+        String[] sections = {"Aircraft", "Mass", "MassFactors", "Controls", "Squares", "Toughness", "Arm", "Engine", "Gear", "Params", "Polares", "SOUND"};
+        String[][] values = {
+                aircraftValues,
+                {"Empty", "TakeOff", "Oil", "Fuel", "Nitro"},
+                {"MassFactor", "Altitude", "FuelFactor", "Altitude", "ParasiteFactor", "Altitude"},
+                controlsValues,
+                {"Wing", "Aileron", "Flap", "Stabilizer", "Elevator", "Keel", "Rudder", "Wing_In", "Wing_Mid", "Wing_Out", "FuselageCxS", "AirbrakeCxS"},
+                {"AroneL", "AroneR", "CF", "Engine1", "Engine2", "Engine3", "Engine4", "GearL2", "GearR2", "Keel1", "Keel2", "Nose", "Oil", "Rudder1", "Rudder2", "StabL", "StabR", "Tail1", "Tail2", "Turret1B", "Turret2B", "Turret3B", "Turret4B", "Turret5B", "Turret6B", "VatorL", "VatorR", "WingLIn", "WingLMid", "WingLOut", "WingRIn", "WingRMid", "WingROut", "Flap01", "Flap02", "Flap03", "Flap04"},
+                {"Aileron", "Flap", "Stabilizer", "Keel", "Elevator", "Rudder", "Wing_In", "Wing_Mid", "Wing_Out", "Wing_V", "GCenter", "GCenterZ", "GC_AOA_Shift", "GC_Flaps_Shift", "GC_Gear_Shift"},
+                engineValues,
+                {"SpringsStiffness", "TailStiffness", "ShockAbsorber", "SinkFactor", "FromIni", "H", "Pitch", "WaterClipList", "WheelDiameterLR", "WheelDiameterC", "NoseGearMaxSteer", "CatGearOffsetX", "CatGearMesh", "ChockLOffsetX", "ChockLOffsetY", "ChockROffsetX", "ChockROffsetY", "ChockCOffsetX", "ChockCOffsetY", "ChockLMesh", "ChockRMesh", "ChockCMesh", "ChockCarrierLMesh", "ChockCarrierRMesh", "ChockCarrierCMesh"},
+                {"CriticalAOA", "CriticalCy", "CriticalAOAFlap", "CriticalCyFlap", "SpinTailAlpha", "SpinCxLoss", "SpinCyLoss", "Vmin", "Vmax", "VmaxAllowed", "VmaxH", "HofVmax", "VminFLAPS", "VmaxFLAPS", "VmaxGEAR", "VjamFLAPS", "Vlanding", "VtakeoffRot", "VminAI", "Vz_climb", "V_climb", "T_turn", "V_turn", "K_max", "Cy0_max", "FlapsMult", "FlapsAngSh", "G_CLASS_COEFF", "G_CLASS", "Range", "CruiseSpeed", "SensYaw", "SensPitch", "SensRoll", "ReferenceWeight"},
+                {"lineCyCoeff", "AOAMinCx_Shift", "Cy0_0", "AOACritH_0", "AOACritL_0", "CyCritH_0", "CyCritL_0", "CxMin_0", "parabCxCoeff_0", "Cy0_1", "AOACritH_1", "AOACritL_1", "CyCritH_1", "CyCritL_1", "CxMin_1", "parabCxCoeff_1", "parabAngle", "Decline", "maxDistAng", "draw_graphs", "mc3", "mc4", "mm", "mz", "CyBFlap", "ThrustBFlap"},
+                {"Engine"}
+        };
+        
+        File loadoutsDir = new File(HomePath.toFileSystemName("FlightModels", 0));
+        if (!loadoutsDir.exists()) {
+            loadoutsDir.mkdirs();
+        }
+        try {
+            PrintWriter pwErrors = new PrintWriter(new BufferedWriter(new FileWriter(HomePath.toFileSystemName("FlightModels/errors.txt", 0))));
+            PrintWriter pwFmd = new PrintWriter(new BufferedWriter(new FileWriter(HomePath.toFileSystemName("FlightModels/fmd.csv", 0))));
+            pwFmd.print("\"\",\"\",\"\"");
+            for (int i=0; i<sections.length;i++) {
+                for (int j=0;j<values[i].length;j++) {
+                    pwFmd.print(",\"" + sections[i] + "\"");
+                }
+            }
+            pwFmd.println();
+            pwFmd.print("\"Aircraft Name\",\"fmd File\",\"DiffFM File\"");
+            for (int i=0; i<sections.length;i++) {
+                for (int j=0;j<values[i].length;j++) {
+                    pwFmd.print(",\"" + values[i][j] + "\"");
+                }
+            }
+            pwFmd.println();
+            
+            for (int sectionIndex = 0; sectionIndex < airIniSectfile.sections(); sectionIndex++) {
+                for (int varsIndex = 0; varsIndex < airIniSectfile.vars(sectionIndex); varsIndex++) {
+                    NumberTokenizer numbertokenizer = new NumberTokenizer(airIniSectfile.value(sectionIndex, varsIndex));
+                    String airplaneName = numbertokenizer.next((String) null);
+                    Class airplaneClass = null;
+                    try {
+                        airplaneClass = ObjIO.classForName(airplaneName);
+                    } catch (Exception exception) {
+                        System.out.println("Class '" + airplaneName + "' not found");
+                        continue;
+                    }
+                    if (!airplaneName.startsWith("air.")) {
+                        airplaneName = "###ERROR### " + airplaneName + " ###ERROR###";
+                        pwErrors.println(airplaneName);
+                    }
+                    airplaneName = airplaneName.substring(4);
+                    if (airplaneName.toLowerCase().startsWith("placeholder")) {
+                        continue;
+                    }
+                    String aircraftFmFile = Property.stringValue(airplaneClass, "FlightModel", null);
+                    SectFile aircraftFmSectFile = FlightModelMain.sectFile(aircraftFmFile);
+                    loadMassFactors(aircraftFmSectFile);
+                    if (aircraftFmFile.toLowerCase().startsWith("flightmodels/")) aircraftFmFile = aircraftFmFile.substring(13);
+                    final String airClassKeyName = Property.stringValue(airplaneClass, "keyName");
+                    final String airClassReadableName = I18N.plane(airClassKeyName);
+                    int diffFmSeparatorIndex = aircraftFmFile.indexOf(":");
+                    pwFmd.print("\""+airClassReadableName+"\"");
+//                    pwFmd.print(",\"" +  + "\"");
+                    if (diffFmSeparatorIndex > -1) {
+                        pwFmd.print(",\"" + aircraftFmFile.substring(0, diffFmSeparatorIndex) + "\"");
+                        pwFmd.print(",\"" + aircraftFmFile.substring(diffFmSeparatorIndex + 1) + "\"");
+                    } else {
+                        pwFmd.print(",\"" + aircraftFmFile + "\"");
+                        pwFmd.print(",\"\"");
+                    }
+                    for (int i=0; i<sections.length;i++) {
+                        if (sections[i].equals("MassFactors")) {
+                            String theMassFactors = "";
+                            String theMassFactorAltitudes = "";
+                            String theParasiteFactors = "";
+                            String theParasiteFactorAltitudes = "";
+                            String theFuelFactors = "";
+                            String theFuelFactorAltitudes = "";
+                            
+                            int massFactorsSectionIndex = aircraftFmSectFile.sectionIndex("MassFactors");
+                            if (massFactorsSectionIndex != -1 && aircraftFmSectFile.vars(massFactorsSectionIndex) > 0) {
+                                if (massFactors == null) {
+                                    theMassFactors = "" + massFactor;
+                                } else {
+                                    for (int j=0; j<massFactors.length;j++) {
+                                        theMassFactors += (j==0?"":",") + massFactors[j];
+                                    }
+                                }
+                                if (massFactorAltitudes != null) {
+                                    for (int j=0; j<massFactorAltitudes.length;j++) {
+                                        theMassFactorAltitudes += (j==0?"":",") + massFactorAltitudes[j];
+                                    }
+                                }
+                                if (parasiteFactors == null) {
+                                    theParasiteFactors = "" + parasiteFactor;
+                                } else {
+                                    for (int j=0; j<parasiteFactors.length;j++) {
+                                        theParasiteFactors += (j==0?"":",") + parasiteFactors[j];
+                                    }
+                                }
+                                if (parasiteFactorAltitudes != null) {
+                                    for (int j=0; j<parasiteFactorAltitudes.length;j++) {
+                                        theParasiteFactorAltitudes += (j==0?"":",") + parasiteFactorAltitudes[j];
+                                    }
+                                }
+                                if (fuelFactors == null) {
+                                    theFuelFactors = "" + fuelFactor;
+                                } else {
+                                    for (int j=0; j<fuelFactors.length;j++) {
+                                        theFuelFactors += (j==0?"":",") + fuelFactors[j];
+                                    }
+                                }
+                                if (fuelFactorAltitudes != null) {
+                                    for (int j=0; j<fuelFactorAltitudes.length;j++) {
+                                        theFuelFactorAltitudes += (j==0?"":",") + fuelFactorAltitudes[j];
+                                    }
+                                }
+                                pwFmd.print(",\"" + theMassFactors + "\"");
+                                pwFmd.print(",\"" + theMassFactorAltitudes + "\"");
+                                pwFmd.print(",\"" + theFuelFactors + "\"");
+                                pwFmd.print(",\"" + theFuelFactorAltitudes + "\"");
+                                pwFmd.print(",\"" + theParasiteFactors + "\"");
+                                pwFmd.print(",\"" + theParasiteFactorAltitudes + "\"");
+                                
+                            } else {
+                                for (int j=0; j<6;j++) pwFmd.print(",\"\"");
+                            }
+                        } else {
+                            for (int j=0;j<values[i].length;j++) {
+                                pwFmd.print(",\"" + aircraftFmSectFile.get(sections[i], values[i][j], "") + "\"");
+                            }
+                        }
+                    }
+                    pwFmd.println();
+                }
+            }
+            pwErrors.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    
+    public void loadMassFactors(SectFile sectfile) {
+        massFactor = 1F;
+        massFactors = null;
+        massFactorAltitudes = null;
+        parasiteFactor = 1F;
+        parasiteFactors = null;
+        parasiteFactorAltitudes = null;
+        fuelFactor = 1F;
+        fuelFactors = null;
+        fuelFactorAltitudes = null;
+        
+        int sectionIndex = sectfile.sectionIndex("MassFactors");
+        if (sectionIndex == -1)
+            return;
+        ArrayList massFactorList = new ArrayList();
+        ArrayList massFactorAltitudeList = new ArrayList();
+        ArrayList parasiteFactorList = new ArrayList();
+        ArrayList parasiteFactorAltitudeList = new ArrayList();
+        ArrayList fuelFactorList = new ArrayList();
+        ArrayList fuelFactorAltitudeList = new ArrayList();
+        ArrayList varNames = new ArrayList(Arrays.asList(new String[] { "MassFactor", "ParasiteFactor", "FuelFactor" }));
+        int vars = sectfile.vars(sectionIndex);
+        for (int var = 0; var < vars; var++) {
+            try {
+                String varName = sectfile.var(sectionIndex, var);
+                if (varNames.contains(varName)) {
+                    float factor = parseFloat(sectfile.value(sectionIndex, var), Float.NaN);
+                    float alt = Float.NaN;
+                    if (!Float.isNaN(factor)) {
+                        if (var + 1 < vars) {
+                            String var2Name = sectfile.var(sectionIndex, var + 1);
+                            if (var2Name.equalsIgnoreCase("Altitude")) {
+                                alt = parseFloat(sectfile.value(sectionIndex, ++var), Float.NaN);
+                            }
+                        }
+                    }
+                    switch (varNames.indexOf(varName)) {
+                        case 0:
+                            if (Float.isNaN(alt)) massFactor = factor;
+                            else {
+                                if (massFactor == 1F) {
+                                    massFactorAltitudeList.add(new Float(alt));
+                                    massFactorList.add(new Float(factor));
+                                }
+                            }
+                            break;
+                        case 1:
+                            if (Float.isNaN(alt)) parasiteFactor = factor;
+                            else {
+                                if (parasiteFactor == 1F) {
+                                    parasiteFactorAltitudeList.add(new Float(alt));
+                                    parasiteFactorList.add(new Float(factor));
+                                }
+                            }
+                            break;
+                        case 2:
+                            if (Float.isNaN(alt)) fuelFactor = factor;
+                            else {
+                                if (fuelFactor == 1F) {
+                                    fuelFactorAltitudeList.add(new Float(alt));
+                                    fuelFactorList.add(new Float(factor));
+                                }
+                            }
+                            break;
+                    }
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        
+        if (massFactorList.size() == 1) {
+            massFactor = ((Float)massFactorList.get(0)).floatValue();
+        } else if (massFactorList.size() > 1) {
+            massFactorAltitudes = new float[massFactorList.size()];
+            massFactors = new float[massFactorList.size()];
+            for (int index = 0; index < massFactorList.size(); index++) {
+                massFactorAltitudes[index] = ((Float)massFactorAltitudeList.get(index)).floatValue();
+                massFactors[index] = ((Float)massFactorList.get(index)).floatValue();
+                sort(massFactorAltitudes, massFactors);
+            }
+        }
+
+        if (parasiteFactorList.size() == 1) {
+            parasiteFactor = ((Float)parasiteFactorList.get(0)).floatValue();
+        } else if (parasiteFactorList.size() > 1) {
+            parasiteFactorAltitudes = new float[parasiteFactorList.size()];
+            parasiteFactors = new float[parasiteFactorList.size()];
+            for (int index = 0; index < parasiteFactorList.size(); index++) {
+                parasiteFactorAltitudes[index] = ((Float)parasiteFactorAltitudeList.get(index)).floatValue();
+                parasiteFactors[index] = ((Float)parasiteFactorList.get(index)).floatValue();
+                sort(parasiteFactorAltitudes, parasiteFactors);
+            }
+        }
+
+        if (fuelFactorList.size() == 1) {
+            fuelFactor = ((Float)fuelFactorList.get(0)).floatValue();
+        } else if (fuelFactorList.size() > 1) {
+            fuelFactorAltitudes = new float[fuelFactorList.size()];
+            fuelFactors = new float[fuelFactorList.size()];
+            for (int index = 0; index < fuelFactorList.size(); index++) {
+                fuelFactorAltitudes[index] = ((Float)fuelFactorAltitudeList.get(index)).floatValue();
+                fuelFactors[index] = ((Float)fuelFactorList.get(index)).floatValue();
+                sort(fuelFactorAltitudes, fuelFactors);
+            }
+        }
+        
+        if (massFactors == null) {
+            System.out.println("MassFactor=" + massFactor);
+        } else {
+            for (int i=0; i<massFactors.length; i++) {
+                System.out.println("MassFactor for " + massFactorAltitudes[i] + "m altitude = " + massFactors[i]);
+            }
+        }
+        if (MASSFACTOR_DEBUG) {
+            if (parasiteFactors == null) {
+                System.out.println("ParasiteFactor=" + parasiteFactor);
+            } else {
+                for (int i=0; i<parasiteFactors.length; i++) {
+                    System.out.println("ParasiteFactor for " + parasiteFactorAltitudes[i] + "m altitude = " + parasiteFactors[i]);
+                }
+            }
+            if (fuelFactors == null) {
+                System.out.println("FuelFactor=" + fuelFactor);
+            } else {
+                for (int i=0; i<fuelFactors.length; i++) {
+                    System.out.println("FuelFactor for " + fuelFactorAltitudes[i] + "m altitude = " + fuelFactors[i]);
+                }
+            }
+        }
+    }
+
+    private float parseFloat(String floatString, float defaultValue) {
+        try
+        {
+            return Float.parseFloat(floatString);
+        }
+        catch (Exception e) {
+            return defaultValue;
+        }
+    }
+
+    private static class InterpolateComparator implements Comparator {
+
+        public int compare(Object arg0, Object arg1) {
+           float[] f0 = (float[])arg0;
+           float[] f1 = (float[])arg1;
+           if (f0[0] < f1[0]) return -1;
+           else if (f0[0] > f1[0]) return -1;
+           else return 0;
+        }
+        
+    }
+
+    public static void sort(float[] x, float[] y) {
+        float[][] values = new float[x.length][2];
+        for (int i=0; i<x.length; i++) {
+            values[i][0] = x[i];
+            values[i][1] = y[i];
+        }
+        Arrays.sort(values, new InterpolateComparator());
+        for (int i=0; i<x.length; i++) {
+            x[i] = values[i][0];
+            y[i] = values[i][1];
+        }
+    }
+
+    private float massFactor = 1F;
+    private float[] massFactors = null;
+    private float[] massFactorAltitudes = null;
+    private float parasiteFactor = 1F;
+    private float[] parasiteFactors = null;
+    private float[] parasiteFactorAltitudes = null;
+    private float fuelFactor = 1F;
+    private float[] fuelFactors = null;
+    private float[] fuelFactorAltitudes = null;
+    private static final boolean MASSFACTOR_DEBUG = false;
 
 
     private static final DecimalFormat df2                                = new DecimalFormat("00");
@@ -2805,6 +3239,7 @@ public class CmdPreload extends Cmd {
     public static final String         FMDMP                              = "FMDMP";
     public static final String         COD                                = "COD";
     public static final String         FBDJ                               = "FBDJ";
+    public static final String         DMPFILES                           = "DMPFILES";
     public static final int            PADDED                             = 0x1;
     public static final int            CLASSNAME                          = 0x2;
     public static final int            SORTED                             = 0x4;
