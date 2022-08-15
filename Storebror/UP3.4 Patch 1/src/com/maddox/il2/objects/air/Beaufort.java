@@ -7,6 +7,7 @@ import com.maddox.il2.ai.Shot;
 import com.maddox.il2.ai.World;
 import com.maddox.il2.engine.Actor;
 import com.maddox.il2.engine.Config;
+import com.maddox.il2.engine.HierMesh;
 import com.maddox.il2.game.AircraftHotKeys;
 import com.maddox.il2.game.HUD;
 import com.maddox.il2.game.Main3D;
@@ -26,6 +27,11 @@ public abstract class Beaufort extends Scheme2 implements TypeBomber {
         this.fSightCurAltitude = 850F;
         this.fSightCurSpeed = 150F;
         this.fSightCurReadyness = 0.0F;
+    }
+
+    public static void prepareWeapons(Class aircraftClass, HierMesh hierMesh, String thisWeaponsName) {
+        hierMesh.chunkVisible("BayDoorL_D0", !thisWeaponsName.startsWith("1x"));
+        hierMesh.chunkVisible("BayDoorR_D0", !thisWeaponsName.startsWith("1x"));
     }
 
     public boolean needsOpenBombBay() {
@@ -444,6 +450,7 @@ public abstract class Beaufort extends Scheme2 implements TypeBomber {
         this.FM.CT.bHasCockpitDoorControl = true;
         this.FM.CT.dvCockpitDoor = 0.65F;
         this.FM.CT.bHasBayDoorControl = true;
+        prepareWeapons(this.getClass(), this.hierMesh(), this.thisWeaponsName);
     }
 
     protected boolean bombBayDoorsRemoved;

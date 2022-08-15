@@ -368,7 +368,7 @@ public class GO_229A3NJ extends GO_229 implements TypeFighterAceMaker, TypeBNZFi
         Property.set(class1, "PaintScheme", new PaintSchemeFMPar05());
         Property.set(class1, "yearService", 1946.5F);
         Property.set(class1, "yearExpired", 1999F);
-        Property.set(class1, "FlightModel", "FlightModels/Ho-229A3NJ.fmd:Ho-229A3NJ_FM");
+        Property.set(class1, "FlightModel", "FlightModels/Ho-229A3NJ.fmd");
         Property.set(class1, "cockpitClass", new Class[] { CockpitGO_229A3NJ.class });
         Property.set(class1, "LOSElevation", 0.51305F);
         Aircraft.weaponTriggersRegister(class1, new int[] { 0, 0, 1, 1, 9, 9, 9, 9, 2, 2, 2, 2, 2, 2, 2, 2, 9, 9, 9, 9, 2, 2, 2, 2 });

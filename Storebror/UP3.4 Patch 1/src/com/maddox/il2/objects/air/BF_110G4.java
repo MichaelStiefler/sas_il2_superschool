@@ -9,10 +9,10 @@ public class BF_110G4 extends BF_110 implements TypeX4Carrier, TypeRadarLiSN2Car
 
     public void onAircraftLoaded() {
         super.onAircraftLoaded();
-        prepareWeapons(this.hierMesh(), this.thisWeaponsName);
+        prepareWeapons(this.getClass(), this.hierMesh(), this.thisWeaponsName);
     }
     
-    public static void prepareWeapons(HierMesh hierMesh, String thisWeaponsName) {
+    public static void prepareWeapons(Class aircraftClass, HierMesh hierMesh, String thisWeaponsName) {
         if (thisWeaponsName.startsWith("SN2b")) {
             hierMesh.chunkVisible("Fug1_D0", true);
             hierMesh.chunkVisible("Fug200_D0", true);

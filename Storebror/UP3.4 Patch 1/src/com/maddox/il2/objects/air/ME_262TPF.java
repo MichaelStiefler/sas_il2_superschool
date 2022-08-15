@@ -226,7 +226,6 @@ public class ME_262TPF extends ME_262B implements TypeX4Carrier, TypeRadarLiSN2C
         Property.set(class1, "yearService", 1944.1F);
         Property.set(class1, "yearExpired", 1945.5F);
         Property.set(class1, "FlightModel", "FlightModels/Me-262B-1a.fmd");
-// Property.set(class1, "cockpitClass", new Class[] { CockpitME_262NJ.class, CockpitME_262NJR.class });
         Property.set(class1, "cockpitClass", new Class[] { CockpitME_262NJ.class, CockpitME_262RearRadar.class });
         Property.set(class1, "LOSElevation", 0.7498F);
         Aircraft.weaponTriggersRegister(class1, new int[] { 0, 0, 1, 1, 9, 9, 9, 9, 0, 0, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 9, 9, 2, 2, 2, 2, 9, 9 });

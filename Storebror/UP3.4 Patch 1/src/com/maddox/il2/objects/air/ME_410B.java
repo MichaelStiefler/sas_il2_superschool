@@ -41,10 +41,10 @@ public class ME_410B extends ME_210 implements TypeBNZFighter, TypeStormovik, Ty
         if (thisWeaponsName.startsWith("U4") || thisWeaponsName.startsWith("ZFR4_U4")) {
             this.FM.M.massEmpty += 540F;
         }
-        prepareWeapons(this.hierMesh(), this.thisWeaponsName);
+        prepareWeapons(this.getClass(), this.hierMesh(), this.thisWeaponsName);
     }
     
-    public static void prepareWeapons(HierMesh hierMesh, String thisWeaponsName) {
+    public static void prepareWeapons(Class aircraftClass, HierMesh hierMesh, String thisWeaponsName) {
         if (thisWeaponsName.endsWith("DTK")) {
             hierMesh.chunkVisible("Rack_L", true);
             hierMesh.chunkVisible("Rack_R", true);

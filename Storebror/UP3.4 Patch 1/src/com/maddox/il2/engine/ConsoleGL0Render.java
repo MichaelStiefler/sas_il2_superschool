@@ -28,7 +28,7 @@ class ConsoleGL0Render extends Render {
                 int i = 0xff0000ff;
                 String selectorInfo = BaseGameVersion.selectorInfo(BaseGameVersion.SELECTOR_INFO_PRODUCT_VERSION);
                 if (selectorInfo.equalsIgnoreCase("N/A")) selectorInfo = "";
-                else selectorInfo = " · Selector Version " + selectorInfo;
+                else selectorInfo = " \u00B7 Selector Version " + selectorInfo;
 //                if ("ru".equalsIgnoreCase(RTSConf.cur.locale.getLanguage())) {
 //                    TTFont.font[2].output(i, RendersMain.getViewPortWidth() * 0.083F, RendersMain.getViewPortHeight() * 0.12F, 0.0F, this.sstep);
 //                    TTFont.font[2].output(i, RendersMain.getViewPortWidth() * 0.083F, (RendersMain.getViewPortHeight() * 0.12F + TTFont.font[2].height()) - TTFont.font[2].descender(), 0.0F, "UP 3.0 RC4 Patch Pack " + NetUser.PATCH_LEVEL + selectorInfo);
@@ -37,7 +37,7 @@ class ConsoleGL0Render extends Render {
 //                    TTFont.font[2].output(i, RendersMain.getViewPortWidth() * 0.02F, (RendersMain.getViewPortHeight() * 0.17F + TTFont.font[2].height()) - TTFont.font[2].descender(), 0.0F, "UP 3.0 RC4 Patch Pack " + NetUser.PATCH_LEVEL + selectorInfo);
 //                }
 
-                String versionString = VERSION_STRING2 + Config.getPatchLevel() + " · Hotfix " + Config.getHotfixVersion() + selectorInfo;
+                String versionString = VERSION_STRING2 + Config.getPatchLevel() + " \u00B7 Hotfix " + Config.getHotfixVersion() + selectorInfo;
 
                 for (int offset = 5; offset > 0; offset--) {
                     TTFont.font[2].output(0x33000000 * (6 - offset), RendersMain.getViewPortWidth() * 0.02F + offset, RendersMain.getViewPortHeight() * 0.17F - offset, 0.0F, this.sstep);
@@ -159,7 +159,7 @@ class ConsoleGL0Render extends Render {
     public ConsoleGL0Render(float f) {
         super(f);
         VERSION_STRING1 = "IL-2 1946 v" + Config.getCoreVersionNumber() + "m";
-        VERSION_STRING2 = Config.getVersionString() + " " + Config.getVersionNumber() + " \"" + Config.getVersionName() + "\" · Patch ";
+        VERSION_STRING2 = Config.getVersionString() + " " + Config.getVersionNumber() + " \"" + Config.getVersionName() + "\" \u00B7 Patch ";
         this.buf = new char[128];
         this.ofs = new int[128];
         this.sstep = null;
@@ -173,6 +173,6 @@ class ConsoleGL0Render extends Render {
     public String           sstep;
 
     private static String   VERSION_STRING1;// = "IL-2 1946 v" + Config.CORE_VERSION_NUMBER + "m";
-    private static String   VERSION_STRING2;// = Config.VERSION_STRING + " " + Config.VERSION_NUMBER + " \"" + Config.VERSION_NAME + "\" · Patch ";
+    private static String   VERSION_STRING2;// = Config.VERSION_STRING + " " + Config.VERSION_NUMBER + " \"" + Config.VERSION_NAME + "\" \u00B7 Patch ";
 
 }

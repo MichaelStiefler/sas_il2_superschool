@@ -386,7 +386,7 @@ public class DO_335A6 extends DO_335 implements TypeX4Carrier, TypeRadarLiSN2Car
         Property.set(class1, "PaintScheme", new PaintSchemeFMPar05());
         Property.set(class1, "yearService", 1945F);
         Property.set(class1, "yearExpired", 1948F);
-        Property.set(class1, "FlightModel", "FlightModels/Do-335A-6.fmd:DO_335");
+        Property.set(class1, "FlightModel", "FlightModels/Do-335A-6.fmd");
         Property.set(class1, "cockpitClass", new Class[] { CockpitDO_335.class, CockpitDO_335RearRadar.class });
         Property.set(class1, "LOSElevation", 1.00705F);
         Aircraft.weaponTriggersRegister(class1, new int[] { 0, 0, 1 });

@@ -9,10 +9,10 @@ public class JU_88G6 extends JU_88NEW implements TypeStormovik, TypeFighter, Typ
 
     public void onAircraftLoaded() {
         super.onAircraftLoaded();
-        prepareWeapons(this.hierMesh(), this.thisWeaponsName);
+        prepareWeapons(this.getClass(), this.hierMesh(), this.thisWeaponsName);
     }
     
-    public static void prepareWeapons(HierMesh hierMesh, String thisWeaponsName) {
+    public static void prepareWeapons(Class aircraftClass, HierMesh hierMesh, String thisWeaponsName) {
         if (thisWeaponsName.startsWith("SN2c")) {
             hierMesh.chunkVisible("RadarSN2b", false);
             hierMesh.chunkVisible("RadarSN2c", true);

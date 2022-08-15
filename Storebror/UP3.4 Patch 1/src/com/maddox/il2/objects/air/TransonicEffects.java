@@ -11,6 +11,7 @@ import com.maddox.il2.fm.RealFlightModel;
 import com.maddox.il2.game.AircraftHotKeys;
 import com.maddox.il2.game.HUD;
 import com.maddox.il2.game.Main3D;
+import com.maddox.sound.SoundFX;
 
 public class TransonicEffects {
 
@@ -39,6 +40,8 @@ public class TransonicEffects {
     private Eff3DActor              shockwave;
     private boolean                 sonicVapor;
     private Hook             vaporHook;
+    private SoundFX          sonicBoomInternal = null;
+    private SoundFX          sonicBoomExternal = null;
 
     private static final int PART_ARONEL                   = 0;
     private static final int PART_ARONER                   = 0;
@@ -104,8 +107,6 @@ public class TransonicEffects {
             aircraft.FM.SensPitch = this.elevatorControlSensitivity * f3 * f3;
             aircraft.FM.SensRoll = this.aileronControlSensitivity * f3;
             aircraft.FM.SensYaw = this.rudderControlSensitivity * f3;
-//                if (f2 > 0.6F) this.ictl = true;
-//                else this.ictl = false;
             if (this.ftl > 0.0F) {
                 if (World.Rnd().nextFloat() > 0.6F)
                     if (aircraft.FM.CT.RudderControl > 0.0F)
@@ -165,6 +166,37 @@ public class TransonicEffects {
     public float calculateMach() {
         return aircraft.FM.getSpeedKMH() / this.getMachForAlt(aircraft.FM.getAltitude());
     }
+    
+    private void playSonicBoom(boolean play, boolean internal) {
+        if (aircraft.draw == null) return;
+        if (internal) {
+            if (!play) {
+                if (this.sonicBoomInternal != null) {
+                    this.sonicBoomInternal.cancel();
+                    this.sonicBoomInternal.destroy();
+                    this.sonicBoomInternal = null;
+                }
+                return;
+            }
+            if (this.sonicBoomInternal == null) this.sonicBoomInternal = new SoundFX("aircraft.SonicBoomInternal");
+            this.sonicBoomInternal.setAcoustics(aircraft.acoustics);
+            this.sonicBoomInternal.insert(aircraft.draw.sounds(), false);
+            this.sonicBoomInternal.play();
+            return;
+        }
+        if (!play) {
+            if (this.sonicBoomExternal != null) {
+                this.sonicBoomExternal.cancel();
+                this.sonicBoomExternal.destroy();
+                this.sonicBoomExternal = null;
+            }
+            return;
+        }
+        if (this.sonicBoomExternal == null) this.sonicBoomExternal = new SoundFX("aircraft.SonicBoom");
+        this.sonicBoomExternal.setAcoustics(aircraft.acoustics);
+        this.sonicBoomExternal.insert(aircraft.draw.sounds(), false);
+        this.sonicBoomExternal.play();
+    }
 
     public void soundbarrier() {
         float machOne = this.getMachForAlt(aircraft.FM.getAltitude());
@@ -173,27 +205,32 @@ public class TransonicEffects {
         if (belowMachOne < 0.5F) belowMachOne = 0.5F;
         float aboveMachOne = aircraft.FM.getSpeedKMH() - machOne;
         if (aboveMachOne < 0.5F) aboveMachOne = 0.5F;
+        boolean isInternal = false;
         if (machFactor <= 1.0D) {
             aircraft.FM.VmaxAllowed = aircraft.FM.getSpeedKMH() + belowMachOne;
+            if (this.sonicBoom) {
+                this.playSonicBoom(false, false);
+                this.playSonicBoom(false, true);
+            }
             this.sonicBoom = false;
         } else {
             aircraft.FM.VmaxAllowed = aircraft.FM.getSpeedKMH() + aboveMachOne;
             if (!this.sonicBoom) {
-                boolean isInternal = false;
                 if (aircraft.FM.actor == World.getPlayerAircraft()) {
                     HUD.log(AircraftHotKeys.hudLogPowerId, "Mach 1 Exceeded!");
                     if (Config.isUSE_RENDER()) {
                         if (!Main3D.cur3D().isViewOutside()) {
-                            aircraft.playSound("aircraft.SonicBoomInternal", true);
+                            this.playSonicBoom(true, true);
                             isInternal = true;
                         }
                     }
                 }
-                if (!isInternal) aircraft.playSound("aircraft.SonicBoom", true);
+                if (!isInternal) {
+                    this.playSonicBoom(true, false);
+                }
                 this.sonicBoom = true;
             }
         }
-        
         if (machFactor < this.lowerTranssonicVaporBoundary || machFactor > this.upperTranssonicVaporBoundary) {
             if (this.sonicVapor) {
                 if (this.shockwave != null) Eff3DActor.finish(this.shockwave);

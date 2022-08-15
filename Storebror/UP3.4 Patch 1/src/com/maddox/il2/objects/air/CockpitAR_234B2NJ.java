@@ -71,7 +71,7 @@ public class CockpitAR_234B2NJ extends CockpitPilot {
     }
 
     public CockpitAR_234B2NJ() {
-        super("3DO/Cockpit/Ar-234B-2/hier.him", "bf109");
+        super("3DO/Cockpit/Ar-234B-2/hierNJ.him", "bf109");
         this.bNeedSetUp = true;
         this.setOld = new Variables();
         this.setNew = new Variables();
@@ -296,6 +296,13 @@ public class CockpitAR_234B2NJ extends CockpitPilot {
             Point3d point3d = new Point3d();
             point3d.set(0.14D, -0.06D, -0.021D);
             hookpilot.setTubeSight(point3d);
+            if (this.aircraft().thisWeaponsName.startsWith("SN2d")) {
+                mesh.chunkVisible("Fug200_D0", false);
+                mesh.chunkVisible("Fug200d_D0", true);
+            } else {
+                mesh.chunkVisible("Fug200_D0", true);
+                mesh.chunkVisible("Fug200d_D0", false);
+            }
             return true;
         } else {
             return false;
@@ -399,6 +406,7 @@ public class CockpitAR_234B2NJ extends CockpitPilot {
     private boolean            bEntered;
 
     static {
-        Property.set(CockpitAR_234B2NJ.class, "normZN", 1.12F);
+        //Property.set(CockpitAR_234B2NJ.class, "normZN", 1.12F);
+        Property.set(CockpitAR_234B2NJ.class, "normZN", 2.0F);
     }
 }

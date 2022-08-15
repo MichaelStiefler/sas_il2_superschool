@@ -45,6 +45,7 @@ import com.maddox.il2.objects.air.TypeDiveBomber;
 import com.maddox.il2.objects.air.TypeDockable;
 import com.maddox.il2.objects.air.TypeFighterAceMaker;
 import com.maddox.il2.objects.air.TypeHasToKG;
+import com.maddox.il2.objects.air.TypeRadarLiSN2Carrier;
 import com.maddox.il2.objects.air.TypeX4Carrier;
 import com.maddox.il2.objects.effects.ForceFeedback;
 import com.maddox.il2.objects.ships.BigshipGeneric;

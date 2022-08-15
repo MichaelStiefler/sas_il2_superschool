@@ -9,6 +9,7 @@ import com.maddox.il2.ai.WayPoint;
 import com.maddox.il2.ai.World;
 import com.maddox.il2.engine.HierMesh;
 import com.maddox.il2.engine.InterpolateRef;
+import com.maddox.il2.engine.Mat;
 import com.maddox.il2.fm.Atmosphere;
 import com.maddox.il2.fm.Pitot;
 import com.maddox.il2.objects.electronics.RadarLiSN2Equipment;
@@ -287,7 +288,7 @@ public class CockpitME_262Sb extends CockpitPilot {
 
     protected void reflectPlaneMats() {
         HierMesh hiermesh = this.aircraft().hierMesh();
-        com.maddox.il2.engine.Mat mat = hiermesh.material(hiermesh.materialFind("Gloss1D0o"));
+        Mat mat = hiermesh.material(hiermesh.materialFind("Gloss1D0o"));
         this.mesh.materialReplace("Gloss1D0o", mat);
         if ((this.aircraft().thisWeaponsName.toLowerCase().indexOf("wfrgr") >= 0) || (this.aircraft().thisWeaponsName.toLowerCase().indexOf("r4m") >= 0)) {
             this.hasRadar = true;

@@ -9,10 +9,10 @@ public class JU_88C6NJ extends JU_88C6NEW implements TypeFighter, TypeBNZFighter
 
     public void onAircraftLoaded() {
         super.onAircraftLoaded();
-        prepareWeapons(this.hierMesh(), this.thisWeaponsName);
+        prepareWeapons(this.getClass(), this.hierMesh(), this.thisWeaponsName);
     }
     
-    public static void prepareWeapons(HierMesh hierMesh, String thisWeaponsName) {
+    public static void prepareWeapons(Class aircraftClass, HierMesh hierMesh, String thisWeaponsName) {
         if (thisWeaponsName.startsWith("SN2b")) {
             hierMesh.chunkVisible("RadarSN2b", true);
             hierMesh.chunkVisible("RadarSN2c", false);

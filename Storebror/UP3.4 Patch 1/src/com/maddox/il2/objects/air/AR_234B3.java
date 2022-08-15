@@ -2,54 +2,56 @@ package com.maddox.il2.objects.air;
 
 import java.io.IOException;
 
-import com.maddox.JGP.Tuple3d;
+import com.maddox.JGP.Point3d;
+import com.maddox.JGP.Vector3d;
 import com.maddox.il2.ai.World;
 import com.maddox.il2.ai.air.Pilot;
 import com.maddox.il2.engine.Actor;
 import com.maddox.il2.engine.Eff3DActor;
-import com.maddox.il2.objects.weapons.Bomb;
+import com.maddox.il2.engine.Orient;
+import com.maddox.il2.fm.AircraftState;
 import com.maddox.il2.objects.weapons.BombStarthilfe109500;
 import com.maddox.rts.NetMsgGuaranted;
 import com.maddox.rts.NetMsgInput;
 import com.maddox.rts.Property;
 import com.maddox.rts.Time;
 
-public class AR_234B3 extends AR_234 implements TypeX4Carrier {
+public class AR_234B3 extends AR_234 implements TypeX4Carrier, TypeRocketBoost {
 
     public AR_234B3() {
-        this.booster = new Bomb[2];
-        this.bHasBoosters = true;
+        this.booster = new BombStarthilfe109500[2];
+        this.boosterEffects = new Eff3DActor[2];
+        this.boostState = AircraftState._AS_BOOST_NOBOOST;
         this.boosterFireOutTime = -1L;
         this.dynamoOrient = 0.0F;
-// this.bDynamoRotary = false;
-// this.rotorrpm = 0;
         this.lastTime = 0L;
         this.radarShortRange = false;
     }
 
-    public void destroy() {
-        this.doCutBoosters();
-        super.destroy();
-    }
-
-    public void doFireBoosters() {
-        Eff3DActor.New(this, this.findHook("_Booster1"), null, 1.0F, "3DO/Effects/Tracers/HydrogenRocket/rocket.eff", 30F);
-        Eff3DActor.New(this, this.findHook("_Booster2"), null, 1.0F, "3DO/Effects/Tracers/HydrogenRocket/rocket.eff", 30F);
-    }
-
-    public void doCutBoosters() {
-        for (int i = 0; i < 2; i++) {
-            if (this.booster[i] != null) {
-                this.booster[i].start();
-                this.booster[i] = null;
+    public void setBoostState(int state) {
+        if (this.boostState == state) return; // Nothing to do here, we are in the requested state already.
+        if (((state ^ this.boostState) & AircraftState._AS_BOOST_EXISTS) != 0) { // The existence of boosters has changed
+            if ((state & AircraftState._AS_BOOST_EXISTS) != 0) { // Boosters exist now
+                this.doAttachBoosters();
+            } else { // Boosters don't exist anymore
+                this.doCutBoosters();
             }
         }
-
+        if (((state ^ this.boostState) & AircraftState._AS_BOOST_ACTIVE) != 0) { // The boosters activity state changed
+            if ((state & AircraftState._AS_BOOST_ACTIVE) != 0) { // Boosters are active now
+                this.doFireBoosters();
+            } else { // Boosters aren't active
+                this.doShutoffBoosters();
+            }
+        }
+        this.boostState = state;
     }
 
-    public void onAircraftLoaded() {
-        super.onAircraftLoaded();
-        this.lastTime = Time.current();
+    public int getBoostState() {
+        return this.boostState;
+    }
+
+    public void doAttachBoosters() {
         for (int i = 0; i < 2; i++) {
             try {
                 this.booster[i] = new BombStarthilfe109500();
@@ -60,7 +62,88 @@ public class AR_234B3 extends AR_234 implements TypeX4Carrier {
                 this.debugprintln("Structure corrupt - can't hang Starthilferakete..");
             }
         }
+    }
+    
+    public void doCutBoosters() {
+      for (int i = 0; i < 2; i++) {
+          if (this.booster[i] != null) {
+              this.booster[i].start();
+              this.booster[i] = null;
+          }
+      }
+      this.stopBoosterSound();
+    }
 
+    public void doFireBoosters() {
+        for (int i=0; i<2; i++) {
+            this.boosterEffects[i] = Eff3DActor.New(this, this.findHook("_Booster" + (i+1)), null, 1.0F, "3DO/Effects/Tracers/HydrogenRocket/rocket.eff", 30F);
+        }
+        this.startBoosterSound();
+    }
+
+    public void doShutoffBoosters() {
+        for (int i=0; i<2; i++) {
+            Eff3DActor.finish(this.boosterEffects[i]); // No null checks etc. required here, it's done internally already.
+        }
+        this.stopBoosterSound();
+    }
+
+    public void startBoosterSound() {
+        for (int i = 0; i < 2; i++) {
+            if (this.booster[i] != null) {
+                this.booster[i].startSound();
+            }
+        }
+    }
+
+    public void stopBoosterSound() {
+        for (int i = 0; i < 2; i++) {
+            if (this.booster[i] != null) {
+                this.booster[i].stopSound();
+            }
+        }
+    }
+    
+    private void boostUpdate() {
+        if (!(this.FM instanceof Pilot)) return;
+        if ((this.boostState & AircraftState._AS_BOOST_EXISTS) == 0) return;
+            // TODO: Changed Booster cutoff reasons from absolute altitude to altitude above ground
+            if (this.FM.getAltitude() - World.land().HQ_Air(this.FM.Loc.x, this.FM.Loc.y) > 300F && this.boosterFireOutTime == -1L && this.FM.Loc.z != 0.0D && World.Rnd().nextFloat() < 0.05F) {
+                this.FM.AS.setBoostState(this, AircraftState._AS_BOOST_NOBOOST);
+                this.FM.AS.setGliderBoostOff();
+            }
+            if (this.boosterFireOutTime == -1L && this.FM.Gears.onGround() && this.FM.EI.getPowerOutput() > 0.8F && this.FM.EI.engines[0].getStage() == 6 && this.FM.EI.engines[1].getStage() == 6 && this.FM.getSpeedKMH() > 20F) {
+                this.boosterFireOutTime = Time.current() + 30000L;
+                this.FM.AS.setBoostState(this, this.boostState | AircraftState._AS_BOOST_ACTIVE);
+                this.FM.AS.setGliderBoostOn();
+            }
+            if (this.boosterFireOutTime > 0L) {
+                if (Time.current() < this.boosterFireOutTime) {
+                    this.FM.producedAF.x += 20000D;
+                } else { // Stop sound
+                    this.FM.AS.setBoostState(this, this.boostState & ~AircraftState._AS_BOOST_ACTIVE);
+                }
+                if (Time.current() > this.boosterFireOutTime + 10000L) { // cut boosters 10 seconds after burnout regardless altitude if not done so before.
+                    this.FM.AS.setBoostState(this, AircraftState._AS_BOOST_NOBOOST);
+                    this.FM.AS.setGliderBoostOff();
+                }
+            }
+    }
+    
+    public void setOnGround(Point3d point3d, Orient orient, Vector3d vector3d) {
+        super.setOnGround(point3d, orient, vector3d);
+        if (!this.isNetMaster()) return; // FIXME: Maybe FM.AS.isMaster() works better? Idea is to deal with "setOnGround" in single player missions only, or in Dogfight missions on server side only.
+        this.FM.AS.setBoostState(this, this.boostState | AircraftState._AS_BOOST_EXISTS);
+    }
+
+    public void destroy() {
+        this.doCutBoosters();
+        super.destroy();
+    }
+
+    public void onAircraftLoaded() {
+        super.onAircraftLoaded();
+        this.lastTime = Time.current();
     }
 
     protected void moveFan(float f) {
@@ -94,9 +177,6 @@ public class AR_234B3 extends AR_234 implements TypeX4Carrier {
             this.hierMesh().chunkSetAngles(Aircraft.Props[j][0], 0.0F, -this.propPos[j], 0.0F);
         }
 
-// this.rotorrpm = 1;
-// this.dynamoOrient = this.bDynamoRotary ? (this.dynamoOrient - 100F) % 360F : (float) (this.dynamoOrient - (this.rotorrpm * 2D)) % 360F;
-// this.hierMesh().chunkSetAngles("RADAR_D0", this.dynamoOrient, 0.0F, 0.0F);
     }
 
     protected boolean cutFM(int i, int j, Actor actor) {
@@ -107,9 +187,8 @@ public class AR_234B3 extends AR_234 implements TypeX4Carrier {
             case 36:
             case 37:
             case 38:
-                this.doCutBoosters();
+                this.FM.AS.setBoostState(this, AircraftState._AS_BOOST_NOBOOST);
                 this.FM.AS.setGliderBoostOff();
-                this.bHasBoosters = false;
                 break;
         }
         return super.cutFM(i, j, actor);
@@ -129,28 +208,7 @@ public class AR_234B3 extends AR_234 implements TypeX4Carrier {
         }
         this.lastTime = curTime;
 
-        if (this.bHasBoosters) {
-            if ((this.FM.getAltitude() > 300F) && (this.boosterFireOutTime == -1L) && (((Tuple3d) (this.FM.Loc)).z != 0.0D) && (World.Rnd().nextFloat() < 0.05F)) {
-                this.doCutBoosters();
-                this.FM.AS.setGliderBoostOff();
-                this.bHasBoosters = false;
-            }
-            if (this.bHasBoosters && (this.boosterFireOutTime == -1L) && this.FM.Gears.onGround() && (this.FM.EI.getPowerOutput() > 0.8F) && (this.FM.EI.engines[0].getStage() == 6) && (this.FM.EI.engines[1].getStage() == 6) && (this.FM.getSpeedKMH() > 20F)) {
-                this.boosterFireOutTime = Time.current() + 30000L;
-                this.doFireBoosters();
-                this.FM.AS.setGliderBoostOn();
-            }
-            if (this.bHasBoosters && (this.boosterFireOutTime > 0L)) {
-                if (Time.current() < this.boosterFireOutTime) {
-                    this.FM.producedAF.x += 20000D;
-                }
-                if (Time.current() > (this.boosterFireOutTime + 10000L)) {
-                    this.doCutBoosters();
-                    this.FM.AS.setGliderBoostOff();
-                    this.bHasBoosters = false;
-                }
-            }
-        }
+        this.boostUpdate();
     }
 
     public void setRadarShortRange(boolean radarShortRange) {
@@ -271,12 +329,11 @@ public class AR_234B3 extends AR_234 implements TypeX4Carrier {
     public void typeBomberReplicateFromNet(NetMsgInput netmsginput) throws IOException {
     }
 
-    private Bomb       booster[];
-    protected boolean  bHasBoosters;
-    protected long     boosterFireOutTime;
+    private BombStarthilfe109500      booster[];
+    private Eff3DActor                    boosterEffects[];
+    private int           boostState;
+    protected long        boosterFireOutTime;
     private float      dynamoOrient;
-// private boolean bDynamoRotary;
-// private int rotorrpm;
     public float       resetTimer;
     public float       Timer1;
     public float       Timer2;
@@ -301,7 +358,7 @@ public class AR_234B3 extends AR_234 implements TypeX4Carrier {
         Property.set(class1, "PaintScheme", new PaintSchemeBMPar05());
         Property.set(class1, "yearService", 1944F);
         Property.set(class1, "yearExpired", 1948.8F);
-        Property.set(class1, "FlightModel", "FlightModels/Ar-234B-3.fmd:Ar234B3_FM");
+        Property.set(class1, "FlightModel", "FlightModels/Ar-234B-3.fmd");
         Property.set(class1, "cockpitClass", new Class[] { CockpitAR_234B3.class, CockpitAEW_standin.class });
         Property.set(class1, "LOSElevation", 1.14075F);
         Aircraft.weaponTriggersRegister(class1, new int[] { 0, 0, 2, 2 });

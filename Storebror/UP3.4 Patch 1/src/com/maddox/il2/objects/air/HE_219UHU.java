@@ -7,10 +7,10 @@ import com.maddox.rts.Property;
 public class HE_219UHU extends HE_219 implements TypeX4Carrier, TypeRadarLiSN2Carrier {
     public void onAircraftLoaded() {
         super.onAircraftLoaded();
-        prepareWeapons(this.hierMesh(), this.thisWeaponsName);
+        prepareWeapons(this.getClass(), this.hierMesh(), this.thisWeaponsName);
     }
     
-    public static void prepareWeapons(HierMesh hierMesh, String thisWeaponsName) {
+    public static void prepareWeapons(Class aircraftClass, HierMesh hierMesh, String thisWeaponsName) {
         if (thisWeaponsName.endsWith("R4")) {
             hierMesh.chunkVisible("MG_FF1", true);
             hierMesh.chunkVisible("MG_FF2", true);

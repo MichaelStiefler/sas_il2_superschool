@@ -51,10 +51,10 @@ public class ME_262SB1A extends ME_262 implements TypeStormovik, TypeX4Carrier, 
 
     public void onAircraftLoaded() {
         super.onAircraftLoaded();
-        prepareWeapons(this.hierMesh(), this.thisWeaponsName);
+        prepareWeapons(this.getClass(), this.hierMesh(), this.thisWeaponsName);
     }
 
-    public static void prepareWeapons(HierMesh hierMesh, String thisWeaponsName) {
+    public static void prepareWeapons(Class aircraftClass, HierMesh hierMesh, String thisWeaponsName) {
         if (thisWeaponsName.equalsIgnoreCase("default")
                 || thisWeaponsName.equalsIgnoreCase("pb1")
                 || thisWeaponsName.equalsIgnoreCase("pb2")

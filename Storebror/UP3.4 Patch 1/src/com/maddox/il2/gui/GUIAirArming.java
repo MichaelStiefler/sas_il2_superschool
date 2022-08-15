@@ -1624,10 +1624,15 @@ public class GUIAirArming extends GameState {
         
         // TODO: Added by SAS~Storebror: Dynamically update the plane's 3D according to the selected loadout
         // +++
-        Method method = Reflection.getMethod(class1, "prepareWeapons", new Class[] {HierMesh.class, String.class});
+        Class currentClass = class1;
+        Method method = Reflection.getMethod(currentClass, "prepareWeapons", new Class[] {Class.class, HierMesh.class, String.class});
+        while (method == null && currentClass != Object.class) {
+            currentClass = currentClass.getSuperclass();
+            method = Reflection.getMethod(currentClass, "prepareWeapons", new Class[] {Class.class, HierMesh.class, String.class});
+        }
         if (method != null) {
             try {
-                method.invoke(null, new Object[] {this.actorMesh.hierMesh(), as[i]});
+                method.invoke(null, new Object[] {class1, this.actorMesh.hierMesh(), as[i]});
             } catch (Exception e) {
                 e.printStackTrace();
             }

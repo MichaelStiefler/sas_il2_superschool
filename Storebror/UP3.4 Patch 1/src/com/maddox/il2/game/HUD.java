@@ -536,7 +536,7 @@ public class HUD {
                 break;
         }
         this.drawTorpedoParameter(
-                "h(drop)=" + (int) dropAltitude + alt + ", v(drop)=" + (int) dropSpeed + speed + ", v(impact)(max)=" + (int) impactSpeed + speed + ", impact°(min)=" + (int) impactAngleMin + "°, impact°(max)=" + (int) impactAngleMax + "°", i, j);
+                "h(drop)=" + (int) dropAltitude + alt + ", v(drop)=" + (int) dropSpeed + speed + ", v(impact)(max)=" + (int) impactSpeed + speed + ", impact\u00B7(min)=" + (int) impactAngleMin + "\u00B7, impact\u00B7(max)=" + (int) impactAngleMax + "\u00B7", i, j);
     }
 
     private void drawTorpedoParameter(String string, int i, int j) {
@@ -561,7 +561,7 @@ public class HUD {
                 speed = "mph";
                 break;
         }
-        log("Torpedo impact: " + (int) speedValue + speed + ", " + (int) angle + "°");
+        log("Torpedo impact: " + (int) speedValue + speed + ", " + (int) angle + "\u00B7");
     }
 
     private void drawShipIDs(String string, int i, int i_23_) {
