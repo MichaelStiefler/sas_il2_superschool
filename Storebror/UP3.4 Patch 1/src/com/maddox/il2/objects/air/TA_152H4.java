@@ -1,16 +1,15 @@
 package com.maddox.il2.objects.air;
 
-import com.maddox.JGP.Tuple3d;
+import java.io.IOException;
+
 import com.maddox.il2.engine.HierMesh;
-import com.maddox.il2.fm.*;
 import com.maddox.il2.game.AircraftHotKeys;
 import com.maddox.il2.game.HUD;
-import com.maddox.rts.*;
-import com.maddox.util.HashMapInt;
-import java.io.IOException;
-import java.util.ArrayList;
+import com.maddox.rts.NetMsgGuaranted;
+import com.maddox.rts.NetMsgInput;
+import com.maddox.rts.Property;
 
-public class TA_152H4 extends TA_152H_Paulus
+public class TA_152H4 extends TA_152NEW // TA_152H_Paulus
     implements TypeFighter, TypeFighterAceMaker
 {
 
@@ -172,10 +171,10 @@ public class TA_152H4 extends TA_152H_Paulus
         });
         Property.set(class1, "LOSElevation", 0.764106F);
         Aircraft.weaponTriggersRegister(class1, new int[] {
-            0, 1, 1, 1, 1, 9
+            0, 1, 1, 1, 1, 9, 9
         });
         Aircraft.weaponHooksRegister(class1, new String[] {
-            "_CANNON01", "_CANNON03", "_CANNON04", "_CANNON05", "_CANNON06", "_ExternalDev01"
+            "_CANNON01", "_CANNON03", "_CANNON04", "_CANNON05", "_CANNON06", "_ExternalDev01", "_ExternalDev02"
         });
     }
 }

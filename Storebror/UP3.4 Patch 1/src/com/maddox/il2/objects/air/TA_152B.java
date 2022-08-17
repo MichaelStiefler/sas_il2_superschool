@@ -61,12 +61,12 @@ public class TA_152B extends TA_152NEW implements TypeFighter {
     public void onAircraftLoaded() {
         super.onAircraftLoaded();
         this.FM.AS.wantBeaconsNet(true);
-        if (this.getGunByHookName("_CANNON03") instanceof GunEmpty) {
-            this.hierMesh().chunkVisible("20mmL1_D0", false);
-        }
-        if (this.getGunByHookName("_CANNON04") instanceof GunEmpty) {
-            this.hierMesh().chunkVisible("20mmR1_D0", false);
-        }
+//        if (this.getGunByHookName("_CANNON03") instanceof GunEmpty) {
+//            this.hierMesh().chunkVisible("20mmL1_D0", false);
+//        }
+//        if (this.getGunByHookName("_CANNON04") instanceof GunEmpty) {
+//            this.hierMesh().chunkVisible("20mmR1_D0", false);
+//        }
     }
 
     private float kangle;

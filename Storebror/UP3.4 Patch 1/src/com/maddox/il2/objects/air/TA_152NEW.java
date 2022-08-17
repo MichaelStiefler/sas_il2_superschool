@@ -36,6 +36,41 @@ public abstract class TA_152NEW extends Scheme1 implements TypeFighter, TypeBNZF
         }
     }
 
+    public static void prepareWeapons(Class aircraftClass, HierMesh hierMesh, String thisWeaponsName) {
+//      StringTokenizer package_parts = new StringTokenizer(aircraftClass.getName(), ".");
+//      String package_part = "";
+//      while (package_parts.hasMoreTokens()) package_part = package_parts.nextToken();
+//      if (package_part.length() < 8) return;
+//      package_part = package_part.substring(6);
+//      if (package_part.startsWith("A8") || package_part.startsWith("A9") || package_part.startsWith("D")) return;
+
+      boolean winter = Config.isUSE_RENDER() && (World.cur().camouflage == 1);
+      hierMesh.chunkVisible("GearL5_D0", !winter);
+      hierMesh.chunkVisible("GearR5_D0", !winter);
+
+      String planeVersion = aircraftClass.getName().substring(33);
+      System.out.println("190 Version = " + planeVersion);
+
+      _WeaponSlot[] weaponSlotsRegistered = Aircraft.getWeaponSlotsRegistered(aircraftClass, thisWeaponsName);
+      
+      if ((weaponSlotsRegistered == null) || (weaponSlotsRegistered.length < 2)) {
+          return;
+      }
+      
+      if (planeVersion.startsWith("HJ")) {
+          hierMesh.chunkVisible("20mmL2_D0", weaponSlotsRegistered[3] != null);
+          hierMesh.chunkVisible("20mmR2_D0", weaponSlotsRegistered[4] != null);
+      } else {
+          hierMesh.chunkVisible("7mmCowl_D0", weaponSlotsRegistered[3] == null);
+      }
+      if (hierMesh.chunkFindCheck("20mmL1_D0") > 0) {
+          hierMesh.chunkVisible("20mmL1_D0", weaponSlotsRegistered[1] != null);
+      }
+      if (hierMesh.chunkFindCheck("20mmR1_D0") > 0) {
+          hierMesh.chunkVisible("20mmR1_D0", weaponSlotsRegistered[2] != null);
+      }
+  }
+
     public void doMurderPilot(int i) {
         switch (i) {
             case 0:
@@ -152,6 +187,7 @@ public abstract class TA_152NEW extends Scheme1 implements TypeFighter, TypeBNZF
             this.FM.CT.dvCockpitDoor = 0.2564102F;
             this.hierMesh().chunkVisible("Wire_D0", true);
         }
+        TA_152NEW.prepareWeapons(this.getClass(), this.hierMesh(), this.thisWeaponsName);
     }
 
     public void update(float f) {
@@ -850,28 +886,28 @@ public abstract class TA_152NEW extends Scheme1 implements TypeFighter, TypeBNZF
         }
     }
 
-    private void cutGearCovers(String s) {
-        Vector3d vector3d = new Vector3d();
-        if (World.Rnd().nextFloat() < 0.3F) {
-            Wreckage wreckage = new Wreckage(this, this.hierMesh().chunkFind("Gear" + s + 5 + "_D0"));
-            wreckage.collide(true);
-            vector3d.set(this.FM.Vwld);
-            wreckage.setSpeed(vector3d);
-            this.hierMesh().chunkVisible("Gear" + s + 5 + "_D0", false);
-            Wreckage wreckage1 = new Wreckage(this, this.hierMesh().chunkFind("Gear" + s + 6 + "_D0"));
-            wreckage1.collide(true);
-            vector3d.set(this.FM.Vwld);
-            wreckage1.setSpeed(vector3d);
-            this.hierMesh().chunkVisible("Gear" + s + 6 + "_D0", false);
-        } else if (World.Rnd().nextFloat() < 0.3F) {
-            int i = World.Rnd().nextInt(2) + 5;
-            Wreckage wreckage2 = new Wreckage(this, this.hierMesh().chunkFind("Gear" + s + i + "_D0"));
-            wreckage2.collide(true);
-            vector3d.set(this.FM.Vwld);
-            wreckage2.setSpeed(vector3d);
-            this.hierMesh().chunkVisible("Gear" + s + i + "_D0", false);
-        }
-    }
+//    private void cutGearCovers(String s) {
+//        Vector3d vector3d = new Vector3d();
+//        if (World.Rnd().nextFloat() < 0.3F) {
+//            Wreckage wreckage = new Wreckage(this, this.hierMesh().chunkFind("Gear" + s + 5 + "_D0"));
+//            wreckage.collide(true);
+//            vector3d.set(this.FM.Vwld);
+//            wreckage.setSpeed(vector3d);
+//            this.hierMesh().chunkVisible("Gear" + s + 5 + "_D0", false);
+//            Wreckage wreckage1 = new Wreckage(this, this.hierMesh().chunkFind("Gear" + s + 6 + "_D0"));
+//            wreckage1.collide(true);
+//            vector3d.set(this.FM.Vwld);
+//            wreckage1.setSpeed(vector3d);
+//            this.hierMesh().chunkVisible("Gear" + s + 6 + "_D0", false);
+//        } else if (World.Rnd().nextFloat() < 0.3F) {
+//            int i = World.Rnd().nextInt(2) + 5;
+//            Wreckage wreckage2 = new Wreckage(this, this.hierMesh().chunkFind("Gear" + s + i + "_D0"));
+//            wreckage2.collide(true);
+//            vector3d.set(this.FM.Vwld);
+//            wreckage2.setSpeed(vector3d);
+//            this.hierMesh().chunkVisible("Gear" + s + i + "_D0", false);
+//        }
+//    }
 
     private boolean       bSmokeEffect;
     private float         trimElevator;
@@ -893,9 +929,9 @@ public abstract class TA_152NEW extends Scheme1 implements TypeFighter, TypeBNZF
     static int            axisD       = 3;
     static int            idX         = 0;
     static int            idY         = 1;
-    private static float  kl          = 1.0F;
-    private static float  kr          = 1.0F;
-    private static float  kc          = 1.0F;
+//    private static float  kl          = 1.0F;
+//    private static float  kr          = 1.0F;
+//    private static float  kc          = 1.0F;
     private Point3d       doorSndPos;
     private float         doorPrev;
     protected float       doorSndControl;
