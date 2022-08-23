@@ -6,7 +6,7 @@ import com.maddox.il2.ai.World;
 import com.maddox.il2.engine.Actor;
 import com.maddox.il2.engine.Config;
 import com.maddox.il2.engine.Eff3DActor;
-import com.maddox.il2.objects.weapons.GunEmpty;
+import com.maddox.il2.engine.HierMesh;
 import com.maddox.rts.Property;
 
 public class ME_262C1A extends ME_262
@@ -65,16 +65,16 @@ public class ME_262C1A extends ME_262
     public void onAircraftLoaded()
     {
         super.onAircraftLoaded();
-        if((getBulletEmitterByHookName("_ExternalBomb01") instanceof GunEmpty) && (getBulletEmitterByHookName("_ExternalDev03") instanceof GunEmpty) && (getBulletEmitterByHookName("_ExternalDev05") instanceof GunEmpty))
-            hierMesh().chunkVisible("Pylon_D0", false);
-        if(getBulletEmitterByHookName("_CANNON07") instanceof GunEmpty)
-            hierMesh().chunkVisible("MK103", false);
-        else
-            hierMesh().chunkVisible("MK103", true);
-        if(getBulletEmitterByHookName("_CANNON09") instanceof GunEmpty)
-            hierMesh().chunkVisible("MK108", false);
-        else
-            hierMesh().chunkVisible("MK108", true);
+//        if((getBulletEmitterByHookName("_ExternalBomb01") instanceof GunEmpty) && (getBulletEmitterByHookName("_ExternalDev03") instanceof GunEmpty) && (getBulletEmitterByHookName("_ExternalDev05") instanceof GunEmpty))
+//            hierMesh().chunkVisible("Pylon_D0", false);
+//        if(getBulletEmitterByHookName("_CANNON07") instanceof GunEmpty)
+//            hierMesh().chunkVisible("MK103", false);
+//        else
+//            hierMesh().chunkVisible("MK103", true);
+//        if(getBulletEmitterByHookName("_CANNON09") instanceof GunEmpty)
+//            hierMesh().chunkVisible("MK108", false);
+//        else
+//            hierMesh().chunkVisible("MK108", true);
         if(Config.isUSE_RENDER())
         {
             flame = Eff3DActor.New(this, findHook("_Engine3EF_01"), null, 1.0F, "3DO/Effects/Aircraft/TurboHWK109F.eff", -1F);
@@ -88,8 +88,16 @@ public class ME_262C1A extends ME_262
             Eff3DActor.setIntesity(sprite, 0.0F);
             Eff3DActor.setIntesity(turboexhaust, 1.0F);
         }
+        prepareWeapons(this.getClass(), this.hierMesh(), this.thisWeaponsName);
     }
 
+    public static void prepareWeapons(Class aircraftClass, HierMesh hierMesh, String thisWeaponsName) {
+        _WeaponSlot[] weaponSlotsRegistered = Aircraft.getWeaponSlotsRegistered(aircraftClass, thisWeaponsName);
+        hierMesh.chunkVisible("Pylon_D0", weaponSlotsRegistered[32] != null || weaponSlotsRegistered[34] != null || weaponSlotsRegistered[42] != null);
+        hierMesh.chunkVisible("MK103", weaponSlotsRegistered[38] != null);
+        hierMesh.chunkVisible("MK108", weaponSlotsRegistered[40] != null);
+    }
+    
     public void rareAction(float f, boolean flag)
     {
         super.rareAction(f, flag);

@@ -4,37 +4,6 @@ import com.maddox.rts.Property;
 
 public class FW_190D14Proto extends FW_190DNEW {
 
-    public FW_190D14Proto() {
-        this.kangle = 0.0F;
-    }
-
-    protected void moveGear(float f) {
-        FW_190DNEW.moveGear(this.hierMesh(), f);
-    }
-
-    public void moveSteering(float f) {
-        if (this.FM.CT.getGear() >= 0.98F) {
-            this.hierMesh().chunkSetAngles("GearC2_D0", 0.0F, -f, 0.0F);
-        }
-    }
-
-    public void onAircraftLoaded() {
-        super.onAircraftLoaded();
-        this.FM.AS.wantBeaconsNet(true);
-        this.FM.Sq.dragParasiteCx = 0.0F;
-    }
-
-    public void update(float f) {
-        for (int i = 1; i < 15; i++) {
-            this.hierMesh().chunkSetAngles("Water" + i + "_D0", 0.0F, -20F * this.kangle, 0.0F);
-        }
-
-        this.kangle = (0.95F * this.kangle) + (0.05F * this.FM.EI.engines[0].getControlRadiator());
-        super.update(f);
-    }
-
-    private float kangle;
-
     static {
         Class class1 = FW_190D14Proto.class;
         new NetAircraft.SPAWN(class1);

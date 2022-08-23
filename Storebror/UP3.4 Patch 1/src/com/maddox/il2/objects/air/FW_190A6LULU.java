@@ -4,7 +4,7 @@ import com.maddox.il2.engine.HierMesh;
 import com.maddox.il2.objects.electronics.RadarLiSN2;
 import com.maddox.rts.Property;
 
-public class FW_190A6LULU extends FW_190A_BASE implements TypeRadarLiSN2Carrier, TypeX4Carrier {
+public class FW_190A6LULU extends FW_190NEW implements TypeRadarLiSN2Carrier, TypeX4Carrier {
     
     public void onAircraftLoaded() {
         super.onAircraftLoaded();
@@ -12,7 +12,7 @@ public class FW_190A6LULU extends FW_190A_BASE implements TypeRadarLiSN2Carrier,
     }
 
     public static void prepareWeapons(Class aircraftClass, HierMesh hierMesh, String thisWeaponsName) {
-        FW_190A_BASE.prepareWeapons(aircraftClass, hierMesh, thisWeaponsName);
+        FW_190NEW.prepareWeapons(aircraftClass, hierMesh, thisWeaponsName);
         _WeaponSlot[] weaponSlotsRegistered = Aircraft.getWeaponSlotsRegistered(aircraftClass, thisWeaponsName);
         if ((weaponSlotsRegistered == null) || (weaponSlotsRegistered.length < 27)) {
             return;

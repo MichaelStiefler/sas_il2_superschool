@@ -2,7 +2,7 @@ package com.maddox.il2.objects.air;
 
 import com.maddox.rts.Property;
 
-public class FW_190A1 extends FW_190A_BASE {
+public class FW_190A1 extends FW_190NEW {
 
     static {
         Class class1 = FW_190A1.class;

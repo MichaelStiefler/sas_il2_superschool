@@ -1,46 +1,184 @@
 package com.maddox.il2.objects.air;
 
+import java.io.IOException;
+
 import com.maddox.JGP.Point3d;
+import com.maddox.JGP.Vector3d;
 import com.maddox.il2.ai.Shot;
 import com.maddox.il2.ai.World;
+import com.maddox.il2.ai.air.Pilot;
 import com.maddox.il2.engine.Actor;
 import com.maddox.il2.engine.Config;
+import com.maddox.il2.engine.Eff3DActor;
 import com.maddox.il2.engine.HierMesh;
+import com.maddox.il2.engine.Orient;
+import com.maddox.il2.fm.AircraftState;
+import com.maddox.il2.fm.RealFlightModel;
 import com.maddox.il2.game.Main3D;
-import com.maddox.il2.objects.weapons.PylonETC501FW190;
+import com.maddox.il2.objects.Wreckage;
+import com.maddox.il2.objects.weapons.BombStarthilfeSolfuel;
+import com.maddox.il2.objects.weapons.BombStarthilfeSolfuelL;
+import com.maddox.il2.objects.weapons.BombStarthilfeSolfuelR;
+import com.maddox.rts.HotKeyCmd;
+import com.maddox.rts.NetMsgGuaranted;
+import com.maddox.rts.NetMsgInput;
 import com.maddox.rts.Property;
+import com.maddox.rts.Time;
+import com.maddox.sas1946.il2.util.TrueRandom;
 
 public abstract class FW_190Sea extends Scheme1
-    implements TypeFighter, TypeBNZFighter
+    implements TypeFighter, TypeBNZFighter, TypeStormovik, TypeBomber, TypeRocketBoost
 {
 
     public FW_190Sea()
     {
         arrestor = 0.0F;
+        this.booster = new BombStarthilfeSolfuel[2];
+        this.boosterEffects = new Eff3DActor[2];
+        this.boostState = AircraftState._AS_BOOST_NOBOOST;
+        this.boosterFireOutTime = -1L;
+    }
+
+    public void setBoostState(int state) {
+        if (this.boostState == state) return; // Nothing to do here, we are in the requested state already.
+        if (((state ^ this.boostState) & AircraftState._AS_BOOST_EXISTS) != 0) { // The existence of boosters has changed
+            if ((state & AircraftState._AS_BOOST_EXISTS) != 0) { // Boosters exist now
+                this.doAttachBoosters();
+            } else { // Boosters don't exist anymore
+                this.doCutBoosters();
+            }
+        }
+        if (((state ^ this.boostState) & AircraftState._AS_BOOST_ACTIVE) != 0) { // The boosters activity state changed
+            if ((state & AircraftState._AS_BOOST_ACTIVE) != 0) { // Boosters are active now
+                this.doFireBoosters();
+            } else { // Boosters aren't active
+                this.doShutoffBoosters();
+            }
+        }
+        this.boostState = state;
+    }
+
+    public int getBoostState() {
+        return this.boostState;
+    }
+
+    public void doAttachBoosters() {
+        for (int i = 0; i < 2; i++) {
+            try {
+                if (i==0) this.booster[i] = new BombStarthilfeSolfuelL(); else this.booster[i] = new BombStarthilfeSolfuelR();
+                this.booster[i].pos.setBase(this, this.findHook("_BoosterH" + (i + 1)), false);
+                this.booster[i].pos.resetAsBase();
+                this.booster[i].drawing(true);
+            } catch (Exception exception) {
+                this.debugprintln("Structure corrupt - can't hang Starthilferakete..");
+            }
+        }
+    }
+    
+    public void doCutBoosters() {
+      for (int i = 0; i < 2; i++) {
+          if (this.booster[i] != null) {
+              this.booster[i].start();
+              this.booster[i] = null;
+              this.dropBooster(i);
+          }
+      }
+      this.stopBoosterSound();
+    }
+    
+    private void dropBooster(int index) {
+        String chunkName = "Booster" + (index==0?"L":"R") + "_D0";
+        Wreckage wreckage = new Wreckage(this, this.hierMesh().chunkFind(chunkName));
+        Vector3d vector3d = new Vector3d();
+        Vector3d dir = new Vector3d();
+        dir.set(TrueRandom.nextDouble(0.9D, 1.1D), index==0?-0.1D:0.1D, TrueRandom.nextDouble(-0.1D, -0.07D));
+        this.pos.getAbsOrient().transform(dir);
+        vector3d.set(this.FM.Vwld);
+        dir.scale(vector3d.length());
+        vector3d.set(dir);
+        wreckage.setSpeed(vector3d);
+        wreckage.collide(true);
+    }
+
+    public void doFireBoosters() {
+        for (int i=0; i<2; i++) {
+            this.boosterEffects[i] = Eff3DActor.New(this, this.findHook("_Booster" + (i+1)), null, 1.0F, "3DO/Effects/Tracers/HydrogenRocket/rocket.eff", 30F);
+        }
+        this.startBoosterSound();
+    }
+
+    public void doShutoffBoosters() {
+        for (int i=0; i<2; i++) {
+            Eff3DActor.finish(this.boosterEffects[i]); // No null checks etc. required here, it's done internally already.
+        }
+        this.stopBoosterSound();
+    }
+
+    public void startBoosterSound() {
+        for (int i = 0; i < 2; i++) {
+            if (this.booster[i] != null) {
+                this.booster[i].startSound();
+            }
+        }
+    }
+
+    public void stopBoosterSound() {
+        for (int i = 0; i < 2; i++) {
+            if (this.booster[i] != null) {
+                this.booster[i].stopSound();
+            }
+        }
+    }
+    
+    private void boostUpdate() {
+        if (!(this.FM instanceof Pilot)) return;
+        if ((this.boostState & AircraftState._AS_BOOST_EXISTS) == 0) return;
+            // TODO: Changed Booster cutoff reasons from absolute altitude to altitude above ground
+            if (this.FM.getAltitude() - World.land().HQ_Air(this.FM.Loc.x, this.FM.Loc.y) > 300F && this.boosterFireOutTime == -1L && this.FM.Loc.z != 0.0D && World.Rnd().nextFloat() < 0.05F) {
+                this.FM.AS.setBoostState(this, AircraftState._AS_BOOST_NOBOOST);
+                this.FM.AS.setGliderBoostOff();
+            }
+            if (this.boosterFireOutTime == -1L && this.FM.Gears.onGround() && this.FM.EI.getPowerOutput() > 0.8F && this.FM.EI.engines[0].getStage() == 6 && this.FM.getSpeedKMH() > 20F) {
+                this.boosterFireOutTime = Time.current() + 20000L;
+                this.FM.AS.setBoostState(this, this.boostState | AircraftState._AS_BOOST_ACTIVE);
+                this.FM.AS.setGliderBoostOn();
+            }
+            if (this.boosterFireOutTime > 0L) {
+                if (Time.current() < this.boosterFireOutTime) {
+                    this.FM.producedAF.x += 20000D;
+                } else { // Stop sound
+                    this.FM.AS.setBoostState(this, this.boostState & ~AircraftState._AS_BOOST_ACTIVE);
+                }
+                if (Time.current() > this.boosterFireOutTime + 10000L) { // cut boosters 10 seconds after burnout regardless altitude if not done so before.
+                    this.FM.AS.setBoostState(this, AircraftState._AS_BOOST_NOBOOST);
+                    this.FM.AS.setGliderBoostOff();
+                }
+            }
+    }
+    
+    public void setOnGround(Point3d point3d, Orient orient, Vector3d vector3d) {
+        super.setOnGround(point3d, orient, vector3d);
+        if (!this.isNetMaster()) return; // FIXME: Maybe FM.AS.isMaster() works better? Idea is to deal with "setOnGround" in single player missions only, or in Dogfight missions on server side only.
+        if (this.thisWeaponsName.endsWith("_boost")) this.FM.AS.setBoostState(this, this.boostState | AircraftState._AS_BOOST_EXISTS);
+    }
+
+    public void destroy() {
+        this.doCutBoosters();
+        super.destroy();
+    }
+
+    public void msgCollision(Actor actor, String string, String string_0_)
+    {
+        if((!isNet() || !isNetMirror()) && !string.startsWith("Hook"))
+            super.msgCollision(actor, string, string_0_);
     }
 
     public void onAircraftLoaded()
     {
         super.onAircraftLoaded();
-        if(World.cur().camouflage == 1)
-        {
-            hierMesh().chunkVisible("GearL5_D0", false);
-            hierMesh().chunkVisible("GearR5_D0", false);
-        }
-        Object objects[] = this.pos.getBaseAttached();
-        if(objects != null)
-        {
-            for(int i = 0; i < objects.length; i++)
-            {
-                if(!(objects[i] instanceof PylonETC501FW190))
-                    continue;
-                hierMesh().chunkVisible("GearL5_D0", false);
-                hierMesh().chunkVisible("GearR5_D0", false);
-                break;
-            }
-        }
-        
         FW_190Sea.prepareWeapons(this.getClass(), this.hierMesh(), this.thisWeaponsName);
+        hierMesh().chunkVisible("BoosterL_D0", false);
+        hierMesh().chunkVisible("BoosterR_D0", false);
     }
 
     public static void prepareWeapons(Class aircraftClass, HierMesh hierMesh, String thisWeaponsName) {
@@ -48,6 +186,8 @@ public abstract class FW_190Sea extends Scheme1
         boolean winter = Config.isUSE_RENDER() && (World.cur().camouflage == 1);
         hierMesh.chunkVisible("GearL5_D0", !winter);
         hierMesh.chunkVisible("GearR5_D0", !winter);
+        hierMesh.chunkVisible("BoosterL_D0", thisWeaponsName.endsWith("_boost"));
+        hierMesh.chunkVisible("BoosterR_D0", thisWeaponsName.endsWith("_boost"));
 
         String planeVersion = aircraftClass.getName().substring(33);
         
@@ -64,8 +204,44 @@ public abstract class FW_190Sea extends Scheme1
         }
         
         if (planeVersion.startsWith("SeaDora")) {
+            hierMesh.chunkVisible("20mmL1_D0", weaponSlotsRegistered[2] != null);
+            hierMesh.chunkVisible("20mmR1_D0", weaponSlotsRegistered[3] != null);
             return;
         }
+        
+        if (planeVersion.startsWith("SeaJab")) {
+            hierMesh.chunkVisible("7mmC_D0", weaponSlotsRegistered[0] != null);
+            hierMesh.chunkVisible("7mmCowl_D0", weaponSlotsRegistered[0] == null);
+            hierMesh.chunkVisible("20mmL1_D0", weaponSlotsRegistered[2] != null);
+            hierMesh.chunkVisible("20mmR1_D0", weaponSlotsRegistered[3] != null);
+//            hierMesh.chunkVisible("20mmL_D0", weaponSlotsRegistered[4] != null);
+//            hierMesh.chunkVisible("20mmR_D0", weaponSlotsRegistered[5] != null);
+            return;
+        }
+    }
+
+    public static void moveGear(HierMesh hiermesh, float f)
+    {
+        hiermesh.chunkSetAngles("GearL2_D0", 0.0F, 77F * f, 0.0F);
+        hiermesh.chunkSetAngles("GearR2_D0", 0.0F, 77F * f, 0.0F);
+        hiermesh.chunkSetAngles("GearL3_D0", 0.0F, 157F * f, 0.0F);
+        hiermesh.chunkSetAngles("GearR3_D0", 0.0F, 157F * f, 0.0F);
+        hiermesh.chunkSetAngles("GearC99_D0", 40F * f, 0.0F, 0.0F);
+        hiermesh.chunkSetAngles("GearC2_D0", 0.0F, 0.0F, 0.0F);
+        float f_0_ = Math.max(-f * 1500F, -94F);
+        hiermesh.chunkSetAngles("GearL5_D0", 0.0F, -f_0_, 0.0F);
+        hiermesh.chunkSetAngles("GearR5_D0", 0.0F, -f_0_, 0.0F);
+    }
+
+    protected void moveGear(float f)
+    {
+        FW_190Sea.moveGear(hierMesh(), f);
+    }
+
+    public void moveSteering(float f)
+    {
+        if(this.FM.CT.getGear() >= 0.98F)
+            hierMesh().chunkSetAngles("GearC2_D0", 0.0F, -f, 0.0F);
     }
 
     public void moveArrestorHook(float f)
@@ -147,7 +323,35 @@ public abstract class FW_190Sea extends Scheme1
     {
         if(this.FM.AS.bIsAboutToBailout)
             hierMesh().chunkVisible("Wire_D0", false);
+        if (this.FM.AS.isMaster() && Config.isUSE_RENDER()) {
+            if ((this.FM.CT.PowerControl > 1.0F || this.FM.CT.getAfterburnerControl()) && this.FM.EI.engines[0].getRPM() > 100F) {
+                this.FM.AS.setSootState(this, 0, 1);
+            } else {
+                this.FM.AS.setSootState(this, 0, 0);
+            }
+        }
         super.update(f);
+        if (this.FM.isPlayers() && (this.FM.getSpeedKMH() > 240F)) {
+            HotKeyCmd.getByRecordedId(348).enable(false);
+        } else {
+            HotKeyCmd.getByRecordedId(348).enable(true);
+        }
+        if ((!this.FM.isPlayers() || !(this.FM instanceof RealFlightModel) || !((RealFlightModel)this.FM).isRealMode()) && this.FM.Gears.onGround()) {
+            if (this.FM.getSpeedKMH() < 50F) {
+                this.FM.CT.cockpitDoorControl = 1.0F;
+            } else {
+                this.FM.CT.cockpitDoorControl = 0.0F;
+            }
+        }
+        if (!this.FM.CT.bHasElevatorControl) {
+            this.FM.CT.ElevatorControl = 0.0F;
+        }
+        if (this.FM.Gears.onGround() && (this.FM.CT.ElevatorControl >= 0.06F)) {
+            this.FM.Gears.bTailwheelLocked = true;
+        } else if (this.FM.Gears.onGround() && (this.FM.CT.ElevatorControl <= 0.06F)) {
+            this.FM.Gears.bTailwheelLocked = false;
+        }
+        this.boostUpdate();
     }
 
     public boolean cut(String string)
@@ -159,16 +363,16 @@ public abstract class FW_190Sea extends Scheme1
 
     protected boolean cutFM(int i, int i_1_, Actor actor)
     {
+        if (i>=33 && i<=38) {
+            this.FM.AS.setBoostState(this, AircraftState._AS_BOOST_NOBOOST);
+            this.FM.AS.setGliderBoostOff();
+        }
         switch(i)
         {
         case 33:
             return super.cutFM(34, i_1_, actor);
-
         case 36:
             return super.cutFM(37, i_1_, actor);
-
-        case 34:
-        case 35:
         default:
             return super.cutFM(i, i_1_, actor);
         }
@@ -643,7 +847,93 @@ public abstract class FW_190Sea extends Scheme1
         }
     }
 
+    protected void nextDMGLevel(String string, int i, Actor actor)
+    {
+        super.nextDMGLevel(string, i, actor);
+        if(this.FM.isPlayers())
+            bChangedPit = true;
+    }
+
+    protected void nextCUTLevel(String string, int i, Actor actor)
+    {
+        super.nextCUTLevel(string, i, actor);
+        if(this.FM.isPlayers())
+            bChangedPit = true;
+    }
+
+    public boolean typeBomberToggleAutomation()
+    {
+        return false;
+    }
+
+    public void typeBomberAdjDistanceReset()
+    {
+    }
+
+    public void typeBomberAdjDistancePlus()
+    {
+    }
+
+    public void typeBomberAdjDistanceMinus()
+    {
+    }
+
+    public void typeBomberAdjSideslipReset()
+    {
+    }
+
+    public void typeBomberAdjSideslipPlus()
+    {
+    }
+
+    public void typeBomberAdjSideslipMinus()
+    {
+    }
+
+    public void typeBomberAdjAltitudeReset()
+    {
+    }
+
+    public void typeBomberAdjAltitudePlus()
+    {
+    }
+
+    public void typeBomberAdjAltitudeMinus()
+    {
+    }
+
+    public void typeBomberAdjSpeedReset()
+    {
+    }
+
+    public void typeBomberAdjSpeedPlus()
+    {
+    }
+
+    public void typeBomberAdjSpeedMinus()
+    {
+    }
+
+    public void typeBomberUpdate(float f1)
+    {
+    }
+
+    public void typeBomberReplicateToNet(NetMsgGuaranted netmsgguaranted1)
+        throws IOException
+    {
+    }
+
+    public void typeBomberReplicateFromNet(NetMsgInput netmsginput1)
+        throws IOException
+    {
+    }
+
     protected float arrestor;
+    public static boolean bChangedPit = false;
+    private BombStarthilfeSolfuel      booster[];
+    private Eff3DActor                    boosterEffects[];
+    private int           boostState;
+    protected long        boosterFireOutTime;
 
     static 
     {

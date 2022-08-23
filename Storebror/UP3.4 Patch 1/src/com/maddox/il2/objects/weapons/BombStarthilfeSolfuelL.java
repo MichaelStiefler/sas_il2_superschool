@@ -5,14 +5,14 @@ import com.maddox.rts.Property;
 public class BombStarthilfeSolfuelL extends BombStarthilfeSolfuel
 {
 
-    public void interpolateTick()
-    {
-        super.interpolateTick();
-        if(!bOnChute && this.curTm > ttcurTM)
-        {
-            setMesh("3DO/Arms/StarthilfeSolfuelL/mono.sim");
-        }
-    }
+//    public void interpolateTick()
+//    {
+//        super.interpolateTick();
+//        if(!bOnChute && this.curTm > ttcurTM)
+//        {
+//            setMesh("3DO/Arms/StarthilfeSolfuelL/mono.sim");
+//        }
+//    }
     static 
     {
         Class var_class = BombStarthilfeSolfuelL.class;

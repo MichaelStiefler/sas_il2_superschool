@@ -29,7 +29,7 @@ import com.maddox.rts.Property;
 import com.maddox.rts.Time;
 import com.maddox.sas1946.il2.util.Reflection;
 
-public class FW_190A8MSTL extends FW_190A_BASE implements TypeDockable, Mistel {
+public class FW_190A8MSTL extends FW_190NEW implements TypeDockable, Mistel {
 
     public FW_190A8MSTL() {
         if (this.Debug_Methods()) System.out.println("FW_190A8MSTL()");
@@ -38,7 +38,6 @@ public class FW_190A8MSTL extends FW_190A_BASE implements TypeDockable, Mistel {
         this.target_ = null;
         this.queen_ = null;
         this.mistelQueen = null;
-        this.applyLoadoutVisibility = false;
     }
 
     public Aircraft getDrone() {

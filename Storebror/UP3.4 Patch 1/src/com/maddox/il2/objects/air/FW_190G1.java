@@ -1,50 +1,8 @@
 package com.maddox.il2.objects.air;
 
-import com.maddox.il2.objects.weapons.FuelTank_Type_D;
 import com.maddox.rts.Property;
 
-public class FW_190G1 extends FW_190F implements TypeStormovik {
-    public void onAircraftLoaded() {
-        super.onAircraftLoaded();
-        this.FM.M.massEmpty -= 81F;
-        this.hierMesh().chunkVisible("7mmC_D0", false);
-        this.hierMesh().chunkVisible("7mmCowl_D0", true);
-        this.hierMesh().chunkVisible("Flap01_D0", true);
-        this.hierMesh().chunkVisible("Flap04_D0", true);
-        this.hierMesh().chunkVisible("Flap01Holed_D0", false);
-        this.hierMesh().chunkVisible("Flap04Holed_D0", false);
-        Object aobj[] = this.pos.getBaseAttached();
-        if (aobj != null) {
-            int i = 0;
-            do {
-                if (i >= aobj.length) {
-                    break;
-                }
-                if (aobj[i] instanceof FuelTank_Type_D) {
-                    this.hierMesh().chunkVisible("Flap01_D0", false);
-                    this.hierMesh().chunkVisible("Flap04_D0", false);
-                    this.hierMesh().chunkVisible("Flap01Holed_D0", true);
-                    this.hierMesh().chunkVisible("Flap04Holed_D0", true);
-                    break;
-                }
-                i++;
-            } while (true);
-        }
-    }
-
-    protected void moveGear(float f) {
-        FW_190F.moveGear(this.hierMesh(), f);
-    }
-
-    public void moveSteering(float f) {
-        if (this.FM.CT.getGear() < 0.98F) {
-            return;
-        } else {
-            this.hierMesh().chunkSetAngles("GearC2_D0", 0.0F, -f, 0.0F);
-            return;
-        }
-    }
-
+public class FW_190G1 extends FW_190F {
     static {
         Class class1 = FW_190G1.class;
         new NetAircraft.SPAWN(class1);

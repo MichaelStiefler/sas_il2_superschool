@@ -223,9 +223,6 @@ public abstract class NetAircraft extends SndAircraft {
             if (Mission.isServer()) ((Maneuver) netaircraft.FM).Group.changeAircraft((Aircraft) netaircraft, (Aircraft) netaircraft_0_);
             netaircraft_0_.FM.CT.set(netaircraft.FM.CT);
             netaircraft_0_.FM.CT.forceGear(netaircraft_0_.FM.CT.GearControl);
-//            if ((Aircraft) netaircraft_0_ != null) {
-//                /* empty */
-//            }
             Aircraft.forceGear(netaircraft_0_.getClass(), netaircraft_0_.hierMesh(), netaircraft_0_.FM.CT.getGear());
             netaircraft_0_.pos.setAbs(netaircraft.pos.getAbs());
             netaircraft_0_.pos.reset();
@@ -521,7 +518,6 @@ public abstract class NetAircraft extends SndAircraft {
             String string = ((AircraftNet) netaircraft.net).netUser.uniqueName();
             int i;
             for (i = 0; Actor.getByName(string + "_" + i) != null; i++) {
-                /* empty */
             }
             netaircraft.setName(string + "_" + i);
         }
@@ -1259,7 +1255,6 @@ public abstract class NetAircraft extends SndAircraft {
                 this.out.setIncludeTime(true);
                 this.out.setFilterArg(actor);
             } catch (Exception exception) {
-                /* empty */
             }
         }
     }
@@ -1299,19 +1294,15 @@ public abstract class NetAircraft extends SndAircraft {
     }
 
     protected void nextCUTLevel(String string, int i, Actor actor) {
-        /* empty */
     }
 
     protected void nextDMGLevel(String string, int i, Actor actor) {
-        /* empty */
     }
 
     protected void netHits(int i, int i_88_, int i_89_, Actor actor) {
-        /* empty */
     }
 
     protected void doExplosion() {
-        /* empty */
     }
 
     public int curDMGProp(int i) {
@@ -1319,23 +1310,18 @@ public abstract class NetAircraft extends SndAircraft {
     }
 
     protected void weaponsLoad(String string) throws Exception {
-        /* empty */
     }
 
     protected void createCockpits() {
-        /* empty */
     }
 
     public void setFM(int i, boolean bool) {
-        /* empty */
     }
 
     public void preparePaintScheme() {
-        /* empty */
     }
 
     public void prepareCamouflage() {
-        /* empty */
     }
 
     public int aircIndex() {
@@ -1347,7 +1333,6 @@ public abstract class NetAircraft extends SndAircraft {
     }
 
     public void onAircraftLoaded() {
-        /* empty */
     }
 
     public NetUser netUser() {
@@ -1366,11 +1351,9 @@ public abstract class NetAircraft extends SndAircraft {
     }
 
     public void moveSteering(float f) {
-        /* empty */
     }
 
     public void moveWheelSink() {
-        /* empty */
     }
 
     public void setFMTrack(FlightModelTrack flightmodeltrack) {
@@ -2306,12 +2289,10 @@ public abstract class NetAircraft extends SndAircraft {
             netmsgfiltered.writeByte(i_163_ | i & 0x1);
             this.net.postTo(Time.current(), this.net.masterChannel(), netmsgfiltered);
         } catch (Exception exception) {
-            /* empty */
         }
     }
 
     protected void msgSndShot(float f, double d, double d_164_, double d_165_) {
-        /* empty */
     }
 
     public void makeMirrorCarrierRelPos() {
@@ -2381,9 +2362,6 @@ public abstract class NetAircraft extends SndAircraft {
             while (i_168_-- > 0) {
                 NetAircraft netaircraft_169_ = netaircraft;
                 StringBuffer stringbuffer = new StringBuffer();
-                if (netaircraft != null) {
-                    /* empty */
-                }
                 netaircraft_169_.nextDMGLevel(stringbuffer.append(partNames()[i_167_]).append("_D0").toString(), 0, null);
             }
         }
@@ -2395,9 +2373,6 @@ public abstract class NetAircraft extends SndAircraft {
                 if ((l & l_171_) == 0L && (netaircraft.FM.Operate & l_171_) != 0L) {
                     NetAircraft netaircraft_172_ = netaircraft;
                     StringBuffer stringbuffer = new StringBuffer();
-                    if (netaircraft != null) {
-                        /* empty */
-                    }
                     netaircraft_172_.nextCUTLevel(stringbuffer.append(partNames()[i_170_]).append("_D0").toString(), 0, null);
                 }
                 i_170_++;

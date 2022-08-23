@@ -2,8 +2,8 @@ package com.maddox.il2.objects.air;
 
 import com.maddox.rts.Property;
 
-public class TA_152HJ extends TA_152NEW // TA_152H_Paulus
-    implements TypeFighter, TypeFighterAceMaker
+public class TA_152HJ extends TA_152NEW_WeaponLayout2 // TA_152H_Paulus
+    implements TypeFighterAceMaker
 {
     public void update(float f) {
         this.updateAfterburner();

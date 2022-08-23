@@ -2,7 +2,7 @@ package com.maddox.il2.objects.air;
 
 import com.maddox.rts.Property;
 
-public class TA_152C extends TA_152NEW implements TypeX4Carrier {
+public class TA_152C extends TA_152NEW_WeaponLayout1 implements TypeX4Carrier {
 
     static {
         Class class1 = TA_152C.class;

@@ -2,25 +2,7 @@ package com.maddox.il2.objects.air;
 
 import com.maddox.rts.Property;
 
-public class FW_190F8 extends FW_190F implements TypeStormovik {
-//    protected void moveGear(float f) {
-//        FW_190.moveGear(this.hierMesh(), f);
-//    }
-//
-//    public void moveSteering(float f) {
-//        if (this.FM.CT.getGear() < 0.98F) {
-//            return;
-//        } else {
-//            this.hierMesh().chunkSetAngles("GearC2_D0", 0.0F, -f, 0.0F);
-//            return;
-//        }
-//    }
-
-    public void onAircraftLoaded() {
-        super.onAircraftLoaded();
-        this.FM.AS.wantBeaconsNet(true);
-    }
-
+public class FW_190F8 extends FW_190F {
     static {
         Class class1 = FW_190F8.class;
         new NetAircraft.SPAWN(class1);

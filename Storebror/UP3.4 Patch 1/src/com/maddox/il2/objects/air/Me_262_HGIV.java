@@ -23,10 +23,6 @@ public class Me_262_HGIV extends ME_262
         k14Distance = 200F;
     }
 
-//    public void onAircraftLoaded()
-//    {
-//    }
-
     public void typeX4CAdjSidePlus()
     {
         deltaAzimuth = 1.0F;

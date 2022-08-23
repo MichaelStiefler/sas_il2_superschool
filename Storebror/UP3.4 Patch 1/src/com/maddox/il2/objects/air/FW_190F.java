@@ -13,7 +13,6 @@ import com.maddox.il2.engine.HierMesh;
 import com.maddox.il2.engine.Orient;
 import com.maddox.il2.game.Main3D;
 import com.maddox.il2.objects.Wreckage;
-import com.maddox.il2.objects.air.Aircraft._WeaponSlot;
 import com.maddox.rts.CmdEnv;
 import com.maddox.rts.HotKeyCmd;
 import com.maddox.rts.NetMsgGuaranted;
@@ -46,19 +45,11 @@ public abstract class FW_190F extends Scheme1 implements TypeFighter, TypeBNZFig
     }
 
     public static void prepareWeapons(Class aircraftClass, HierMesh hierMesh, String thisWeaponsName) {
-//      StringTokenizer package_parts = new StringTokenizer(aircraftClass.getName(), ".");
-//      String package_part = "";
-//      while (package_parts.hasMoreTokens()) package_part = package_parts.nextToken();
-//      if (package_part.length() < 8) return;
-//      package_part = package_part.substring(6);
-//      if (package_part.startsWith("A8") || package_part.startsWith("A9") || package_part.startsWith("D")) return;
-
       boolean winter = Config.isUSE_RENDER() && (World.cur().camouflage == 1);
       hierMesh.chunkVisible("GearL5_D0", !winter);
       hierMesh.chunkVisible("GearR5_D0", !winter);
 
       String planeVersion = aircraftClass.getName().substring(33);
-      System.out.println("190 Version = " + planeVersion);
 
       _WeaponSlot[] weaponSlotsRegistered = Aircraft.getWeaponSlotsRegistered(aircraftClass, thisWeaponsName);
       
@@ -77,18 +68,7 @@ public abstract class FW_190F extends Scheme1 implements TypeFighter, TypeBNZFig
       if (hierMesh.chunkFindCheck("20mmR1_D0") > 0) {
           hierMesh.chunkVisible("20mmR1_D0", weaponSlotsRegistered[3] != null);
       }
-      
-      
-      
-//    this.hierMesh().chunkVisible("GearL5_D0", false);
-//    this.hierMesh().chunkVisible("GearR5_D0", false);
-//    this.hierMesh().chunkVisible("GearL5C_D0", true);
-//    this.hierMesh().chunkVisible("GearR5C_D0", true);
-//    if ((World.cur().camouflage == 1) && (World.Rnd().nextFloat() < 0.05F)) {
-//        this.hierMesh().chunkVisible("MGearL3C_D0", false);
-//        this.hierMesh().chunkVisible("MGearR3C_D0", false);
-//    }
-      
+
       if (hierMesh.chunkFindCheck("TropFilter_D0") >= 0) {
         if (thisWeaponsName.endsWith("_Trop")) {
             hierMesh.chunkVisible("TropFilter_D0", true);
@@ -123,8 +103,6 @@ public abstract class FW_190F extends Scheme1 implements TypeFighter, TypeBNZFig
           return;
       }
       if (planeVersion.startsWith("F9")) {
-//          hierMesh.chunkVisible("ETC71_L", weaponSlotsRegistered[4] != null);
-//          hierMesh.chunkVisible("ETC71_R", weaponSlotsRegistered[6] != null);
           hierMesh.chunkVisible("ETC_501", weaponSlotsRegistered[22] != null || weaponSlotsRegistered[32] != null || weaponSlotsRegistered[33] != null);
           hierMesh.chunkVisible("Flap01_D0", !thisWeaponsName.startsWith("U1_"));
           hierMesh.chunkVisible("Flap04_D0", !thisWeaponsName.startsWith("U1_"));
@@ -165,41 +143,6 @@ public abstract class FW_190F extends Scheme1 implements TypeFighter, TypeBNZFig
           hierMesh.chunkVisible("Flap04Holed_D0", hasWingTanks);
           return;
       }
-
-      
-//      hierMesh.chunkVisible("20mmL_D0", weaponSlotsRegistered[4] != null);
-//      hierMesh.chunkVisible("20mmR_D0", weaponSlotsRegistered[5] != null);
-//      if (weaponSlotsRegistered.length < 10) {
-//          return;
-//      }
-//      hierMesh.chunkVisible("Flap01_D0", weaponSlotsRegistered[8] == null);
-//      hierMesh.chunkVisible("Flap01Holed_D0", weaponSlotsRegistered[8] != null);
-//      hierMesh.chunkVisible("Flap04_D0", weaponSlotsRegistered[9] == null);
-//      hierMesh.chunkVisible("Flap04Holed_D0", weaponSlotsRegistered[9] != null);
-      
-      
-      
-//      if (planeVersion.startsWith("A8R11")) {
-//          FW_190NEW.prepareWeapons(aircraftClass, hierMesh, thisWeaponsName);
-//          return;
-//      }
-//      if (planeVersion.startsWith("A8MSTL")) {
-//          hierMesh.chunkVisible("ETC_501", false);
-//          hierMesh.chunkVisible("7mmC_D0", weaponSlotsRegistered[0] != null);
-//          hierMesh.chunkVisible("7mmCowl_D0", weaponSlotsRegistered[0] == null);
-//          hierMesh.chunkVisible("GuncoverL_D0", false);
-//          hierMesh.chunkVisible("GuncoverR_D0", false);
-//          return;
-//      }
-//      if (planeVersion.startsWith("A8") || planeVersion.startsWith("A9")) {
-//          hierMesh.chunkVisible("ETC_501", weaponSlotsRegistered[4] != null || weaponSlotsRegistered[31] != null);
-//          hierMesh.chunkVisible("7mmC_D0", weaponSlotsRegistered[0] != null);
-//          hierMesh.chunkVisible("7mmCowl_D0", weaponSlotsRegistered[0] == null);
-//          hierMesh.chunkVisible("GuncoverL_D0", weaponSlotsRegistered[27] != null);
-//          hierMesh.chunkVisible("GuncoverR_D0", weaponSlotsRegistered[28] != null);
-//          return;
-//      }
-
   }
 
     static double getDst(double x1, double y1, double x2, double y2) {
@@ -398,10 +341,11 @@ public abstract class FW_190F extends Scheme1 implements TypeFighter, TypeBNZFig
 //        this.hierMesh().chunkVisible("GearR5C_D0", true);
 //        this.hierMesh().chunkVisible("20mmL_D0", false);
 //        this.hierMesh().chunkVisible("20mmR_D0", false);
-        if (this.FM.isPlayers()) {
-            this.FM.CT.bHasCockpitDoorControl = true;
-        }
-        this.FM.CT.dvCockpitDoor = 0.2564102F;
+        this.FM.AS.wantBeaconsNet(true);
+//        if (this.FM.isPlayers()) {
+//            this.FM.CT.bHasCockpitDoorControl = true;
+//        }
+//        this.FM.CT.dvCockpitDoor = 0.2564102F;
         this.hierMesh().chunkVisible("Wire_D0", true);
 //        if ((World.cur().camouflage == 1) && (World.Rnd().nextFloat() < 0.05F)) {
 //            this.hierMesh().chunkVisible("MGearL3C_D0", false);

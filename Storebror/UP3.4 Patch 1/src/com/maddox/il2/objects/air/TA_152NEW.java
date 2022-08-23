@@ -56,39 +56,18 @@ public abstract class TA_152NEW extends Scheme1 implements TypeFighter, TypeBNZF
     }
 
     public static void prepareWeapons(Class aircraftClass, HierMesh hierMesh, String thisWeaponsName) {
-//      StringTokenizer package_parts = new StringTokenizer(aircraftClass.getName(), ".");
-//      String package_part = "";
-//      while (package_parts.hasMoreTokens()) package_part = package_parts.nextToken();
-//      if (package_part.length() < 8) return;
-//      package_part = package_part.substring(6);
-//      if (package_part.startsWith("A8") || package_part.startsWith("A9") || package_part.startsWith("D")) return;
-
       boolean winter = Config.isUSE_RENDER() && (World.cur().camouflage == 1);
       hierMesh.chunkVisible("GearL5_D0", !winter);
       hierMesh.chunkVisible("GearR5_D0", !winter);
-
-      String planeVersion = aircraftClass.getName().substring(33);
-      System.out.println("190 Version = " + planeVersion);
-
       _WeaponSlot[] weaponSlotsRegistered = Aircraft.getWeaponSlotsRegistered(aircraftClass, thisWeaponsName);
-      
-      if ((weaponSlotsRegistered == null) || (weaponSlotsRegistered.length < 2)) {
-          return;
-      }
-      
-      if (planeVersion.startsWith("HJ")) {
-          hierMesh.chunkVisible("20mmL2_D0", weaponSlotsRegistered[3] != null);
-          hierMesh.chunkVisible("20mmR2_D0", weaponSlotsRegistered[4] != null);
-      } else {
-          hierMesh.chunkVisible("7mmCowl_D0", weaponSlotsRegistered[3] == null);
-      }
+//      System.out.println("TA_152NEW prepareWeapons");
       if (hierMesh.chunkFindCheck("20mmL1_D0") > 0) {
           hierMesh.chunkVisible("20mmL1_D0", weaponSlotsRegistered[1] != null);
       }
       if (hierMesh.chunkFindCheck("20mmR1_D0") > 0) {
           hierMesh.chunkVisible("20mmR1_D0", weaponSlotsRegistered[2] != null);
       }
-  }
+    }
 
     public void doMurderPilot(int i) {
         switch (i) {
@@ -220,7 +199,7 @@ public abstract class TA_152NEW extends Scheme1 implements TypeFighter, TypeBNZF
             this.FM.CT.dvCockpitDoor = 0.2564102F;
             this.hierMesh().chunkVisible("Wire_D0", true);
         }
-        TA_152NEW.prepareWeapons(this.getClass(), this.hierMesh(), this.thisWeaponsName);
+//        TA_152NEW.prepareWeapons(this.getClass(), this.hierMesh(), this.thisWeaponsName);
     }
 
     public void update(float f) {

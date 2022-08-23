@@ -2,57 +2,7 @@ package com.maddox.il2.objects.air;
 
 import com.maddox.rts.Property;
 
-public class FW_190G8 extends FW_190F implements TypeStormovik, TypeBomber {
-
-//    public FW_190G8() {
-//        this.fuel_tank = 0;
-//    }
-//
-//    protected void moveGear(float f) {
-//        FW_190G.moveGear(this.hierMesh(), f);
-//    }
-//
-//    public void moveSteering(float f) {
-//        if (this.FM.CT.getGear() < 0.98F) {
-//            return;
-//        } else {
-//            this.hierMesh().chunkSetAngles("GearC2_D0", 0.0F, -f, 0.0F);
-//            return;
-//        }
-//    }
-//
-//    public void onAircraftLoaded() {
-//        super.onAircraftLoaded();
-//        this.FM.AS.wantBeaconsNet(true);
-//        if (this.getGunByHookName("_MGUN01") instanceof GunEmpty) {
-//            this.hierMesh().chunkVisible("7mmC_D0", false);
-//            this.hierMesh().chunkVisible("7mmCowl_D0", true);
-//            this.FM.M.massEmpty -= 58F;
-//        } else {
-//            this.FM.M.massEmpty -= 24F;
-//        }
-//        this.hierMesh().chunkVisible("Flap01_D0", true);
-//        this.hierMesh().chunkVisible("Flap04_D0", true);
-//        this.hierMesh().chunkVisible("Flap01Holed_D0", false);
-//        this.hierMesh().chunkVisible("Flap04Holed_D0", false);
-//        Object aobj[] = this.pos.getBaseAttached();
-//        if (aobj != null) {
-//            for (int i = 0; i < aobj.length; i++) {
-//                if (aobj[i] instanceof FuelTank_Type_D) {
-//                    this.fuel_tank++;
-//                }
-//            }
-//
-//        }
-//        if (this.fuel_tank > 1) {
-//            this.hierMesh().chunkVisible("Flap01_D0", false);
-//            this.hierMesh().chunkVisible("Flap04_D0", false);
-//            this.hierMesh().chunkVisible("Flap01Holed_D0", true);
-//            this.hierMesh().chunkVisible("Flap04Holed_D0", true);
-//        }
-//    }
-//
-//    private int fuel_tank;
+public class FW_190G8 extends FW_190F implements TypeBomber {
 
     static {
         Class class1 = FW_190G8.class;

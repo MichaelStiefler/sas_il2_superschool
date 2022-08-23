@@ -127,11 +127,15 @@ public class Li_P13 extends Scheme2
         }
         if(thisWeaponsName.startsWith("X4"))
         {
-            hierMesh().chunkVisible("Pilon1_D0", true);
-            hierMesh().chunkVisible("Pilon2_D0", true);
             Polares polares = (Polares)Reflection.getValue(FM, "Wing");
             polares.CxMin_0 = 0.022F;
         }
+        prepareWeapons(this.getClass(), this.hierMesh(), this.thisWeaponsName);
+    }
+    
+    public static void prepareWeapons(Class aircraftClass, HierMesh hierMesh, String thisWeaponsName) {
+            hierMesh.chunkVisible("Pilon1_D0", thisWeaponsName.startsWith("X4"));
+            hierMesh.chunkVisible("Pilon2_D0", thisWeaponsName.startsWith("X4"));
     }
 
     protected void hitBone(String s, Shot shot, Point3d point3d)

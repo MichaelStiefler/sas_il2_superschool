@@ -3,7 +3,7 @@ package com.maddox.il2.objects.air;
 import com.maddox.il2.objects.electronics.RadarLiSN2;
 import com.maddox.rts.Property;
 
-public class FW_190A8R11 extends FW_190A_BASE implements TypeRadarLiSN2Carrier, TypeX4Carrier {
+public class FW_190A8R11 extends FW_190NEW implements TypeRadarLiSN2Carrier, TypeX4Carrier {
 
     // +++ RadarLiSN2Carrier +++
     public void setCurPilot(int theCurPilot) {

@@ -9,6 +9,8 @@ import com.maddox.il2.engine.ActorHMesh;
 import com.maddox.il2.engine.Config;
 import com.maddox.il2.engine.HierMesh;
 import com.maddox.il2.engine.Orient;
+import com.maddox.il2.fm.RealFlightModel;
+import com.maddox.il2.game.HUD;
 import com.maddox.il2.game.Main3D;
 import com.maddox.il2.objects.Wreckage;
 import com.maddox.rts.CmdEnv;
@@ -34,10 +36,6 @@ public abstract class FW_190NEW extends Scheme1 implements TypeFighter, TypeBNZF
         this.doorSound = null;
         this.doorPrev = 0.0F;
         this.doorSndPos = null;
-        this.bSmokeEffect = false;
-        if (Config.cur.ini.get("Mods", "SmokeEffect", 0) > 0) {
-            this.bSmokeEffect = true;
-        }
     }
 
     protected void nextDMGLevel(String s, int i, Actor actor) {
@@ -55,31 +53,102 @@ public abstract class FW_190NEW extends Scheme1 implements TypeFighter, TypeBNZF
     }
 
     public static void prepareWeapons(Class aircraftClass, HierMesh hierMesh, String thisWeaponsName) {
+//      StringTokenizer package_parts = new StringTokenizer(aircraftClass.getName(), ".");
+//      String package_part = "";
+//      while (package_parts.hasMoreTokens()) package_part = package_parts.nextToken();
+//      if (package_part.length() < 8) return;
+//      package_part = package_part.substring(6);
+//      if (package_part.startsWith("A8") || package_part.startsWith("A9") || package_part.startsWith("D")) return;
 
-        boolean winter = Config.isUSE_RENDER() && (World.cur().camouflage == 1);
-        hierMesh.chunkVisible("GearL5_D0", !winter);
-        hierMesh.chunkVisible("GearR5_D0", !winter);
+      boolean winter = Config.isUSE_RENDER() && (World.cur().camouflage == 1);
+      hierMesh.chunkVisible("GearL5_D0", !winter);
+      hierMesh.chunkVisible("GearR5_D0", !winter);
 
-        _WeaponSlot[] weaponSlotsRegistered = Aircraft.getWeaponSlotsRegistered(aircraftClass, thisWeaponsName);
-        hierMesh.chunkVisible("7mmC_D0", weaponSlotsRegistered[0] != null);
-        hierMesh.chunkVisible("7mmCowl_D0", weaponSlotsRegistered[0] == null);
-        hierMesh.chunkVisible("20mmL1_D0", weaponSlotsRegistered[2] != null);
-        hierMesh.chunkVisible("20mmR1_D0", weaponSlotsRegistered[3] != null);
-        hierMesh.chunkVisible("20mmL_D0", weaponSlotsRegistered[4] != null);
-        hierMesh.chunkVisible("20mmR_D0", weaponSlotsRegistered[5] != null);
-        hierMesh.chunkVisible("30mmL_D0", weaponSlotsRegistered[11] != null);
-        hierMesh.chunkVisible("30mmR_D0", weaponSlotsRegistered[12] != null);
-        hierMesh.chunkVisible("GuncoverL_D0", weaponSlotsRegistered[11] != null);
-        hierMesh.chunkVisible("GuncoverR_D0", weaponSlotsRegistered[12] != null);
-        hierMesh.chunkVisible("ETC_501", weaponSlotsRegistered[10] != null);
-    }
-    
+      String planeVersion = aircraftClass.getName().substring(33);
+//      System.out.println("190 Version = " + planeVersion);
+      if (planeVersion.startsWith("D")) {
+          return;
+      }
+
+      _WeaponSlot[] weaponSlotsRegistered = Aircraft.getWeaponSlotsRegistered(aircraftClass, thisWeaponsName);
+      if ((weaponSlotsRegistered == null) || (weaponSlotsRegistered.length < 2)) {
+          return;
+      }
+      if (planeVersion.startsWith("A8R11") || planeVersion.startsWith("A7")) {
+          hierMesh.chunkVisible("7mmC_D0", weaponSlotsRegistered[0] != null);
+          hierMesh.chunkVisible("7mmCowl_D0", weaponSlotsRegistered[0] == null);
+          hierMesh.chunkVisible("20mmL1_D0", weaponSlotsRegistered[2] != null);
+          hierMesh.chunkVisible("20mmR1_D0", weaponSlotsRegistered[3] != null);
+          hierMesh.chunkVisible("20mmL_D0", weaponSlotsRegistered[4] != null);
+          hierMesh.chunkVisible("20mmR_D0", weaponSlotsRegistered[5] != null);
+          hierMesh.chunkVisible("30mmL_D0", weaponSlotsRegistered[11] != null);
+          hierMesh.chunkVisible("30mmR_D0", weaponSlotsRegistered[12] != null);
+          hierMesh.chunkVisible("GuncoverL_D0", weaponSlotsRegistered[11] != null);
+          hierMesh.chunkVisible("GuncoverR_D0", weaponSlotsRegistered[12] != null);
+          hierMesh.chunkVisible("ETC_501", weaponSlotsRegistered[10] != null);
+          return;
+      }
+      if (planeVersion.startsWith("A8MSTL")) {
+          hierMesh.chunkVisible("ETC_501", false);
+          hierMesh.chunkVisible("7mmC_D0", weaponSlotsRegistered[0] != null);
+          hierMesh.chunkVisible("7mmCowl_D0", weaponSlotsRegistered[0] == null);
+          hierMesh.chunkVisible("GuncoverL_D0", false);
+          hierMesh.chunkVisible("GuncoverR_D0", false);
+          return;
+      }
+      if (planeVersion.startsWith("A8") || planeVersion.startsWith("A9")) {
+          hierMesh.chunkVisible("ETC_501", weaponSlotsRegistered[4] != null || weaponSlotsRegistered[31] != null);
+          hierMesh.chunkVisible("7mmC_D0", weaponSlotsRegistered[0] != null);
+          hierMesh.chunkVisible("7mmCowl_D0", weaponSlotsRegistered[0] == null);
+          hierMesh.chunkVisible("GuncoverL_D0", weaponSlotsRegistered[27] != null);
+          hierMesh.chunkVisible("GuncoverR_D0", weaponSlotsRegistered[28] != null);
+          return;
+      }
+      
+//      for (int i=0;i<weaponSlotsRegistered.length; i++) {
+//          System.out.println("WS[" + i + "] = " + (weaponSlotsRegistered[0]==null?"null":weaponSlotsRegistered[0].getClass().getName()));
+//      }
+
+      hierMesh.chunkVisible("7mmC_D0", weaponSlotsRegistered[0] != null);
+      hierMesh.chunkVisible("7mmCowl_D0", weaponSlotsRegistered[0] == null);
+      if (weaponSlotsRegistered.length < 6) {
+          return;
+      }
+      if (hierMesh.chunkFindCheck("20mmL1_D0") > 0) {
+          hierMesh.chunkVisible("20mmL1_D0", weaponSlotsRegistered[2] != null);
+      }
+      if (hierMesh.chunkFindCheck("20mmR1_D0") > 0) {
+          hierMesh.chunkVisible("20mmR1_D0", weaponSlotsRegistered[3] != null);
+      }
+      hierMesh.chunkVisible("20mmL_D0", weaponSlotsRegistered[4] != null);
+      hierMesh.chunkVisible("20mmR_D0", weaponSlotsRegistered[5] != null);
+      if (weaponSlotsRegistered.length < 10) {
+          return;
+      }
+      hierMesh.chunkVisible("Flap01_D0", weaponSlotsRegistered[8] == null);
+      hierMesh.chunkVisible("Flap01Holed_D0", weaponSlotsRegistered[8] != null);
+      hierMesh.chunkVisible("Flap04_D0", weaponSlotsRegistered[9] == null);
+      hierMesh.chunkVisible("Flap04Holed_D0", weaponSlotsRegistered[9] != null);
+  }
+
     static double getDst(double x1, double y1, double x2, double y2) {
         double dst = 0.0D;
         dst = ((x1 - x2) * (x1 - x2)) + ((y1 - y2) * (y1 - y2));
         dst = Math.sqrt(dst);
         return dst;
     }
+
+//    public static void moveGear(HierMesh hiermesh, float f) {
+//        hiermesh.chunkSetAngles("GearL2_D0", 0.0F, 77F * f, 0.0F);
+//        hiermesh.chunkSetAngles("GearR2_D0", 0.0F, 77F * f, 0.0F);
+//        hiermesh.chunkSetAngles("GearL3_D0", 0.0F, 157F * f, 0.0F);
+//        hiermesh.chunkSetAngles("GearR3_D0", 0.0F, 157F * f, 0.0F);
+//        hiermesh.chunkSetAngles("GearC99_D0", 20F * f, 0.0F, 0.0F);
+//        hiermesh.chunkSetAngles("GearC2_D0", 0.0F, 0.0F, 0.0F);
+//        float f1 = Math.max(-f * 1500F, -94F);
+//        hiermesh.chunkSetAngles("GearL5_D0", 0.0F, -f1, 0.0F);
+//        hiermesh.chunkSetAngles("GearR5_D0", 0.0F, -f1, 0.0F);
+//    }
 
     public static void moveGear(HierMesh hiermesh, float f) {
         if (f < 0.002777778F) {
@@ -130,6 +199,10 @@ public abstract class FW_190NEW extends Scheme1 implements TypeFighter, TypeBNZF
         float f1 = -1F * (f <= 0.5F ? Aircraft.cvt(f, 0.0F, 0.15F, 0.0F, 94F) : Aircraft.cvt(f, 0.85F, 1.0F, 94F, 0.0F));
         hiermesh.chunkSetAngles("GearL5_D0", 0.0F, -f1, 0.0F);
         hiermesh.chunkSetAngles("GearR5_D0", 0.0F, -f1, 0.0F);
+    }
+
+    protected void moveGear(float f) {
+        FW_190NEW.moveGear(this.hierMesh(), f);
     }
 
     public void moveWheelSink() {
@@ -295,6 +368,9 @@ public abstract class FW_190NEW extends Scheme1 implements TypeFighter, TypeBNZF
             this.FM.VmaxAllowed = 161F;
             this.FM.Sq.dragEngineCx[0] *= 6.2F;
         }
+        if (this.FM.isPlayers() && this.FM.EI.engines[0].getControlAfterburner()) {
+            HUD.logRightBottom("Start- und Notleistung ENABLED!");
+        }
         super.update(f);
         if (HotKeyCmd.getByRecordedId(272).isActive() && this.FM.isPlayers()) {
             CmdEnv.top().exec("fov 90");
@@ -311,8 +387,8 @@ public abstract class FW_190NEW extends Scheme1 implements TypeFighter, TypeBNZF
         if (this.FM.AS.bIsAboutToBailout && !this.FM.isPlayers()) {
             this.hierMesh().chunkVisible("Wire_D0", false);
         }
-        if (this.bSmokeEffect) {
-            if (((this.FM == World.getPlayerFM()) && (this.FM.CT.PowerControl >= 1.0F) && (this.FM.EI.engines[0].getRPM() > 100F)) || ((this.FM == World.getPlayerFM()) && this.FM.CT.getAfterburnerControl() && (this.FM.EI.engines[0].getRPM() > 100F))) {
+        if (this.FM.AS.isMaster() && Config.isUSE_RENDER()) {
+            if ((this.FM.CT.PowerControl > 1.0F || this.FM.CT.getAfterburnerControl()) && this.FM.EI.engines[0].getRPM() > 100F) {
                 this.FM.AS.setSootState(this, 0, 1);
             } else {
                 this.FM.AS.setSootState(this, 0, 0);
@@ -348,6 +424,13 @@ public abstract class FW_190NEW extends Scheme1 implements TypeFighter, TypeBNZF
         }
         if (!this.bHasElevatorControl) {
             this.FM.CT.ElevatorControl = 0.0F;
+        }
+        if ((!this.FM.isPlayers() || !(this.FM instanceof RealFlightModel) || !((RealFlightModel)this.FM).isRealMode()) && this.FM.Gears.onGround()) {
+            if (this.FM.getSpeedKMH() < 50F) {
+                this.FM.CT.cockpitDoorControl = 1.0F;
+            } else {
+                this.FM.CT.cockpitDoorControl = 0.0F;
+            }
         }
         if (this.trimElevator != this.FM.CT.trimElevator) {
             this.trimElevator = this.FM.CT.trimElevator;
@@ -972,7 +1055,6 @@ public abstract class FW_190NEW extends Scheme1 implements TypeFighter, TypeBNZF
         }
     }
 
-    private boolean       bSmokeEffect;
     private float         trimElevator;
     private boolean       bHasElevatorControl;
     private float         X;

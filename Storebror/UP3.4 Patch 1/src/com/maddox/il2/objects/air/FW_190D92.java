@@ -1,52 +1,8 @@
 package com.maddox.il2.objects.air;
 
-import com.maddox.il2.objects.weapons.GunEmpty;
 import com.maddox.rts.Property;
 
-public class FW_190D92 extends FW_190DNEW implements TypeFighter, TypeBNZFighter {
-
-    public FW_190D92() {
-        this.kangle = 0.0F;
-    }
-
-    protected void moveGear(float f) {
-        FW_190DNEW.moveGear(this.hierMesh(), f);
-    }
-
-    public void moveSteering(float f) {
-        if (this.FM.CT.getGear() < 0.98F) {
-            return;
-        } else {
-            this.hierMesh().chunkSetAngles("GearC2_D0", 0.0F, -f, 0.0F);
-            return;
-        }
-    }
-
-    public void onAircraftLoaded() {
-        super.onAircraftLoaded();
-        this.FM.AS.wantBeaconsNet(true);
-        if (this.getGunByHookName("_MGUN01") instanceof GunEmpty) {
-            this.hierMesh().chunkVisible("7mmC_D0", false);
-            this.hierMesh().chunkVisible("7mmCowl_D0", true);
-        }
-        if (this.getGunByHookName("_CANNON03") instanceof GunEmpty) {
-            this.hierMesh().chunkVisible("20mmL1_D0", false);
-        }
-        if (this.getGunByHookName("_CANNON04") instanceof GunEmpty) {
-            this.hierMesh().chunkVisible("20mmR1_D0", false);
-        }
-    }
-
-    public void update(float f) {
-        for (int i = 1; i < 13; i++) {
-            this.hierMesh().chunkSetAngles("Water" + i + "_D0", 0.0F, -20F * this.kangle, 0.0F);
-        }
-
-        this.kangle = (0.95F * this.kangle) + (0.05F * this.FM.EI.engines[0].getControlRadiator());
-        super.update(f);
-    }
-
-    private float kangle;
+public class FW_190D92 extends FW_190DNEW {
 
     static {
         Class class1 = FW_190D92.class;

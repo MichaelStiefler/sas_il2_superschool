@@ -3,28 +3,6 @@ package com.maddox.il2.objects.air;
 import com.maddox.rts.Property;
 
 public class FW_190F8U1 extends FW_190F {
-//    public void onAircraftLoaded() {
-//        super.onAircraftLoaded();
-//        this.FM.AS.wantBeaconsNet(true);
-//        this.hierMesh().chunkVisible("Flap01_D0", true);
-//        this.hierMesh().chunkVisible("Flap01Holed_D0", false);
-//        this.hierMesh().chunkVisible("Flap04_D0", true);
-//        this.hierMesh().chunkVisible("Flap04Holed_D0", false);
-//    }
-//
-//    protected void moveGear(float f) {
-//        FW_190.moveGear(this.hierMesh(), f);
-//    }
-//
-//    public void moveSteering(float f) {
-//        if (this.FM.CT.getGear() < 0.98F) {
-//            return;
-//        } else {
-//            this.hierMesh().chunkSetAngles("GearC2_D0", 0.0F, -f, 0.0F);
-//            return;
-//        }
-//    }
-
     static {
         Class class1 = FW_190F8U1.class;
         new NetAircraft.SPAWN(class1);

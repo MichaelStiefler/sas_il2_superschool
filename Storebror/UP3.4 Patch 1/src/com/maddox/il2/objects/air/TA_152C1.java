@@ -2,7 +2,7 @@ package com.maddox.il2.objects.air;
 
 import com.maddox.rts.Property;
 
-public class TA_152C1 extends TA_152NEW implements TypeFighterAceMaker {
+public class TA_152C1 extends TA_152NEW_WeaponLayout1 implements TypeFighterAceMaker {
 
     static {
         Class class1 = TA_152C1.class;

@@ -6,6 +6,8 @@ import com.maddox.il2.ai.World;
 import com.maddox.il2.engine.Actor;
 import com.maddox.il2.engine.Config;
 import com.maddox.il2.engine.Eff3DActor;
+import com.maddox.il2.engine.HierMesh;
+import com.maddox.il2.objects.air.Aircraft._WeaponSlot;
 import com.maddox.il2.objects.weapons.GunEmpty;
 import com.maddox.rts.Property;
 
@@ -85,6 +87,13 @@ public class ME_262C3A extends ME_262
             Eff3DActor.setIntesity(sprite, 0.0F);
             Eff3DActor.setIntesity(turboexhaust, 1.0F);
         }
+        prepareWeapons(this.getClass(), this.hierMesh(), this.thisWeaponsName);
+    }
+
+    public static void prepareWeapons(Class aircraftClass, HierMesh hierMesh, String thisWeaponsName) {
+        _WeaponSlot[] weaponSlotsRegistered = Aircraft.getWeaponSlotsRegistered(aircraftClass, thisWeaponsName);
+        hierMesh.chunkVisible("MK103", weaponSlotsRegistered[38] != null);
+        hierMesh.chunkVisible("MK108", weaponSlotsRegistered[40] != null);
     }
 
     public void rareAction(float f, boolean flag)

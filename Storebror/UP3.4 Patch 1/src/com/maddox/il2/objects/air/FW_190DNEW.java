@@ -1,5 +1,7 @@
 package com.maddox.il2.objects.air;
 
+import java.io.IOException;
+
 import com.maddox.JGP.Point3d;
 import com.maddox.JGP.Vector3d;
 import com.maddox.il2.ai.Shot;
@@ -9,10 +11,15 @@ import com.maddox.il2.engine.ActorHMesh;
 import com.maddox.il2.engine.Config;
 import com.maddox.il2.engine.HierMesh;
 import com.maddox.il2.engine.Orient;
+import com.maddox.il2.fm.RealFlightModel;
+import com.maddox.il2.game.AircraftHotKeys;
+import com.maddox.il2.game.HUD;
 import com.maddox.il2.game.Main3D;
 import com.maddox.il2.objects.Wreckage;
 import com.maddox.rts.CmdEnv;
 import com.maddox.rts.HotKeyCmd;
+import com.maddox.rts.NetMsgGuaranted;
+import com.maddox.rts.NetMsgInput;
 import com.maddox.rts.Property;
 import com.maddox.sound.AudioStream;
 import com.maddox.sound.SoundFX;
@@ -34,10 +41,15 @@ public abstract class FW_190DNEW extends Scheme1 implements TypeFighter, TypeBNZ
         this.doorSound = null;
         this.doorPrev = 0.0F;
         this.doorSndPos = null;
-        this.bSmokeEffect = false;
-        if (Config.cur.ini.get("Mods", "SmokeEffect", 0) > 0) {
-            this.bSmokeEffect = true;
-        }
+//        this.bSmokeEffect = false;
+//        if (Config.cur.ini.get("Mods", "SmokeEffect", 0) > 0) {
+//            this.bSmokeEffect = true;
+//        }
+        this.kangle = 0.0F;
+        this.flapps = 0.0F;
+        this.k14Mode = 0;
+        this.k14WingspanType = 0;
+        this.k14Distance = 200F;
     }
 
     public static void prepareWeapons(Class aircraftClass, HierMesh hierMesh, String thisWeaponsName) {
@@ -142,6 +154,10 @@ public abstract class FW_190DNEW extends Scheme1 implements TypeFighter, TypeBNZ
         Aircraft.xyz[2] = Aircraft.cvt(f, 0.0F, 1.0F, 0.0F, 0.1F);
         hiermesh.chunkSetLocate("poleL_D0", Aircraft.xyz, Aircraft.ypr);
         hiermesh.chunkSetLocate("poleR_D0", Aircraft.xyz, Aircraft.ypr);
+    }
+
+    protected void moveGear(float f) {
+        FW_190DNEW.moveGear(this.hierMesh(), f);
     }
 
     public void moveWheelSink() {
@@ -272,16 +288,12 @@ public abstract class FW_190DNEW extends Scheme1 implements TypeFighter, TypeBNZ
 
     public void onAircraftLoaded() {
         super.onAircraftLoaded();
-        if (this.FM.isPlayers()) {
-            this.FM.EI.engines[0].setControlPropAuto(false);
-        }
-        this.FM.CT.bHasCockpitDoorControl = true;
-        this.FM.CT.dvCockpitDoor = 0.2564102F;
-        this.hierMesh().chunkVisible("Wire_D0", true);
-//        if (((Aircraft) this.FM.actor instanceof FW_190D9) || ((Aircraft) this.FM.actor instanceof FW_190D9RLP)) {
-//            this.FM.EI.engines[0].setAfterburnerType(1);
+        this.FM.AS.wantBeaconsNet(true);
+//        if (this.FM.isPlayers()) {
+//            this.FM.EI.engines[0].setControlPropAuto(false);
 //        }
-//        this.FM.M.nitro = 143F;
+        this.FM.CT.bHasCockpitDoorControl = true;
+        this.hierMesh().chunkVisible("Wire_D0", true);
         FW_190DNEW.prepareWeapons(this.getClass(), this.hierMesh(), this.thisWeaponsName);
     }
 
@@ -307,6 +319,22 @@ public abstract class FW_190DNEW extends Scheme1 implements TypeFighter, TypeBNZ
             this.FM.VmaxAllowed = 161F;
             this.FM.Sq.dragEngineCx[0] *= 6.2F;
         }
+        if (Math.abs(this.flapps - this.kangle) > 0.01F) {
+            this.flapps = this.kangle;
+            for (int i = 1; i < 13; i++) {
+                String s = "Water" + i + "_D0";
+                this.hierMesh().chunkSetAngles(s, 0.0F, -10F * this.kangle, 0.0F);
+            }
+
+        }
+        this.kangle = (0.95F * this.kangle) + (0.05F * this.FM.EI.engines[0].getControlRadiator());
+        if (this.FM.AS.isMaster() && Config.isUSE_RENDER()) {
+            if ((this.FM.CT.PowerControl > 1.0F || this.FM.CT.getAfterburnerControl()) && this.FM.EI.engines[0].getRPM() > 100F) {
+                this.FM.AS.setSootState(this, 0, 1);
+            } else {
+                this.FM.AS.setSootState(this, 0, 0);
+            }
+        }
         super.update(f);
         if (HotKeyCmd.getByRecordedId(272).isActive() && this.FM.isPlayers()) {
             CmdEnv.top().exec("fov 90");
@@ -323,13 +351,6 @@ public abstract class FW_190DNEW extends Scheme1 implements TypeFighter, TypeBNZ
         if (this.FM.AS.bIsAboutToBailout && !this.FM.isPlayers()) {
             this.hierMesh().chunkVisible("Wire_D0", false);
         }
-        if (this.bSmokeEffect) {
-            if (((this.FM == World.getPlayerFM()) && (this.FM.CT.PowerControl >= 1.0F) && (this.FM.EI.engines[0].getRPM() > 100F)) || ((this.FM == World.getPlayerFM()) && this.FM.CT.getAfterburnerControl() && (this.FM.EI.engines[0].getRPM() > 100F))) {
-                this.FM.AS.setSootState(this, 0, 1);
-            } else {
-                this.FM.AS.setSootState(this, 0, 0);
-            }
-        }
         if ((Main3D.cur3D().cockpits != null) && (Main3D.cur3D().cockpits[0] != null) && this.FM.isPlayers()) {
             if (Main3D.cur3D().cockpits[0].isFocused() || ((this.FM.CT.cockpitDoorControl == 0.9F) && !this.FM.Gears.onGround()) || ((this.FM.CT.cockpitDoorControl == 0.9F) && !this.FM.Gears.getWheelsOnGround())) {
                 this.hierMesh().chunkVisible("Blister1_D0", false);
@@ -340,16 +361,13 @@ public abstract class FW_190DNEW extends Scheme1 implements TypeFighter, TypeBNZ
         if (this.FM.isPlayers() && ((HotKeyCmd.getByRecordedId(161).isActive() && this.FM.EI.isSelectionHasControlAfterburner()) || (HotKeyCmd.getByRecordedId(142).isActive() && this.FM.EI.isSelectionAllowsAutoProp()))) {
             this.bouton.setPlay(true);
         }
-        if (this.FM.isPlayers() && (this.FM.CT.cockpitDoorControl == 1.0F) && this.FM.Gears.onGround()) {
-            this.FM.CT.dvCockpitDoor = 0.2564102F;
-        }
         if (this.FM.isPlayers() && (this.FM.getSpeedKMH() > 240F)) {
             HotKeyCmd.getByRecordedId(348).enable(false);
         } else {
             HotKeyCmd.getByRecordedId(348).enable(true);
         }
-        if (!this.FM.isPlayers() && this.FM.Gears.onGround()) {
-            if (this.FM.EI.engines[0].getRPM() < 100F) {
+        if ((!this.FM.isPlayers() || !(this.FM instanceof RealFlightModel) || !((RealFlightModel)this.FM).isRealMode()) && this.FM.Gears.onGround()) {
+            if (this.FM.getSpeedKMH() < 50F) {
                 this.FM.CT.cockpitDoorControl = 1.0F;
             } else {
                 this.FM.CT.cockpitDoorControl = 0.0F;
@@ -410,9 +428,9 @@ public abstract class FW_190DNEW extends Scheme1 implements TypeFighter, TypeBNZ
 
     public void setOnGround(Point3d point3d, Orient orient, Vector3d vector3d) {
         super.setOnGround(point3d, orient, vector3d);
-        if (this.FM.isPlayers()) {
-            this.FM.CT.dvCockpitDoor = 80F;
-        }
+//        if (this.FM.isPlayers()) {
+//            this.FM.CT.dvCockpitDoor = 80F;
+//        }
         this.FM.CT.cockpitDoorControl = 1.0F;
     }
 
@@ -969,7 +987,80 @@ public abstract class FW_190DNEW extends Scheme1 implements TypeFighter, TypeBNZ
         }
     }
 
-    private boolean       bSmokeEffect;
+    public boolean typeFighterAceMakerToggleAutomation() {
+        this.k14Mode++;
+        if (this.k14Mode > 2) {
+            this.k14Mode = 0;
+        }
+        HUD.log(AircraftHotKeys.hudLogWeaponId, "K14AceMakerMode" + this.k14Mode);
+        return true;
+    }
+
+    public void typeFighterAceMakerAdjDistanceReset() {
+    }
+
+    public void typeFighterAceMakerAdjDistancePlus() {
+        this.k14Distance += 10F;
+        if (this.k14Distance > 800F) {
+            this.k14Distance = 800F;
+        }
+        HUD.log(AircraftHotKeys.hudLogWeaponId, "K14AceMakerInc");
+    }
+
+    public void typeFighterAceMakerAdjDistanceMinus() {
+        this.k14Distance -= 10F;
+        if (this.k14Distance < 200F) {
+            this.k14Distance = 200F;
+        }
+        HUD.log(AircraftHotKeys.hudLogWeaponId, "K14AceMakerDec");
+    }
+
+    public void typeFighterAceMakerAdjSideslipReset() {
+    }
+
+    public void typeFighterAceMakerAdjSideslipPlus() {
+        this.k14WingspanType--;
+        if (this.k14WingspanType < 0) {
+            this.k14WingspanType = 0;
+        }
+        HUD.log(AircraftHotKeys.hudLogWeaponId, "AskaniaWing" + this.k14WingspanType);
+    }
+
+    public void typeFighterAceMakerAdjSideslipMinus() {
+        this.k14WingspanType++;
+        if (this.k14WingspanType > 9) {
+            this.k14WingspanType = 9;
+        }
+        HUD.log(AircraftHotKeys.hudLogWeaponId, "AskaniaWing" + this.k14WingspanType);
+    }
+
+    public void typeFighterAceMakerReplicateToNet(NetMsgGuaranted netmsgguaranted) throws IOException {
+        netmsgguaranted.writeByte(this.k14Mode);
+        netmsgguaranted.writeByte(this.k14WingspanType);
+        netmsgguaranted.writeFloat(this.k14Distance);
+    }
+
+    public void typeFighterAceMakerReplicateFromNet(NetMsgInput netmsginput) throws IOException {
+        this.k14Mode = netmsginput.readByte();
+        this.k14WingspanType = netmsginput.readByte();
+        this.k14Distance = netmsginput.readFloat();
+    }
+
+    protected void nextDMGLevel(String s, int i, Actor actor) {
+        super.nextDMGLevel(s, i, actor);
+        if (this.FM.isPlayers()) {
+            FW_190DNEW.bChangedPit = true;
+        }
+    }
+    
+    protected void nextCUTLevel(String s, int i, Actor actor) {
+        super.nextCUTLevel(s, i, actor);
+        if (this.FM.isPlayers()) {
+            FW_190DNEW.bChangedPit = true;
+        }
+    }
+
+//    private boolean       bSmokeEffect;
     private float         trimElevator;
     private boolean       bHasElevatorControl;
     private float         X;
@@ -997,6 +1088,12 @@ public abstract class FW_190DNEW extends Scheme1 implements TypeFighter, TypeBNZ
     protected AudioStream bouton;
     protected AudioStream arrach;
     private AudioStream   windExtFw;
+    private float kangle;
+    private float flapps;
+    public int    k14Mode;
+    public int    k14WingspanType;
+    public float  k14Distance;
+    public static boolean bChangedPit = false;
 
     static {
         Class class1 = FW_190DNEW.class;
