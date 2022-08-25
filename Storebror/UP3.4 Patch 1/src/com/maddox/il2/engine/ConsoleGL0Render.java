@@ -38,27 +38,30 @@ class ConsoleGL0Render extends Render {
 //                }
 
                 String versionString = VERSION_STRING2 + Config.getPatchLevel() + " \u00B7 Hotfix " + Config.getHotfixVersion() + selectorInfo;
+                
+                float posX = 0.11F;
+                float posY = 0.02F;
 
                 for (int offset = 5; offset > 0; offset--) {
-                    TTFont.font[2].output(0x33000000 * (6 - offset), RendersMain.getViewPortWidth() * 0.02F + offset, RendersMain.getViewPortHeight() * 0.17F - offset, 0.0F, this.sstep);
-                    TTFont.font[2].output(0x33000000 * (6 - offset), RendersMain.getViewPortWidth() * 0.02F + offset, RendersMain.getViewPortHeight() * 0.17F + TTFont.font[2].height() - TTFont.font[2].descender() - offset, 0.0F, versionString);
-                    TTFont.font[2].output(0x33000000 * (6 - offset), RendersMain.getViewPortWidth() * 0.02F + offset, RendersMain.getViewPortHeight() * 0.17F + TTFont.font[2].height() * 2 - TTFont.font[2].descender() * 2 - offset, 0.0F, VERSION_STRING1);
+                    TTFont.font[2].output(0x33000000 * (6 - offset), RendersMain.getViewPortWidth() * posX + offset, RendersMain.getViewPortHeight() * posY - offset, 0.0F, this.sstep);
+                    TTFont.font[2].output(0x33000000 * (6 - offset), RendersMain.getViewPortWidth() * posX + offset, RendersMain.getViewPortHeight() * posY + TTFont.font[2].height() - TTFont.font[2].descender() - offset, 0.0F, versionString);
+                    TTFont.font[2].output(0x33000000 * (6 - offset), RendersMain.getViewPortWidth() * posX + offset, RendersMain.getViewPortHeight() * posY + TTFont.font[2].height() * 2 - TTFont.font[2].descender() * 2 - offset, 0.0F, VERSION_STRING1);
                 }
-                TTFont.font[2].output(0xff000000, RendersMain.getViewPortWidth() * 0.02F + 1F, RendersMain.getViewPortHeight() * 0.17F + 1F, 0.0F, this.sstep);
-                TTFont.font[2].output(0xff000000, RendersMain.getViewPortWidth() * 0.02F + 1F, RendersMain.getViewPortHeight() * 0.17F + TTFont.font[2].height() - TTFont.font[2].descender() + 1F, 0.0F, versionString);
-                TTFont.font[2].output(0xff000000, RendersMain.getViewPortWidth() * 0.02F + 1F, RendersMain.getViewPortHeight() * 0.17F + TTFont.font[2].height() * 2 - TTFont.font[2].descender() * 2 + 1F, 0.0F, VERSION_STRING1);
+                TTFont.font[2].output(0xff000000, RendersMain.getViewPortWidth() * posX + 1F, RendersMain.getViewPortHeight() * posY + 1F, 0.0F, this.sstep);
+                TTFont.font[2].output(0xff000000, RendersMain.getViewPortWidth() * posX + 1F, RendersMain.getViewPortHeight() * posY + TTFont.font[2].height() - TTFont.font[2].descender() + 1F, 0.0F, versionString);
+                TTFont.font[2].output(0xff000000, RendersMain.getViewPortWidth() * posX + 1F, RendersMain.getViewPortHeight() * posY + TTFont.font[2].height() * 2 - TTFont.font[2].descender() * 2 + 1F, 0.0F, VERSION_STRING1);
 
-                TTFont.font[2].output(0xff000000, RendersMain.getViewPortWidth() * 0.02F - 1F, RendersMain.getViewPortHeight() * 0.17F - 1F, 0.0F, this.sstep);
-                TTFont.font[2].output(0xff000000, RendersMain.getViewPortWidth() * 0.02F - 1F, RendersMain.getViewPortHeight() * 0.17F + TTFont.font[2].height() - TTFont.font[2].descender() - 1F, 0.0F, versionString);
-                TTFont.font[2].output(0xff000000, RendersMain.getViewPortWidth() * 0.02F - 1F, RendersMain.getViewPortHeight() * 0.17F + TTFont.font[2].height() * 2 - TTFont.font[2].descender() * 2 - 1F, 0.0F, VERSION_STRING1);
+                TTFont.font[2].output(0xff000000, RendersMain.getViewPortWidth() * posX - 1F, RendersMain.getViewPortHeight() * posY - 1F, 0.0F, this.sstep);
+                TTFont.font[2].output(0xff000000, RendersMain.getViewPortWidth() * posX - 1F, RendersMain.getViewPortHeight() * posY + TTFont.font[2].height() - TTFont.font[2].descender() - 1F, 0.0F, versionString);
+                TTFont.font[2].output(0xff000000, RendersMain.getViewPortWidth() * posX - 1F, RendersMain.getViewPortHeight() * posY + TTFont.font[2].height() * 2 - TTFont.font[2].descender() * 2 - 1F, 0.0F, VERSION_STRING1);
 
-                TTFont.font[2].output(0xff000000, RendersMain.getViewPortWidth() * 0.02F - 1F, RendersMain.getViewPortHeight() * 0.17F + 1F, 0.0F, this.sstep);
-                TTFont.font[2].output(0xff000000, RendersMain.getViewPortWidth() * 0.02F - 1F, RendersMain.getViewPortHeight() * 0.17F + TTFont.font[2].height() - TTFont.font[2].descender() + 1F, 0.0F, versionString);
-                TTFont.font[2].output(0xff000000, RendersMain.getViewPortWidth() * 0.02F - 1F, RendersMain.getViewPortHeight() * 0.17F + TTFont.font[2].height() * 2 - TTFont.font[2].descender() * 2 + 1F, 0.0F, VERSION_STRING1);
+                TTFont.font[2].output(0xff000000, RendersMain.getViewPortWidth() * posX - 1F, RendersMain.getViewPortHeight() * posY + 1F, 0.0F, this.sstep);
+                TTFont.font[2].output(0xff000000, RendersMain.getViewPortWidth() * posX - 1F, RendersMain.getViewPortHeight() * posY + TTFont.font[2].height() - TTFont.font[2].descender() + 1F, 0.0F, versionString);
+                TTFont.font[2].output(0xff000000, RendersMain.getViewPortWidth() * posX - 1F, RendersMain.getViewPortHeight() * posY + TTFont.font[2].height() * 2 - TTFont.font[2].descender() * 2 + 1F, 0.0F, VERSION_STRING1);
 
-                TTFont.font[2].output(i, RendersMain.getViewPortWidth() * 0.02F, RendersMain.getViewPortHeight() * 0.17F, 0.0F, this.sstep);
-                TTFont.font[2].output(i, RendersMain.getViewPortWidth() * 0.02F, RendersMain.getViewPortHeight() * 0.17F + TTFont.font[2].height() - TTFont.font[2].descender(), 0.0F, versionString);
-                TTFont.font[2].output(i, RendersMain.getViewPortWidth() * 0.02F, RendersMain.getViewPortHeight() * 0.17F + TTFont.font[2].height() * 2 - TTFont.font[2].descender() * 2, 0.0F, VERSION_STRING1);
+                TTFont.font[2].output(i, RendersMain.getViewPortWidth() * posX, RendersMain.getViewPortHeight() * posY, 0.0F, this.sstep);
+                TTFont.font[2].output(i, RendersMain.getViewPortWidth() * posX, RendersMain.getViewPortHeight() * posY + TTFont.font[2].height() - TTFont.font[2].descender(), 0.0F, versionString);
+                TTFont.font[2].output(i, RendersMain.getViewPortWidth() * posX, RendersMain.getViewPortHeight() * posY + TTFont.font[2].height() * 2 - TTFont.font[2].descender() * 2, 0.0F, VERSION_STRING1);
 
             }
             return;

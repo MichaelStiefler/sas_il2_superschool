@@ -738,6 +738,10 @@ public abstract class NetAircraft extends SndAircraft {
             int i_46_ = i & 0xf;
             if (i_46_ == 1) {
                 float f_47_ = netmsginput.readUnsignedByte() / 255.0F * 640.0F;
+                // +++ TODO: Storebror: Replicate high RPMs for Jet Aircraft
+                if (NetAircraft.this.FM.EI.engines[0].wMaxAllowed > 600F)
+                    f_47_ *= 10F;
+                // ---
                 float f_48_ = netmsginput.readUnsignedByte() / 255.0F * 1.6F;
                 i_46_ = NetAircraft.this.FM.EI.getNum();
                 for (int i_49_ = 0; i_49_ < i_46_; i_49_++)
@@ -747,6 +751,10 @@ public abstract class NetAircraft extends SndAircraft {
                     }
             } else for (int i_50_ = 0; i_50_ < i_46_; i_50_++) {
                 float f_51_ = netmsginput.readUnsignedByte() / 255.0F * 640.0F;
+                // +++ TODO: Storebror: Replicate high RPMs for Jet Aircraft
+                if (NetAircraft.this.FM.EI.engines[0].wMaxAllowed > 600F)
+                    f_51_ *= 10F;
+                // ---
                 float f_52_ = netmsginput.readUnsignedByte() / 255.0F * 1.6F;
                 if (!NetAircraft.this.isFMTrackMirror()) {
                     NetAircraft.this.FM.EI.engines[i_50_].setw(f_51_);
@@ -1064,6 +1072,10 @@ public abstract class NetAircraft extends SndAircraft {
                 int lastEngineW = 0;
                 for (int engineIndex = 0; engineIndex < NetAircraft.this.FM.EI.getNum(); engineIndex++) {
                     int curEngineW = (int) (NetAircraft.this.FM.EI.engines[engineIndex].getw() / 640.0F * 255.0F);
+                    // +++ TODO: Storebror: Replicate high RPMs for Jet Aircraft
+                    if (NetAircraft.this.FM.EI.engines[engineIndex].wMaxAllowed > 600F)
+                        curEngineW = (int) (NetAircraft.this.FM.EI.engines[engineIndex].getw() / 6400.0F * 255.0F);
+                    // ---
                     if (engineIndex == 0) lastEngineW = curEngineW;
                     else if (lastEngineW != curEngineW) // engineWMatches = true;
                         engineWMatches = false; // TODO: Storebror, Multi Engine Aircraft Net Replication Bugfix
@@ -1175,6 +1187,11 @@ public abstract class NetAircraft extends SndAircraft {
                     this.out.writeShort(i_85_);
                 }
                 for (int i_86_ = 0; i_86_ < (i & 0xf); i_86_++) {
+                    // +++ TODO: Storebror: Replicate high RPMs for Jet Aircraft
+                    if (NetAircraft.this.FM.EI.engines[i_86_].wMaxAllowed > 600F)
+                        this.out.writeByte((byte) (int) (NetAircraft.this.FM.EI.engines[i_86_].getw() / 6400.0F * 255.0F));
+                    else
+                    // ---
                     this.out.writeByte((byte) (int) (NetAircraft.this.FM.EI.engines[i_86_].getw() / 640.0F * 255.0F));
                     this.out.writeByte((byte) (int) (NetAircraft.this.FM.EI.engines[i_86_].getPropPhi() / 1.6F * 255.0F));
                 }

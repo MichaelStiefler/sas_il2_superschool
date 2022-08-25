@@ -21,7 +21,7 @@ public class ME_262C1A extends ME_262
         turboexhaust = null;
         bCockpitNVentilated = false;
     }
-
+    
     protected void hitBone(String s, Shot shot, Point3d point3d)
     {
         super.hitBone(s, shot, point3d);

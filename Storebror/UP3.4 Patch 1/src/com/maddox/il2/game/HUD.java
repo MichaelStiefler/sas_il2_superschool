@@ -956,18 +956,18 @@ public class HUD {
                 TTFont ttfont = this.fntCenter;
                 String string = "" + (i + 500) / 1000;
                 float f = ttfont.width(string);
-                ttfont.output(-16711681, (this.viewDX - f) / 2.0F, this.viewDY * 0.75F, 0.0F, string);
+                ttfont.output(0xff00ffff, (this.viewDX - f) / 2.0F, this.viewDY * 0.75F, 0.0F, string);
             }
         } else if (this.logIntro != null) {
             TTFont ttfont = this.fntCenter;
             float f = ttfont.width(this.logIntro);
-            int i = -16777216;
+            int i = 0xff000000;
             ttfont.output(i, (this.viewDX - f) / 2.0F, this.viewDY * 0.75F, 0.0F, this.logIntro);
         } else if (this.logCenter != null) if (l > this.logCenterTime + logCenterTimeLife) this.logCenter = null;
         else if (this.bDrawAllMessages) {
             TTFont ttfont = this.fntCenter;
             float f = ttfont.width(this.logCenter);
-            int i = -16776961;
+            int i = 0xff0000ff;
             int i_48_ = 255 - (int) ((l - this.logCenterTime) / 5000.0 * 255.0);
             i |= i_48_ << 8;
             ttfont.output(i, (this.viewDX - f) / 2.0F, this.viewDY * 0.75F, 0.0F, this.logCenter);
@@ -1005,10 +1005,13 @@ public class HUD {
         if (!Main3D.cur3D().aircraftHotKeys.isAfterburner()) this.logRightBottom = null;
         if (this.logRightBottom != null && this.bDrawAllMessages) {
             TTFont ttfont = TTFont.font[1];
-            int i = (int) (this.viewDX * 0.95);
+            //int i = (int) (this.viewDX * 0.95);
+            int i = this.viewDX - 5;
             int i_49_ = (int) ttfont.width(this.logRightBottom);
-            int i_50_ = (int) (this.viewDY * 0.45 - 3 * ttfont.height());
-            int i_51_ = -16776961;
+            //int i_50_ = (int) (this.viewDY * 0.45 - 3 * ttfont.height());
+//            int i_50_ = (int) (this.viewDY * 0.22 - 3 * ttfont.height());
+            int i_50_ = 5 + (lenLogBuf + 1) * ttfont.height();
+            int i_51_ = 0xff0000ff;
             int i_52_ = (int) (510.0F * ((Time.current() - this.logRightBottomTime) % logTimeFire) / 5000.0F);
             i_52_ -= 255;
             if (i_52_ < 0) i_52_ = -i_52_;
@@ -1021,12 +1024,15 @@ public class HUD {
             }
             if (this.logLen != 0) {
                 TTFont ttfont = TTFont.font[1];
-                int i = (int) (this.viewDX * 0.95);
+                //int i = (int) (this.viewDX * 0.95);
+                int i = this.viewDX - 5;
                 int i_53_ = ttfont.height();
-                int i_54_ = (int) (this.viewDY * 0.45) - (lenLogBuf - this.logLen) * i_53_;
+                //int i_54_ = (int) (this.viewDY * 0.45) - (lenLogBuf - this.logLen) * i_53_;
+//                int i_54_ = (int) (this.viewDY * 0.12) - (lenLogBuf - this.logLen) * i_53_;
+                int i_54_ = 5 + (this.logLen - 1) * i_53_;
                 for (int i_55_ = 0; i_55_ < this.logLen; i_55_++) {
                     int i_56_ = (this.logPtr + i_55_) % lenLogBuf;
-                    int i_57_ = -65536;
+                    int i_57_ = 0xffff0000;
                     if (l < this.logTime[i_56_] + logCenterTimeLife) {
                         int i_58_ = (int) ((this.logTime[i_56_] + logCenterTimeLife - l) / 5000.0 * 255.0);
                         i_57_ |= i_58_ | i_58_ << 8;
@@ -1038,6 +1044,9 @@ public class HUD {
             }
         }
     }
+//    ttfont.output(j, 5.0F, 5 + i, 0.0F, this.renderSpeedSubstrings[1][0] + " " + i_10_ + " " + this.renderSpeedSubstrings[1][1]);
+//    ttfont.output(j, 5.0F, 5 + i + i, 0.0F, this.renderSpeedSubstrings[2][0] + " " + i_11_ + " " + this.renderSpeedSubstrings[2][1]);
+//    if (bool) ttfont.output(j, 5.0F, 5 + i + i + i, 0.0F, this.renderSpeedSubstrings[3][0]);
 
     private int __log(int i, String string) {
         if (this.logLen > 0 && i != 0) {
