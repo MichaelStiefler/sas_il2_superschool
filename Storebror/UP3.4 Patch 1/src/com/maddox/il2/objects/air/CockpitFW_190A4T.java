@@ -1,13 +1,16 @@
 package com.maddox.il2.objects.air;
 
-import com.maddox.JGP.Tuple3d;
-import com.maddox.il2.ai.*;
-import com.maddox.il2.engine.*;
-import com.maddox.il2.fm.*;
+import com.maddox.il2.ai.WayPoint;
+import com.maddox.il2.ai.World;
+import com.maddox.il2.engine.HookNamed;
+import com.maddox.il2.engine.InterpolateRef;
+import com.maddox.il2.engine.LightPoint;
+import com.maddox.il2.engine.LightPointActor;
+import com.maddox.il2.engine.Loc;
+import com.maddox.il2.fm.Pitot;
 import com.maddox.il2.objects.weapons.Gun;
 import com.maddox.rts.Property;
 import com.maddox.rts.Time;
-import com.maddox.util.HashMapExt;
 
 public class CockpitFW_190A4T extends CockpitPilot
 {
@@ -304,7 +307,6 @@ public class CockpitFW_190A4T extends CockpitPilot
         retoggleLight();
     }
 
-    private float tmp;
     private Gun gun[];
     private Variables setOld;
     private Variables setNew;
@@ -322,13 +324,6 @@ public class CockpitFW_190A4T extends CockpitPilot
     };
     private static final float fuelScale[] = {
         0.0F, 16F, 35F, 52.5F, 72F, 72F
-    };
-    private static final float manPrsScale[] = {
-        0.0F, 0.0F, 0.0F, 15.5F, 71F, 125F, 180F, 235F, 290F, 245F, 
-        247F, 247F
-    };
-    private static final float oilfuelNeedleScale[] = {
-        0.0F, 38F, 84F, 135.5F, 135F
     };
     private static final float vsiNeedleScale[] = {
         0.0F, 48F, 82F, 96.5F, 111F, 120.5F, 130F, 130F

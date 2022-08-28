@@ -345,7 +345,7 @@ public abstract class FW_190NEW extends Scheme1 implements TypeFighter, TypeBNZF
         this.FM.AS.wantBeaconsNet(true);
         FW_190NEW.prepareWeapons(this.getClass(), this.hierMesh(), this.thisWeaponsName);
     }
-
+    
     public void update(float f) {
         if ((this.FM.CT.cockpitDoorControl > 0.9F) && (this.FM.getSpeedKMH() > 240F) && !this.FM.Gears.onGround() && (this.FM == World.getPlayerFM()) && (this.hierMesh().chunkFindCheck("Blister1_D0") != -1) && (this.FM.AS.getPilotHealth(0) > 0.0F)) {
             this.arrach.setPlay(true);

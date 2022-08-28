@@ -1,7 +1,5 @@
 package com.maddox.il2.objects.air;
 
-import com.maddox.JGP.Point3d;
-import com.maddox.JGP.Vector3d;
 import com.maddox.JGP.Vector3f;
 import com.maddox.il2.ai.AnglesFork;
 import com.maddox.il2.ai.BulletEmitter;
@@ -68,7 +66,6 @@ public class CockpitFW_190F8PB extends CockpitPilot {
         float      dimPosition;
         AnglesFork azimuth;
         AnglesFork waypointAzimuth;
-        AnglesFork radioCompassAzimuth;
         float      beaconDirection;
         float      beaconRange;
         float      turn;
@@ -77,7 +74,6 @@ public class CockpitFW_190F8PB extends CockpitPilot {
         private Variables() {
             this.azimuth = new AnglesFork();
             this.waypointAzimuth = new AnglesFork();
-            this.radioCompassAzimuth = new AnglesFork();
         }
     }
 
@@ -90,15 +86,12 @@ public class CockpitFW_190F8PB extends CockpitPilot {
         this.gun = new Gun[6];
         this.bomb = new BulletEmitter[11];
         AircraftLH.printCompassHeading = true;
-        this.bBeaconKeysEnabled = ((AircraftLH) this.aircraft()).bWantBeaconKeys;
         ((AircraftLH) this.aircraft()).bWantBeaconKeys = true;
         this.setOld = new Variables();
         this.setNew = new Variables();
         this.pictAiler = 0.0F;
         this.pictElev = 0.0F;
         this.w = new Vector3f();
-        this.tmpP = new Point3d();
-        this.tmpV = new Vector3d();
         this.setNew.dimPosition = 1.0F;
         this.bNeedSetUp = true;
         HookNamed hooknamed = new HookNamed(this.mesh, "LIGHTHOOK_L");
@@ -381,7 +374,6 @@ public class CockpitFW_190F8PB extends CockpitPilot {
         this.mesh.materialReplace("Gloss1D0o", mat);
     }
 
-    private boolean            bBeaconKeysEnabled;
     private Gun                gun[];
     private Variables          setOld;
     private Variables          setNew;
@@ -399,8 +391,6 @@ public class CockpitFW_190F8PB extends CockpitPilot {
     private static final float fuelScale[]        = { 0.0F, 16F, 35F, 52.5F, 72F, 72F };
     private static final float vsiNeedleScale[]   = { 0.0F, 48F, 82F, 96.5F, 111F, 120.5F, 130F, 130F };
     private static final float oilTempScale[]     = { 0.0F, 23F, 52F, 81F, 81F };
-    private Point3d            tmpP;
-    private Vector3d           tmpV;
     private int                tClap;
     private float              pictClap;
     static {

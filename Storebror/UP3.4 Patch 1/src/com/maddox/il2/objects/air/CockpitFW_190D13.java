@@ -64,7 +64,6 @@ public class CockpitFW_190D13 extends CockpitPilot {
         float      dimPosition;
         AnglesFork azimuth;
         AnglesFork waypointAzimuth;
-        AnglesFork radioCompassAzimuth;
         float      beaconDirection;
         float      beaconRange;
         float      turn;
@@ -73,7 +72,6 @@ public class CockpitFW_190D13 extends CockpitPilot {
         private Variables() {
             this.azimuth = new AnglesFork();
             this.waypointAzimuth = new AnglesFork();
-            this.radioCompassAzimuth = new AnglesFork();
         }
     }
 
@@ -86,7 +84,6 @@ public class CockpitFW_190D13 extends CockpitPilot {
         this.gun = new Gun[3];
         this.bomb = new BulletEmitter[4];
         AircraftLH.printCompassHeading = true;
-        this.bBeaconKeysEnabled = ((AircraftLH) this.aircraft()).bWantBeaconKeys;
         ((AircraftLH) this.aircraft()).bWantBeaconKeys = true;
         this.setOld = new Variables();
         this.setNew = new Variables();
@@ -147,7 +144,6 @@ public class CockpitFW_190D13 extends CockpitPilot {
                 this.bomb[0] = ((Aircraft) this.fm.actor).getBulletEmitterByHookName("_ExternalDev05");
                 this.bomb[3] = ((Aircraft) this.fm.actor).getBulletEmitterByHookName("_ExternalDev06");
             }
-            this.t1 = Time.current();
         }
         this.resetYPRmodifier();
         Cockpit.xyz[1] = this.cvt(this.fm.CT.getCockpitDoor(), 0.01F, 0.99F, 0.0F, 0.5F);
@@ -371,7 +367,6 @@ public class CockpitFW_190D13 extends CockpitPilot {
         this.mesh.materialReplace("Gloss1D0o", mat);
     }
 
-    private boolean            bBeaconKeysEnabled;
     private Gun                gun[];
     private Variables          setOld;
     private Variables          setNew;
@@ -379,7 +374,6 @@ public class CockpitFW_190D13 extends CockpitPilot {
     private LightPointActor    light1;
     private LightPointActor    light2;
     private BulletEmitter      bomb[];
-    private long               t1;
     private float              pictAiler;
     private float              pictElev;
     public Vector3f            w;

@@ -2,21 +2,16 @@
 package com.maddox.il2.objects.air;
 
 import com.maddox.JGP.Point3d;
-import com.maddox.JGP.Vector3d;
-import com.maddox.il2.ai.*;
+import com.maddox.il2.ai.Shot;
+import com.maddox.il2.ai.World;
 import com.maddox.il2.engine.Config;
 import com.maddox.il2.engine.HierMesh;
-import com.maddox.il2.fm.*;
 import com.maddox.il2.game.Main3D;
 import com.maddox.rts.Property;
 
 public abstract class KI_43 extends Scheme1
     implements TypeFighter
 {
-
-    public KI_43()
-    {
-    }
 
     protected void moveFan(float f)
     {
@@ -491,7 +486,7 @@ public abstract class KI_43 extends Scheme1
 
     static 
     {
-        Class class1 = com.maddox.il2.objects.air.KI_43.class;
+        Class class1 = KI_43.class;
         Property.set(class1, "originCountry", PaintScheme.countryJapan);
     }
 }

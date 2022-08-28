@@ -102,7 +102,7 @@ public class FW_190SeaJab extends FW_190Sea
             1, 1, 9, 9, 2, 2, 2, 2, 2, 2, 
             2, 2, 9, 9, 1, 1, 1, 1, 9, 9, 
             1, 1, 9, 9, 3, 9, 1, 3, 3, 3, 
-            9
+            9, 9
         });
         Aircraft.weaponHooksRegister(var_class, new String[] {
             "_MGUN01", "_MGUN02", "_CANNON01", "_CANNON02", "_ExternalBomb01", "_ExternalBomb02", "_ExternalBomb03", "_ExternalBomb04", "_ExternalBomb13", "_ExternalBomb06", 
@@ -113,7 +113,7 @@ public class FW_190SeaJab extends FW_190Sea
             "_CANNON03", "_CANNON04", "_ExternalDev10", "_ExternalDev11", "_ExternalRock27", "_ExternalRock28", "_ExternalRock29", "_ExternalRock30", "_ExternalRock31", "_ExternalRock31", 
             "_ExternalRock32", "_ExternalRock32", "_ExternalDev12", "_ExternalDev13", "_CANNON05", "_CANNON06", "_CANNON07", "_CANNON08", "_ExternalDev14", "_ExternalDev15", 
             "_CANNON09", "_CANNON10", "_ExternalDev16", "_ExternalDev17", "_ExternalBomb10", "_ExternalDev18", "_CANNON11", "_ExternalBomb11", "_ExternalBomb12", "_ExternalBomb05", 
-            "_ExternalDev19"
+            "_ExternalDev19", "_ExternalDev20"
         });
     }
 }

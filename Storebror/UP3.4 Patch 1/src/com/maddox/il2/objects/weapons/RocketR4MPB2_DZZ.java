@@ -1,7 +1,6 @@
 package com.maddox.il2.objects.weapons;
 
 import com.maddox.JGP.Color3f;
-import com.maddox.JGP.Vector3d;
 import com.maddox.rts.Property;
 
 public class RocketR4MPB2_DZZ extends Rocket

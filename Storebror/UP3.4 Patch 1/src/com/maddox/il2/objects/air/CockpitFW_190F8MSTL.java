@@ -71,7 +71,6 @@ public class CockpitFW_190F8MSTL extends CockpitPilot {
         float      dimPosition;
         AnglesFork azimuth;
         AnglesFork waypointAzimuth;
-        AnglesFork radioCompassAzimuth;
         float      beaconDirection;
         float      beaconRange;
         float      turn;
@@ -80,7 +79,6 @@ public class CockpitFW_190F8MSTL extends CockpitPilot {
         private Variables() {
             this.azimuth = new AnglesFork();
             this.waypointAzimuth = new AnglesFork();
-            this.radioCompassAzimuth = new AnglesFork();
         }
     }
 
@@ -93,7 +91,6 @@ public class CockpitFW_190F8MSTL extends CockpitPilot {
         this.gun = new Gun[6];
         this.bomb = new BulletEmitter[5];
         AircraftLH.printCompassHeading = true;
-        this.bBeaconKeysEnabled = ((AircraftLH) this.aircraft()).bWantBeaconKeys;
         ((AircraftLH) this.aircraft()).bWantBeaconKeys = true;
         this.setOld = new Variables();
         this.setNew = new Variables();
@@ -141,7 +138,6 @@ public class CockpitFW_190F8MSTL extends CockpitPilot {
                 this.bomb[i] = ((Aircraft) this.fm.actor).getBulletEmitterByHookName("_ExternalBomb0" + (i + 1));
             }
 
-            this.t1 = Time.current();
         }
         this.resetYPRmodifier();
         Cockpit.xyz[1] = this.cvt(this.fm.CT.getCockpitDoor(), 0.01F, 0.99F, 0.0F, 0.5F);
@@ -361,7 +357,6 @@ public class CockpitFW_190F8MSTL extends CockpitPilot {
         this.mesh.materialReplace("Gloss1D0o", mat);
     }
 
-    private boolean            bBeaconKeysEnabled;
     private Gun                gun[];
     private Variables          setOld;
     private Variables          setNew;
@@ -369,7 +364,6 @@ public class CockpitFW_190F8MSTL extends CockpitPilot {
     private LightPointActor    light1;
     private LightPointActor    light2;
     private BulletEmitter      bomb[];
-    private long               t1;
     private float              pictAiler;
     private float              pictElev;
     public Vector3f            w;

@@ -2,12 +2,11 @@
 package com.maddox.il2.objects.air;
 
 import com.maddox.JGP.Point3d;
-import com.maddox.il2.ai.*;
-import com.maddox.il2.engine.*;
-import com.maddox.il2.fm.*;
-import com.maddox.il2.objects.sounds.SndAircraft;
+import com.maddox.il2.ai.Shot;
+import com.maddox.il2.ai.World;
+import com.maddox.il2.engine.Actor;
+import com.maddox.il2.fm.FlightModelMain;
 import com.maddox.rts.Property;
-import java.util.Random;
 
 
 public class RWD_14 extends Scheme1
@@ -18,7 +17,6 @@ public class RWD_14 extends Scheme1
     {
         bChangedPit = true;
         slpos = 0.0F;
-        radiat = 0.0F;
     }
 
     protected void nextDMGLevel(String s, int i, Actor actor)
@@ -457,9 +455,7 @@ public class RWD_14 extends Scheme1
 
 
     public static boolean bChangedPit;
-    private int pk;
     private float slpos;
-    private float radiat;
 
     static 
     {

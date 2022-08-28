@@ -1,25 +1,9 @@
 package com.maddox.il2.objects.weapons;
 
-import com.maddox.JGP.Tuple3d;
-import com.maddox.JGP.Vector3d;
-import com.maddox.il2.ai.RangeRandom;
-import com.maddox.il2.ai.World;
-import com.maddox.il2.engine.*;
-import com.maddox.il2.objects.ActorLand;
-import com.maddox.il2.objects.air.Chute;
-import com.maddox.rts.*;
+import com.maddox.rts.Property;
 
 public class BombStarthilfeSolfuelR extends BombStarthilfeSolfuel
 {
-
-//    public void interpolateTick()
-//    {
-//        super.interpolateTick();
-//        if(!bOnChute && this.curTm > ttcurTM)
-//        {
-//            setMesh("3DO/Arms/StarthilfeSolfuelR/mono.sim");
-//        }
-//    }
 
     static 
     {

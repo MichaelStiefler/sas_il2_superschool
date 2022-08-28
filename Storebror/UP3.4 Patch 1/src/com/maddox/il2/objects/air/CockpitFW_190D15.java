@@ -1,7 +1,5 @@
 package com.maddox.il2.objects.air;
 
-import com.maddox.JGP.Point3d;
-import com.maddox.JGP.Vector3d;
 import com.maddox.JGP.Vector3f;
 import com.maddox.il2.ai.AnglesFork;
 import com.maddox.il2.ai.BulletEmitter;
@@ -64,7 +62,6 @@ public class CockpitFW_190D15 extends CockpitPilot {
         float      dimPosition;
         AnglesFork azimuth;
         AnglesFork waypointAzimuth;
-        AnglesFork radioCompassAzimuth;
         float      beaconDirection;
         float      beaconRange;
         float      turn;
@@ -73,7 +70,6 @@ public class CockpitFW_190D15 extends CockpitPilot {
         private Variables() {
             this.azimuth = new AnglesFork();
             this.waypointAzimuth = new AnglesFork();
-            this.radioCompassAzimuth = new AnglesFork();
         }
     }
 
@@ -85,7 +81,6 @@ public class CockpitFW_190D15 extends CockpitPilot {
         super("3DO/Cockpit/FW-190D-15/hier.him", "bf109");
         this.lampGun = new Gun[2];
         AircraftLH.printCompassHeading = true;
-        this.bBeaconKeysEnabled = ((AircraftLH) this.aircraft()).bWantBeaconKeys;
         ((AircraftLH) this.aircraft()).bWantBeaconKeys = true;
         this.gun = new Gun[12];
         this.setOld = new Variables();
@@ -94,8 +89,6 @@ public class CockpitFW_190D15 extends CockpitPilot {
         this.pictAiler = 0.0F;
         this.pictElev = 0.0F;
         this.w = new Vector3f();
-        this.tmpP = new Point3d();
-        this.tmpV = new Vector3d();
         this.setNew.dimPosition = 1.0F;
         HookNamed hooknamed = new HookNamed(this.mesh, "LIGHTHOOK_L");
         Loc loc = new Loc(0.0D, 0.0D, 0.0D, 0.0F, 0.0F, 0.0F);
@@ -158,7 +151,6 @@ public class CockpitFW_190D15 extends CockpitPilot {
                 this.bomb[0] = ((Aircraft) this.fm.actor).getBulletEmitterByHookName("_ExternalDev05");
                 this.bomb[3] = ((Aircraft) this.fm.actor).getBulletEmitterByHookName("_ExternalDev06");
             }
-            this.t1 = Time.current();
         }
         if (((this.fm.AS.astateCockpitState & 0x20) == 0) && ((this.fm.AS.astateCockpitState & 0x80) == 0)) {
             this.mesh.chunkSetAngles("NeedleALT", -this.cvt(this.interp(this.setNew.altimeter, this.setOld.altimeter, f), 0.0F, 10000F, 0.0F, 3600F), 0.0F, 0.0F);
@@ -428,7 +420,6 @@ public class CockpitFW_190D15 extends CockpitPilot {
         this.retoggleLight();
     }
 
-    private boolean            bBeaconKeysEnabled;
     private Gun                gun[];
     private Gun                lampGun[];
     private Variables          setOld;
@@ -437,7 +428,6 @@ public class CockpitFW_190D15 extends CockpitPilot {
     private LightPointActor    light1;
     private LightPointActor    light2;
     private BulletEmitter      bomb[];
-    private long               t1;
     private float              pictAiler;
     private float              pictElev;
     public Vector3f            w;
@@ -445,8 +435,6 @@ public class CockpitFW_190D15 extends CockpitPilot {
     private static final float rpmScale[]         = { 0.0F, 11.25F, 53F, 108F, 170F, 229F, 282F, 334F, 342.5F, 342.5F };
     private static final float fuelScale[]        = { 0.0F, 16F, 35F, 52.5F, 72F, 72F };
     private static final float vsiNeedleScale[]   = { 0.0F, 48F, 82F, 96.5F, 111F, 120.5F, 130F, 130F };
-    private Point3d            tmpP;
-    private Vector3d           tmpV;
     private int                tClap;
     private float              pictClap;
     static {

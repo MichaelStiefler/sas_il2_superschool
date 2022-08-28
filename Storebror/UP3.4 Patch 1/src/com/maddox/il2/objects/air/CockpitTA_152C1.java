@@ -1,15 +1,21 @@
 package com.maddox.il2.objects.air;
 
-import com.maddox.JGP.*;
-import com.maddox.il2.ai.*;
-import com.maddox.il2.engine.*;
-import com.maddox.il2.fm.*;
-import com.maddox.il2.game.AircraftHotKeys;
+import com.maddox.JGP.Vector3d;
+import com.maddox.JGP.Vector3f;
+import com.maddox.il2.ai.AnglesFork;
+import com.maddox.il2.ai.BulletEmitter;
+import com.maddox.il2.ai.World;
+import com.maddox.il2.engine.HierMesh;
+import com.maddox.il2.engine.InterpolateRef;
+import com.maddox.il2.engine.Mat;
+import com.maddox.il2.fm.Atmosphere;
+import com.maddox.il2.fm.Pitot;
 import com.maddox.il2.game.Main3D;
-import com.maddox.il2.objects.sounds.SndAircraft;
 import com.maddox.il2.objects.weapons.Gun;
 import com.maddox.il2.objects.weapons.GunEmpty;
-import com.maddox.rts.*;
+import com.maddox.rts.HotKeyCmd;
+import com.maddox.rts.Property;
+import com.maddox.rts.Time;
 
 public class CockpitTA_152C1 extends CockpitPilot
 {
@@ -57,7 +63,6 @@ public class CockpitTA_152C1 extends CockpitPilot
                 double d = 0.00125D * (double)f1;
                 float f2 = (float)Math.toDegrees(d * vector3d.z);
                 float f3 = -(float)Math.toDegrees(d * vector3d.y);
-                float f4 = floatindex((f - 200F) * 0.04F, CockpitTA_152C1.k14BulletDrop) - CockpitTA_152C1.k14BulletDrop[0];
                 f2 += (float)Math.toDegrees(Math.atan(f3 / f1));
                 setNew.k14x = 0.92F * setOld.k14x + 0.08F * f2;
                 setNew.k14y = 0.92F * setOld.k14y + 0.08F * f3;
@@ -86,7 +91,6 @@ public class CockpitTA_152C1 extends CockpitPilot
         float dimPosition;
         AnglesFork azimuth;
         AnglesFork waypointAzimuth;
-        AnglesFork radioCompassAzimuth;
         float turn;
         float beaconDirection;
         float beaconRange;
@@ -101,7 +105,6 @@ public class CockpitTA_152C1 extends CockpitPilot
         {
             azimuth = new AnglesFork();
             waypointAzimuth = new AnglesFork();
-            radioCompassAzimuth = new AnglesFork();
         }
     }
 
@@ -116,7 +119,6 @@ public class CockpitTA_152C1 extends CockpitPilot
         gun = new Gun[5];
         bomb = new BulletEmitter[4];
         AircraftLH.printCompassHeading = true;
-        bBeaconKeysEnabled = ((AircraftLH)aircraft()).bWantBeaconKeys;
         ((AircraftLH)aircraft()).bWantBeaconKeys = true;
         setOld = new Variables();
         setNew = new Variables();
@@ -311,13 +313,6 @@ public class CockpitTA_152C1 extends CockpitPilot
             if(this.fm.CT.saveWeaponControl[0] || this.fm.CT.saveWeaponControl[1])
                 f2 = 20F;
             tClap = Time.tickCounter() + World.Rnd().nextInt(500, 1000);
-            if(this.fm.CT.saveWeaponControl[0] && !this.fm.CT.saveWeaponControl[1])
-                selectorAngle = 24F;
-            else
-            if(!this.fm.CT.saveWeaponControl[0] && this.fm.CT.saveWeaponControl[1])
-                selectorAngle = 43F;
-            else
-                selectorAngle = 10F;
         }
         if(Time.tickCounter() < tClap)
             i1 = 1;
@@ -462,8 +457,6 @@ public class CockpitTA_152C1 extends CockpitPilot
         this.mesh.materialReplace("Gloss1D0o", mat);
     }
 
-    private boolean bBeaconKeysEnabled;
-    private float tmp;
     private Gun gun[];
     private Variables setOld;
     private Variables setNew;
@@ -484,13 +477,6 @@ public class CockpitTA_152C1 extends CockpitPilot
     private static final float fuelScale[] = {
         0.0F, 16F, 35F, 52.5F, 72F, 72F
     };
-    private static final float manPrsScale[] = {
-        0.0F, 0.0F, 0.0F, 15.5F, 71F, 125F, 180F, 235F, 290F, 245F, 
-        247F, 247F
-    };
-    private static final float oilfuelNeedleScale[] = {
-        0.0F, 38F, 84F, 135.5F, 135F
-    };
     private static final float vsiNeedleScale[] = {
         0.0F, 48F, 82F, 96.5F, 111F, 120.5F, 130F, 130F
     };
@@ -500,16 +486,8 @@ public class CockpitTA_152C1 extends CockpitPilot
     private static final float k14TargetWingspanScale[] = {
         9.9F, 10.52F, 13.8F, 16.34F, 19F, 20F, 22F, 29.25F, 30F, 32.85F
     };
-    private static final float k14BulletDrop[] = {
-        5.812F, 6.168F, 6.508F, 6.978F, 7.24F, 7.576F, 7.849F, 8.108F, 8.473F, 8.699F, 
-        8.911F, 9.111F, 9.384F, 9.554F, 9.787F, 9.928F, 9.992F, 10.282F, 10.381F, 10.513F, 
-        10.603F, 10.704F, 10.739F, 10.782F, 10.789F
-    };
-    private Point3d tmpP;
-    private Vector3d tmpV;
     private int tClap;
     private float pictClap;
-    private float selectorAngle;
 
     static 
     {

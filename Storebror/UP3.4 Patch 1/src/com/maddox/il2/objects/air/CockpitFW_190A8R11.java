@@ -67,7 +67,6 @@ public class CockpitFW_190A8R11 extends CockpitPilot {
         float      dimPosition;
         AnglesFork azimuth;
         AnglesFork waypointAzimuth;
-//        AnglesFork radioCompassAzimuth;
         float      turn;
         float      beaconDirection;
         float      beaconRange;
@@ -76,7 +75,6 @@ public class CockpitFW_190A8R11 extends CockpitPilot {
         private Variables() {
             this.azimuth = new AnglesFork();
             this.waypointAzimuth = new AnglesFork();
-//            this.radioCompassAzimuth = new AnglesFork();
         }
     }
 
@@ -89,7 +87,6 @@ public class CockpitFW_190A8R11 extends CockpitPilot {
         this.gun = new Gun[6];
         this.bomb = new BulletEmitter[4];
         AircraftLH.printCompassHeading = true;
-//        this.bBeaconKeysEnabled = ((AircraftLH) this.aircraft()).bWantBeaconKeys;
         ((AircraftLH) this.aircraft()).bWantBeaconKeys = true;
         this.bNeedSetUp = true;
         this.setOld = new Variables();
@@ -377,7 +374,6 @@ public class CockpitFW_190A8R11 extends CockpitPilot {
     private RadarLiSN2Equipment cockpitRadarLiSN2        = new RadarLiSN2Equipment(this, 27, 155F, 5F, 0.2F, 0.012F, 0.011637F, 0.073296F);
     // --- RadarLiSN2 ---
 
-//    private boolean            bBeaconKeysEnabled;
     private Gun                gun[];
     private Variables          setOld;
     private Variables          setNew;
@@ -396,8 +392,6 @@ public class CockpitFW_190A8R11 extends CockpitPilot {
     private static final float fuelScale[]        = { 0.0F, 16F, 35F, 52.5F, 72F, 72F };
     private static final float vsiNeedleScale[]   = { 0.0F, 48F, 82F, 96.5F, 111F, 120.5F, 130F, 130F };
     private static final float oilTempScale[]     = { 0.0F, 23F, 52F, 81F, 81F };
-//    private Point3d            tmpP;
-//    private Vector3d           tmpV;
     private int                tClap;
     private float              pictClap;
     static {

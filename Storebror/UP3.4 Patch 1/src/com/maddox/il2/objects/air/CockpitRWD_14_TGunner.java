@@ -1,14 +1,22 @@
 package com.maddox.il2.objects.air;
 
-import com.maddox.JGP.*;
+import com.maddox.JGP.Tuple3d;
+import com.maddox.JGP.Tuple3f;
+import com.maddox.JGP.Vector3f;
 import com.maddox.il2.ai.World;
-import com.maddox.il2.engine.*;
-import com.maddox.il2.fm.*;
-import com.maddox.il2.objects.sounds.SndAircraft;
-import com.maddox.rts.Time;
-import com.maddox.util.HashMapExt;
+import com.maddox.il2.engine.Actor;
+import com.maddox.il2.engine.HierMesh;
+import com.maddox.il2.engine.Hook;
+import com.maddox.il2.engine.HookNamed;
+import com.maddox.il2.engine.InterpolateRef;
+import com.maddox.il2.engine.LightPoint;
+import com.maddox.il2.engine.LightPointActor;
+import com.maddox.il2.engine.Loc;
+import com.maddox.il2.engine.Orient;
+import com.maddox.il2.fm.FlightModelMain;
+import com.maddox.il2.fm.Pitot;
 import com.maddox.rts.Property;
-import com.maddox.il2.ai.BulletEmitter;
+import com.maddox.rts.Time;
 
 public class CockpitRWD_14_TGunner extends CockpitGunner
 {
@@ -40,11 +48,9 @@ public class CockpitRWD_14_TGunner extends CockpitGunner
                 reflectPlaneMats();
                 bNeedSetUp = false;
             }
-            RWD_14 rwd_14 = (RWD_14)aircraft();
             if(RWD_14.bChangedPit)
             {
                 reflectPlaneToModel();
-                RWD_14 rwd_14_1 = (RWD_14)aircraft();
                 RWD_14.bChangedPit = false;
             }
             setTmp = setOld;
@@ -289,7 +295,6 @@ public class CockpitRWD_14_TGunner extends CockpitGunner
     private boolean bNeedSetUp;
     private float pictAiler;
     private float pictElev;
-    private long oldTime;    
     private Hook hook1;
     
     private static final float speedometerScale[] = {
@@ -311,16 +316,8 @@ public class CockpitRWD_14_TGunner extends CockpitGunner
 
     static 
     {
-        Property.set(com.maddox.il2.objects.air.CockpitRWD_14_TGunner.class, "aiTuretNum", 0);
-        Property.set(com.maddox.il2.objects.air.CockpitRWD_14_TGunner.class, "weaponControlNum", 10);
-        Property.set(com.maddox.il2.objects.air.CockpitRWD_14_TGunner.class, "astatePilotIndx", 1);
+        Property.set(CockpitRWD_14_TGunner.class, "aiTuretNum", 0);
+        Property.set(CockpitRWD_14_TGunner.class, "weaponControlNum", 10);
+        Property.set(CockpitRWD_14_TGunner.class, "astatePilotIndx", 1);
     }
-
-
-
-
-
-
-
-
 }

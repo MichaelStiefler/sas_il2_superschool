@@ -1,15 +1,22 @@
 package com.maddox.il2.objects.air;
 
-import com.maddox.JGP.*;
-import com.maddox.il2.ai.*;
-import com.maddox.il2.engine.*;
-import com.maddox.il2.fm.*;
-import com.maddox.il2.objects.sounds.SndAircraft;
+import com.maddox.JGP.Vector3d;
+import com.maddox.JGP.Vector3f;
+import com.maddox.il2.ai.AnglesFork;
+import com.maddox.il2.ai.BulletEmitter;
+import com.maddox.il2.engine.HierMesh;
+import com.maddox.il2.engine.HookNamed;
+import com.maddox.il2.engine.InterpolateRef;
+import com.maddox.il2.engine.LightPoint;
+import com.maddox.il2.engine.LightPointActor;
+import com.maddox.il2.engine.Loc;
+import com.maddox.il2.engine.Mat;
+import com.maddox.il2.fm.Atmosphere;
+import com.maddox.il2.fm.Pitot;
 import com.maddox.il2.objects.weapons.Gun;
 import com.maddox.il2.objects.weapons.GunEmpty;
 import com.maddox.rts.Property;
 import com.maddox.rts.Time;
-import com.maddox.util.HashMapExt;
 
 public class CockpitTA_152H_EZ42 extends CockpitPilot
 {
@@ -86,7 +93,6 @@ public class CockpitTA_152H_EZ42 extends CockpitPilot
         float dimPosition;
         AnglesFork azimuth;
         AnglesFork waypointAzimuth;
-        AnglesFork radioCompassAzimuth;
         float turn;
         float beaconDirection;
         float beaconRange;
@@ -101,7 +107,6 @@ public class CockpitTA_152H_EZ42 extends CockpitPilot
         {
             azimuth = new AnglesFork();
             waypointAzimuth = new AnglesFork();
-            radioCompassAzimuth = new AnglesFork();
         }
     }
 
@@ -116,15 +121,12 @@ public class CockpitTA_152H_EZ42 extends CockpitPilot
         gun = new Gun[4];
         bomb = new BulletEmitter[4];
         AircraftLH.printCompassHeading = true;
-        bBeaconKeysEnabled = ((AircraftLH)aircraft()).bWantBeaconKeys;
         ((AircraftLH)aircraft()).bWantBeaconKeys = true;
         setOld = new Variables();
         setNew = new Variables();
         pictAiler = 0.0F;
         pictElev = 0.0F;
         w = new Vector3f();
-        tmpP = new Point3d();
-        tmpV = new Vector3d();
         setNew.dimPosition = 1.0F;
         bNeedSetUp = true;
         HookNamed hooknamed = new HookNamed(this.mesh, "LIGHTHOOK_L");
@@ -297,22 +299,11 @@ public class CockpitTA_152H_EZ42 extends CockpitPilot
                 Cockpit.xyz[2] = -0.004F;
             this.mesh.chunkSetLocate("SecTrigger", Cockpit.xyz, Cockpit.ypr);
             float f2 = 0.0F;
-            int i1 = 0;
             if(this.fm.CT.saveWeaponControl[0] || this.fm.CT.saveWeaponControl[1] || this.fm.CT.saveWeaponControl[3])
             {
                 if(this.fm.CT.saveWeaponControl[0] || this.fm.CT.saveWeaponControl[1])
                     f2 = 20F;
-                tClap = Time.tickCounter() + World.Rnd().nextInt(500, 1000);
-                if(this.fm.CT.saveWeaponControl[0] && !this.fm.CT.saveWeaponControl[1])
-                    selectorAngle = 24F;
-                else
-                if(!this.fm.CT.saveWeaponControl[0] && this.fm.CT.saveWeaponControl[1])
-                    selectorAngle = 43F;
-                else
-                    selectorAngle = 10F;
             }
-            if(Time.tickCounter() < tClap)
-                i1 = 1;
             this.mesh.chunkSetAngles("SecTrigger2", -(240F + f2) * (pictClap = 0.85F * pictClap + 0.15F * (float)i), 0.0F, 0.0F);
             this.mesh.chunkSetLocate("SecTrigger", Cockpit.xyz, Cockpit.ypr);
             Cockpit.ypr[0] = interp(setNew.throttle, setOld.throttle, f) * 34F * 0.91F;
@@ -462,8 +453,6 @@ public class CockpitTA_152H_EZ42 extends CockpitPilot
         this.mesh.materialReplace("Gloss1D0o", mat);
     }
 
-    private boolean bBeaconKeysEnabled;
-    private float tmp;
     private Gun gun[];
     private Variables setOld;
     private Variables setNew;
@@ -485,13 +474,6 @@ public class CockpitTA_152H_EZ42 extends CockpitPilot
     private static final float fuelScale[] = {
         0.0F, 16F, 35F, 52.5F, 72F, 72F
     };
-    private static final float manPrsScale[] = {
-        0.0F, 0.0F, 0.0F, 15.5F, 71F, 125F, 180F, 235F, 290F, 245F, 
-        247F, 247F
-    };
-    private static final float oilfuelNeedleScale[] = {
-        0.0F, 38F, 84F, 135.5F, 135F
-    };
     private static final float vsiNeedleScale[] = {
         0.0F, 48F, 82F, 96.5F, 111F, 120.5F, 130F, 130F
     };
@@ -506,11 +488,7 @@ public class CockpitTA_152H_EZ42 extends CockpitPilot
         8.911F, 9.111F, 9.384F, 9.554F, 9.787F, 9.928F, 9.992F, 10.282F, 10.381F, 10.513F, 
         10.603F, 10.704F, 10.739F, 10.782F, 10.789F
     };
-    private Point3d tmpP;
-    private Vector3d tmpV;
-    private int tClap;
     private float pictClap;
-    private float selectorAngle;
 
     static 
     {

@@ -184,8 +184,8 @@ public abstract class FW_190Sea extends Scheme1
     public static void prepareWeapons(Class aircraftClass, HierMesh hierMesh, String thisWeaponsName) {
 
         boolean winter = Config.isUSE_RENDER() && (World.cur().camouflage == 1);
-        hierMesh.chunkVisible("GearL5_D0", !winter);
-        hierMesh.chunkVisible("GearR5_D0", !winter);
+//        hierMesh.chunkVisible("GearL5_D0", !winter);
+//        hierMesh.chunkVisible("GearR5_D0", !winter);
         hierMesh.chunkVisible("BoosterL_D0", thisWeaponsName.endsWith("_boost"));
         hierMesh.chunkVisible("BoosterR_D0", thisWeaponsName.endsWith("_boost"));
 
@@ -194,6 +194,8 @@ public abstract class FW_190Sea extends Scheme1
         _WeaponSlot[] weaponSlotsRegistered = Aircraft.getWeaponSlotsRegistered(aircraftClass, thisWeaponsName);
         
         if (planeVersion.startsWith("SeaFg")) {
+            hierMesh.chunkVisible("GearL5_D0", !winter && weaponSlotsRegistered[14] == null);
+            hierMesh.chunkVisible("GearR5_D0", !winter && weaponSlotsRegistered[14] == null);
             hierMesh.chunkVisible("7mmC_D0", weaponSlotsRegistered[0] != null);
             hierMesh.chunkVisible("7mmCowl_D0", weaponSlotsRegistered[0] == null);
             hierMesh.chunkVisible("20mmL1_D0", weaponSlotsRegistered[2] != null);
@@ -204,12 +206,16 @@ public abstract class FW_190Sea extends Scheme1
         }
         
         if (planeVersion.startsWith("SeaDora")) {
+            hierMesh.chunkVisible("GearL5_D0", !winter && weaponSlotsRegistered[4] == null);
+            hierMesh.chunkVisible("GearR5_D0", !winter && weaponSlotsRegistered[4] == null);
             hierMesh.chunkVisible("20mmL1_D0", weaponSlotsRegistered[2] != null);
             hierMesh.chunkVisible("20mmR1_D0", weaponSlotsRegistered[3] != null);
             return;
         }
         
         if (planeVersion.startsWith("SeaJab")) {
+            hierMesh.chunkVisible("GearL5_D0", !winter && weaponSlotsRegistered[80] == null);
+            hierMesh.chunkVisible("GearR5_D0", !winter && weaponSlotsRegistered[80] == null);
             hierMesh.chunkVisible("7mmC_D0", weaponSlotsRegistered[0] != null);
             hierMesh.chunkVisible("7mmCowl_D0", weaponSlotsRegistered[0] == null);
             hierMesh.chunkVisible("20mmL1_D0", weaponSlotsRegistered[2] != null);

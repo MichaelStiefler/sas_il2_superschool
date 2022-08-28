@@ -64,7 +64,6 @@ public class CockpitFW_190A4 extends CockpitPilot {
         float      dimPosition;
         AnglesFork azimuth;
         AnglesFork waypointAzimuth;
-        AnglesFork radioCompassAzimuth;
         float      beaconDirection;
         float      beaconRange;
         float      turn;
@@ -73,7 +72,6 @@ public class CockpitFW_190A4 extends CockpitPilot {
         private Variables() {
             this.azimuth = new AnglesFork();
             this.waypointAzimuth = new AnglesFork();
-            this.radioCompassAzimuth = new AnglesFork();
         }
     }
 
@@ -84,7 +82,6 @@ public class CockpitFW_190A4 extends CockpitPilot {
     public CockpitFW_190A4() {
         super("3DO/Cockpit/FW-190A-4/hier.him", "bf109");
         AircraftLH.printCompassHeading = true;
-        this.bBeaconKeysEnabled = ((AircraftLH) this.aircraft()).bWantBeaconKeys;
         ((AircraftLH) this.aircraft()).bWantBeaconKeys = true;
         this.gun = new Gun[6];
         this.setOld = new Variables();
@@ -343,7 +340,6 @@ public class CockpitFW_190A4 extends CockpitPilot {
         this.mesh.materialReplace("Gloss1D0o", mat);
     }
 
-    private boolean            bBeaconKeysEnabled;
     private Gun                gun[];
     private Variables          setOld;
     private Variables          setNew;

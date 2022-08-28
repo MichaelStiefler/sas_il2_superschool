@@ -1,6 +1,5 @@
 package com.maddox.il2.objects.air;
 
-import com.maddox.JGP.Point3d;
 import com.maddox.JGP.Vector3d;
 import com.maddox.JGP.Vector3f;
 import com.maddox.il2.ai.AnglesFork;
@@ -91,7 +90,6 @@ public class CockpitFW_190D9LATE extends CockpitPilot {
         float      dimPosition;
         AnglesFork azimuth;
         AnglesFork waypointAzimuth;
-        AnglesFork radioCompassAzimuth;
         float      turn;
         float      beaconDirection;
         float      beaconRange;
@@ -105,7 +103,6 @@ public class CockpitFW_190D9LATE extends CockpitPilot {
         private Variables() {
             this.azimuth = new AnglesFork();
             this.waypointAzimuth = new AnglesFork();
-            this.radioCompassAzimuth = new AnglesFork();
         }
     }
 
@@ -118,15 +115,12 @@ public class CockpitFW_190D9LATE extends CockpitPilot {
         this.gun = new Gun[4];
         this.bomb = new BulletEmitter[4];
         AircraftLH.printCompassHeading = true;
-        this.bBeaconKeysEnabled = ((AircraftLH) this.aircraft()).bWantBeaconKeys;
         ((AircraftLH) this.aircraft()).bWantBeaconKeys = true;
         this.setOld = new Variables();
         this.setNew = new Variables();
         this.pictAiler = 0.0F;
         this.pictElev = 0.0F;
         this.w = new Vector3f();
-        this.tmpP = new Point3d();
-        this.tmpV = new Vector3d();
         this.setNew.dimPosition = 1.0F;
         this.bNeedSetUp = true;
         HookNamed hooknamed = new HookNamed(this.mesh, "LIGHTHOOK_L");
@@ -432,7 +426,6 @@ public class CockpitFW_190D9LATE extends CockpitPilot {
         this.mesh.materialReplace("Gloss1D0o", mat);
     }
 
-    private boolean            bBeaconKeysEnabled;
     private Gun                gun[];
     private Variables          setOld;
     private Variables          setNew;
@@ -451,8 +444,6 @@ public class CockpitFW_190D9LATE extends CockpitPilot {
     private static final float k14TargetMarkScale[]     = { -0F, -4.5F, -27.5F, -42.5F, -56.5F, -61.5F, -70F, -95F, -102.5F, -106F };
     private static final float k14TargetWingspanScale[] = { 9.9F, 10.52F, 13.8F, 16.34F, 19F, 20F, 22F, 29.25F, 30F, 32.85F };
     private static final float k14BulletDrop[]          = { 5.812F, 6.168F, 6.508F, 6.978F, 7.24F, 7.576F, 7.849F, 8.108F, 8.473F, 8.699F, 8.911F, 9.111F, 9.384F, 9.554F, 9.787F, 9.928F, 9.992F, 10.282F, 10.381F, 10.513F, 10.603F, 10.704F, 10.739F, 10.782F, 10.789F };
-    private Point3d            tmpP;
-    private Vector3d           tmpV;
     private int                tClap;
     private float              pictClap;
     static {

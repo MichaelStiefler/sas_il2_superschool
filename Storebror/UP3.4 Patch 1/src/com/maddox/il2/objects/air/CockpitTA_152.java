@@ -1,14 +1,22 @@
 package com.maddox.il2.objects.air;
 
-import com.maddox.JGP.*;
-import com.maddox.il2.ai.*;
-import com.maddox.il2.engine.*;
-import com.maddox.il2.fm.*;
+import com.maddox.JGP.Vector3f;
+import com.maddox.il2.ai.AnglesFork;
+import com.maddox.il2.ai.BulletEmitter;
+import com.maddox.il2.ai.World;
+import com.maddox.il2.engine.HierMesh;
+import com.maddox.il2.engine.HookNamed;
+import com.maddox.il2.engine.InterpolateRef;
+import com.maddox.il2.engine.LightPoint;
+import com.maddox.il2.engine.LightPointActor;
+import com.maddox.il2.engine.Loc;
+import com.maddox.il2.engine.Mat;
+import com.maddox.il2.fm.Atmosphere;
+import com.maddox.il2.fm.Pitot;
 import com.maddox.il2.objects.weapons.Gun;
 import com.maddox.il2.objects.weapons.GunEmpty;
 import com.maddox.rts.Property;
 import com.maddox.rts.Time;
-import com.maddox.util.HashMapExt;
 
 public class CockpitTA_152 extends CockpitPilot
 {
@@ -64,7 +72,6 @@ public class CockpitTA_152 extends CockpitPilot
         float dimPosition;
         AnglesFork azimuth;
         AnglesFork waypointAzimuth;
-        AnglesFork radioCompassAzimuth;
         float beaconDirection;
         float beaconRange;
         float turn;
@@ -74,7 +81,6 @@ public class CockpitTA_152 extends CockpitPilot
         {
             azimuth = new AnglesFork();
             waypointAzimuth = new AnglesFork();
-            radioCompassAzimuth = new AnglesFork();
         }
     }
 
@@ -87,7 +93,6 @@ public class CockpitTA_152 extends CockpitPilot
     {
         super("3DO/Cockpit/Ta-152H-1/hier.him", "bf109");
         AircraftLH.printCompassHeading = true;
-        bBeaconKeysEnabled = ((AircraftLH)aircraft()).bWantBeaconKeys;
         ((AircraftLH)aircraft()).bWantBeaconKeys = true;
         gun = new Gun[4];
         bomb = new BulletEmitter[4];
@@ -257,13 +262,6 @@ public class CockpitTA_152 extends CockpitPilot
                 if(this.fm.CT.saveWeaponControl[0] || this.fm.CT.saveWeaponControl[1])
                     f2 = 20F;
                 tClap = Time.tickCounter() + World.Rnd().nextInt(500, 1000);
-                if(this.fm.CT.saveWeaponControl[0] && !this.fm.CT.saveWeaponControl[1])
-                    selectorAngle = 24F;
-                else
-                if(!this.fm.CT.saveWeaponControl[0] && this.fm.CT.saveWeaponControl[1])
-                    selectorAngle = 43F;
-                else
-                    selectorAngle = 10F;
             }
             if(Time.tickCounter() < tClap)
                 i = 1;
@@ -416,8 +414,6 @@ public class CockpitTA_152 extends CockpitPilot
         this.mesh.materialReplace("Gloss1D0o", mat);
     }
 
-    private boolean bBeaconKeysEnabled;
-    private float tmp;
     private Gun gun[];
     private Variables setOld;
     private Variables setNew;
@@ -445,15 +441,11 @@ public class CockpitTA_152 extends CockpitPilot
     private static final float presScale[] = {
         0.0F, 10F, 40F, 60F, 77F
     };
-    private static final float oilfuelNeedleScale[] = {
-        0.0F, 38F, 84F, 135.5F, 135F
-    };
     private static final float vsiNeedleScale[] = {
         0.0F, 48F, 82F, 96.5F, 111F, 120.5F, 130F, 130F
     };
     private int tClap;
     private float pictClap;
-    private float selectorAngle;
 
     static 
     {

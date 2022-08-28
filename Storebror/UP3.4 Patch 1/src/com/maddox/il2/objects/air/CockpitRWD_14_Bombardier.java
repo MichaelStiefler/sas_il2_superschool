@@ -1,13 +1,21 @@
 package com.maddox.il2.objects.air;
 
-import com.maddox.JGP.*;
+import com.maddox.JGP.Tuple3d;
+import com.maddox.JGP.Tuple3f;
+import com.maddox.JGP.Vector3f;
 import com.maddox.il2.ai.World;
-import com.maddox.il2.engine.*;
-import com.maddox.il2.fm.*;
+import com.maddox.il2.engine.Actor;
+import com.maddox.il2.engine.HierMesh;
+import com.maddox.il2.engine.HookNamed;
+import com.maddox.il2.engine.InterpolateRef;
+import com.maddox.il2.engine.LightPoint;
+import com.maddox.il2.engine.LightPointActor;
+import com.maddox.il2.engine.Loc;
+import com.maddox.il2.fm.FlightModelMain;
+import com.maddox.il2.fm.Pitot;
 import com.maddox.il2.objects.sounds.SndAircraft;
-import com.maddox.rts.Time;
-import com.maddox.util.HashMapExt;
 import com.maddox.rts.Property;
+import com.maddox.rts.Time;
 
 public class CockpitRWD_14_Bombardier extends CockpitPilot
 {
@@ -39,11 +47,9 @@ public class CockpitRWD_14_Bombardier extends CockpitPilot
                 reflectPlaneMats();
                 bNeedSetUp = false;
             }
-            RWD_14 rwd_14 = (RWD_14)aircraft();
             if(RWD_14.bChangedPit)
             {
                 reflectPlaneToModel();
-                RWD_14 rwd_14_1 = (RWD_14)aircraft();
                 RWD_14.bChangedPit = false;
             }
             setTmp = setOld;
@@ -233,7 +239,6 @@ public class CockpitRWD_14_Bombardier extends CockpitPilot
     private boolean bNeedSetUp;
     private float pictAiler;
     private float pictElev;
-    private long oldTime;    
     
     private static final float speedometerScale[] = {
         0.0F, 3F, 6F, 9F, 13F, 28F, 41.5F, 54F, 71.5F, 90F, 
@@ -254,14 +259,6 @@ public class CockpitRWD_14_Bombardier extends CockpitPilot
 
     static 
     {
-        Property.set(com.maddox.il2.objects.air.CockpitRWD_14_Bombardier.class, "astatePilotIndx", 0);
+        Property.set(CockpitRWD_14_Bombardier.class, "astatePilotIndx", 0);
     }
-
-
-
-
-
-
-
-
 }

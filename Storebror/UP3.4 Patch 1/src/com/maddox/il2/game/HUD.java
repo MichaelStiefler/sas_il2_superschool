@@ -535,8 +535,10 @@ public class HUD {
                 speed = "mph";
                 break;
         }
+//        this.drawTorpedoParameter(
+//                "h(drop)=" + (int) dropAltitude + alt + ", v(drop)=" + (int) dropSpeed + speed + ", v(impact)(max)=" + (int) impactSpeed + speed + ", impact\u00B7(min)=" + (int) impactAngleMin + "\u00B7, impact\u00B7(max)=" + (int) impactAngleMax + "\u00B7", i, j);
         this.drawTorpedoParameter(
-                "h(drop)=" + (int) dropAltitude + alt + ", v(drop)=" + (int) dropSpeed + speed + ", v(impact)(max)=" + (int) impactSpeed + speed + ", impact\u00B7(min)=" + (int) impactAngleMin + "\u00B7, impact\u00B7(max)=" + (int) impactAngleMax + "\u00B7", i, j);
+                "h(drop)=" + (int) dropAltitude + alt + ", v(drop)=" + (int) dropSpeed + speed + ", v(impact)(max)=" + (int) impactSpeed + speed + ", impact°(min)=" + (int) impactAngleMin + "°, impact°(max)=" + (int) impactAngleMax + "°", i, j);
     }
 
     private void drawTorpedoParameter(String string, int i, int j) {
