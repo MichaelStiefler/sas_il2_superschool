@@ -47,13 +47,27 @@ public class TYPHOON1BLate extends TEMPEST {
     }
 
     public void hitProp(int i, int j, Actor actor) {
+//        System.out.println("hitProp(" + i + ", " + j + ", " + actor.getClass().getName());
         if (i > this.FM.EI.getNum() - 1 || this.oldProp[i] == 2) return;
         super.hitProp(i, j, actor);
-        if (this.hierMesh().isChunkVisible(Props[i][2]) && Mission.curYear() >= fourBladeIntroduction) {
-            this.hierMesh().chunkVisible(Props[i][2], false);
+//        if (this.hierMesh().isChunkVisible(Props[i][2]) && Mission.curYear() >= fourBladeIntroduction) {
+//            this.hierMesh().chunkVisible(Props[i][2], false);
+//            this.hierMesh().chunkVisible(Propsb[i][0], false);
+//            this.hierMesh().chunkVisible(Propsb[i][1], false);
+//            this.hierMesh().chunkVisible(Propsb[i][2], true);
+//        }
+        if (Mission.curYear() >= fourBladeIntroduction) {
+            for (int k=0; k<3; k++) {
+//                System.out.println("this.hierMesh().isChunkVisible(Props[" + i + "][" + k + "])=" + this.hierMesh().isChunkVisible(Props[i][k]));
+                this.hierMesh().chunkVisible(Props[i][k], false);
+            }
             this.hierMesh().chunkVisible(Propsb[i][0], false);
             this.hierMesh().chunkVisible(Propsb[i][1], false);
             this.hierMesh().chunkVisible(Propsb[i][2], true);
+//            for (int k=0; k<3; k++) {
+//                System.out.println("this.hierMesh().isChunkVisible(Props[" + i + "][" + k + "])=" + this.hierMesh().isChunkVisible(Props[i][k]));
+//                System.out.println("this.hierMesh().isChunkVisible(Propsb[" + i + "][" + k + "])=" + this.hierMesh().isChunkVisible(Propsb[i][k]));
+//            }
         }
     }
 
@@ -78,15 +92,33 @@ public class TYPHOON1BLate extends TEMPEST {
         super.rareAction(f, flag);
         if (this.FM.getAltitude() < 3000F && this.FM.CT.getCockpitDoor() > 0.8F) this.hierMesh().chunkVisible("HMask1_D0", false);
         else this.hierMesh().chunkVisible("HMask1_D0", this.hierMesh().isChunkVisible("Pilot1_D0"));
-        if (Mission.curYear() >= fourBladeIntroduction && this.hierMesh().isChunkVisible(Props[0][0])) {
-            this.hierMesh().chunkVisible(Props[0][0], false);
-            this.hierMesh().chunkVisible(Propsb[0][0], true);
+//        if (Mission.curYear() >= fourBladeIntroduction && this.hierMesh().isChunkVisible(Props[0][0])) {
+//            this.hierMesh().chunkVisible(Props[0][0], false);
+//            this.hierMesh().chunkVisible(Propsb[0][0], true);
+//        }
+    }
+    
+    public void update(float f) {
+        super.update(f);
+        if (Mission.curYear() >= fourBladeIntroduction) {
+            for (int i=0; i<3; i++) {
+                if (this.hierMesh().isChunkVisible(Props[0][i])) {
+                    this.hierMesh().chunkVisible(Props[0][i], false);
+                    this.hierMesh().chunkVisible(Propsb[0][i], true);
+                }
+            }
+            for (int i=0; i<2; i++) {
+                if (this.hierMesh().isChunkVisible(Propsb[0][i])) {
+                    for (int j=i + 1; j<3; j++) this.hierMesh().chunkVisible(Propsb[0][j], false);
+                }
+            }
         }
     }
 
+
     public static final String Propsb[][]            = { { "Prop1b_D0", "PropRot1b_D0", "Prop1b_D1" }, { "Prop2b_D0", "PropRot2b_D0", "Prop2b_D1" }, { "Prop3b_D0", "PropRot3b_D0", "Prop3b_D1" }, { "Prop4b_D0", "PropRot4b_D0", "Prop4b_D1" },
             { "Prop5b_D0", "PropRot5b_D0", "Prop5b_D1" }, { "Prop6b_D0", "PropRot6b_D0", "Prop6b_D1" } };
-    private static final int   fourBladeIntroduction = 1943;
+    private static final int   fourBladeIntroduction = 1900; // 1943;
 
     static {
         Class class1 = TYPHOON1BLate.class;

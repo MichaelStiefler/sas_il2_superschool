@@ -67,6 +67,9 @@ public class GUINetClientDBrief extends GUIBriefing {
         try {
             ResourceBundle resourcebundle = ResourceBundle.getBundle(string, RTSConf.cur.locale);
             this.textDescription = resourcebundle.getString("Description");
+            // TODO: +++ Modified by SAS~Storebror: Save last Briefing Text (e.g. for Network use)
+            GUIPad.setBriefingText(this.textDescription);
+            // ---
             this.prepareTextDescription(Army.amountNet());
         } catch (Exception exception) {
             this.textDescription = null;
@@ -82,6 +85,9 @@ public class GUINetClientDBrief extends GUIBriefing {
         if (i < 0 || World.cur().bornPlaces == null || i >= World.cur().bornPlaces.size()) return this.textArmyDescription[0];
         BornPlace bornplace = (BornPlace) World.cur().bornPlaces.get(i);
         if (bornplace.army < 0 || bornplace.army >= this.textArmyDescription.length) return "";
+        // TODO: +++ Modified by SAS~Storebror: Save last Briefing Text (e.g. for Network use)
+        GUIPad.setBriefingText(this.textArmyDescription[bornplace.army]);
+        // ---
         return this.textArmyDescription[bornplace.army];
     }
 

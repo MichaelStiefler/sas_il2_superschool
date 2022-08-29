@@ -1481,6 +1481,10 @@ public abstract class Aircraft extends NetAircraft implements MsgCollisionListen
     }
 
     public void update(float f) {
+//        if (this.FM.AS.bNavLightsOn) {
+//            this.FM.AS.setNavLightsState(false);
+//            this.hitProp(0, 0, Engine.actorLand());
+//        }
         super.update(f);
         if (this == World.getPlayerAircraft()) {
             if (Config.hudEngineParams) HUD.training("R:" + (int)this.FM.EI.engines[0].getRPM()
