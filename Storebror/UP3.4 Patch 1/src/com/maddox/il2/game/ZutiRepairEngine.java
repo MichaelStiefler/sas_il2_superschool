@@ -5,6 +5,7 @@ package com.maddox.il2.game;
 
 import com.maddox.il2.ai.World;
 import com.maddox.il2.ai.ZutiSupportMethods_AI;
+import com.maddox.il2.engine.Config;
 import com.maddox.il2.fm.Motor;
 import com.maddox.il2.fm.ZutiSupportMethods_FM;
 import com.maddox.il2.net.BornPlace;
@@ -32,7 +33,7 @@ public class ZutiRepairEngine {
 
         int engineRepairTime = Mission.MDS_VARIABLES().zutiReload_EngineRepairSeconds;
         if (this.bornPlace != null) engineRepairTime = this.bornPlace.zutiEngineRepairSeconds;
-        if (Mission.isSingle()) engineRepairTime = 1;
+        if (Config.cur.ini.get("Mods", "offlineRRR", 0) == 1 && Mission.isSingle()) engineRepairTime = 1;
 
         this.repairTime = engineRepairTime * repairPenalty;
         System.out.println("Engine Repair Time: " + engineRepairTime + "s.");
@@ -93,7 +94,7 @@ public class ZutiRepairEngine {
         try {
             Motor motor = this.playerAC.FM.EI.engines[this.engineId];
 
-            com.maddox.il2.objects.air.Aircraft ac = World.getPlayerAircraft();
+            Aircraft ac = World.getPlayerAircraft();
 
             // This part is executed when prop is bent/damaged
             /*

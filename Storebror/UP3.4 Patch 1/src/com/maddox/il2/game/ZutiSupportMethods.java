@@ -145,12 +145,12 @@ public class ZutiSupportMethods {
      */
     public static String getCountryFromNetRegiment(String netRegiment) {
         // System.out.println("Searching country for net regiment: " + netRegiment);
-        java.util.ResourceBundle resCountry = java.util.ResourceBundle.getBundle("i18n/country", com.maddox.rts.RTSConf.cur.locale, com.maddox.rts.LDRres.loader());
+        java.util.ResourceBundle resCountry = java.util.ResourceBundle.getBundle("i18n/country", RTSConf.cur.locale, LDRres.loader());
 
-        java.util.List list = com.maddox.il2.ai.Regiment.getAll();
+        java.util.List list = Regiment.getAll();
         int k1 = list.size();
         for (int i = 0; i < k1; i++) {
-            com.maddox.il2.ai.Regiment regiment = (com.maddox.il2.ai.Regiment) list.get(i);
+            Regiment regiment = (Regiment) list.get(i);
             String branch = resCountry.getString(regiment.branch());
             if (regiment.name().equals(netRegiment)) return branch;
         }
@@ -165,12 +165,12 @@ public class ZutiSupportMethods {
      * @return
      */
     public static String getUserCfgRegiment(String inRegiment) {
-        java.util.ResourceBundle resCountry = java.util.ResourceBundle.getBundle("i18n/country", com.maddox.rts.RTSConf.cur.locale, com.maddox.rts.LDRres.loader());
+        java.util.ResourceBundle resCountry = java.util.ResourceBundle.getBundle("i18n/country", RTSConf.cur.locale, LDRres.loader());
 
-        java.util.List list = com.maddox.il2.ai.Regiment.getAll();
+        java.util.List list = Regiment.getAll();
         int k1 = list.size();
         for (int i = 0; i < k1; i++) {
-            com.maddox.il2.ai.Regiment regiment = (com.maddox.il2.ai.Regiment) list.get(i);
+            Regiment regiment = (Regiment) list.get(i);
             String branch = resCountry.getString(regiment.branch());
             if (branch.equals(inRegiment)) return regiment.name();
         }
@@ -445,7 +445,7 @@ public class ZutiSupportMethods {
 
                 if (ZutiSupportMethods.isStaticActor(actor)) continue;
 
-                if (actor instanceof com.maddox.il2.objects.vehicles.tanks.TankGeneric) {
+                if (actor instanceof TankGeneric) {
                     tank = (TankGeneric) actor;
                     // If tank is dead or of different army, continue
                     if (tank.zutiHasFrontMarkerAssigned() || tank.dying != 0 || tank.getArmy() != marker.army) continue;
@@ -803,7 +803,7 @@ public class ZutiSupportMethods {
         // remove this front marker from global list
         if (!markerReasigned) {
             printDebugMessage("Markers before removing: " + Front.markers().size());
-            com.maddox.il2.ai.Front.markers().remove(marker);
+            Front.markers().remove(marker);
             printDebugMessage("Markers after removing: " + Front.markers().size());
             Front.setMarkersChanged();
             marker = null;
@@ -911,7 +911,7 @@ public class ZutiSupportMethods {
                 bp = (BornPlace) World.cur().bornPlaces.get(((AircraftNet) playerAc.net).netUser.getBornPlace());
                 /*
                  * NetUser netUser = ((AircraftNet) playerAc.net).netUser; System.out.println(((Aircraft)playerAc).getClass()); System.out.println("NetAircraft spawning player name : " + netUser.uniqueName());
-                 * System.out.println("NetAircraft spawning player bp id: " + netUser.getBornPlace()); String currentAcName = com.maddox.rts.Property.stringValue(((Aircraft)playerAc).getClass(), "keyName");
+                 * System.out.println("NetAircraft spawning player bp id: " + netUser.getBornPlace()); String currentAcName = Property.stringValue(((Aircraft)playerAc).getClass(), "keyName");
                  * System.out.println("NetAircraft spawning player plane: " + currentAcName); int bpId = netUser.getBornPlace(); System.out.println("BP ID = " + bpId);
                  *
                  * BornPlace zutiPilotsBornPlace = (BornPlace)World.cur().bornPlaces.get( bpId ); if( zutiPilotsBornPlace != null ) { System.out.println("Letali��e obstaja..."); }
@@ -1280,7 +1280,7 @@ public class ZutiSupportMethods {
     public static boolean allowRRR(Aircraft aircraft) {
         if (aircraft == null || !Actor.isValid(aircraft)) return false;
         
-        if (Mission.isSingle()) return true;
+        if (Config.cur.ini.get("Mods", "offlineRRR", 0) == 1 && Mission.isSingle()) return true;
 
         boolean positionedOnRRRArea = false;
         if (ZutiSupportMethods_FM.isFMOnZAP(aircraft.FM) || ZutiAirfieldPoint.isLocatedTestRunway(aircraft.FM.Loc) || ZutiAirfieldPoint.isLocatedOnCarrier(aircraft.FM.Loc)) positionedOnRRRArea = true;
@@ -1318,7 +1318,7 @@ public class ZutiSupportMethods {
      * @return
      */
     public static BornPlace getParatrooperAreaBornPlace(double x, double y, int army) {
-        if (!ZutiMDSVariables.ZUTI_FRONT_ENABLE_HB_CAPTURING || com.maddox.il2.ai.World.cur().bornPlaces == null || Front.markers() == null) return null;
+        if (!ZutiMDSVariables.ZUTI_FRONT_ENABLE_HB_CAPTURING || World.cur().bornPlaces == null || Front.markers() == null) return null;
 
         if (CURRENT_BORN_PLACE == null || CURRENT_BORN_PLACE.army == army) CURRENT_BORN_PLACE = ZutiSupportMethods_Net.getNearestBornPlace_ExcludeArmy(x, y, army, true);
 
@@ -1378,7 +1378,7 @@ public class ZutiSupportMethods {
         if (actor instanceof Aircraft) return false;
         if (actor instanceof Chief) return false;
         if (actor instanceof Wing) return false;
-        return !com.maddox.il2.engine.Actor.isValid(actor.getOwner()) || !(actor.getOwner() instanceof com.maddox.il2.ai.Chief);
+        return !Actor.isValid(actor.getOwner()) || !(actor.getOwner() instanceof Chief);
     }
 
     /**
@@ -1881,7 +1881,7 @@ public class ZutiSupportMethods {
                 double friction = bp.zutiFriction;
 
                 if (zaps != null) {
-                    zaps.add(new com.maddox.il2.game.ZutiAirfieldPoint(x1, y1, x2, y2, friction));
+                    zaps.add(new ZutiAirfieldPoint(x1, y1, x2, y2, friction));
                     printDebugMessage("BornPlace is also friction area: Location(" + x1 + ", " + y1 + "), T2(" + x2 + ", " + y2 + "), friction=" + friction);
                 } else System.out.println("ZutiAirports table is null!");
             }
@@ -2309,7 +2309,7 @@ public class ZutiSupportMethods {
         List airports = ZutiSupportMethods_Engine.AIRFIELDS;
         int size = airports.size();
         for (int z = 0; z < size; z++) {
-            ZutiAirfieldPoint point = (com.maddox.il2.game.ZutiAirfieldPoint) airports.get(z);
+            ZutiAirfieldPoint point = (ZutiAirfieldPoint) airports.get(z);
             {
                 double result = point.isInZAPArea(pos.x, pos.y);
                 if (result > -1) return z;

@@ -118,7 +118,7 @@ public class TYPHOON1BLate extends TEMPEST {
 
     public static final String Propsb[][]            = { { "Prop1b_D0", "PropRot1b_D0", "Prop1b_D1" }, { "Prop2b_D0", "PropRot2b_D0", "Prop2b_D1" }, { "Prop3b_D0", "PropRot3b_D0", "Prop3b_D1" }, { "Prop4b_D0", "PropRot4b_D0", "Prop4b_D1" },
             { "Prop5b_D0", "PropRot5b_D0", "Prop5b_D1" }, { "Prop6b_D0", "PropRot6b_D0", "Prop6b_D1" } };
-    private static final int   fourBladeIntroduction = 1900; // 1943;
+    private static final int   fourBladeIntroduction = 1943;
 
     static {
         Class class1 = TYPHOON1BLate.class;

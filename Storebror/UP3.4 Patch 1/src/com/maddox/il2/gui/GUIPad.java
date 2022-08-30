@@ -7,7 +7,6 @@ package com.maddox.il2.gui;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 import java.util.ResourceBundle;
 
@@ -68,7 +67,6 @@ import com.maddox.il2.objects.vehicles.radios.TypeHasBeacon;
 import com.maddox.il2.objects.vehicles.radios.TypeHasLorenzBlindLanding;
 import com.maddox.il2.objects.vehicles.radios.TypeHasRadioStation;
 import com.maddox.rts.RTSConf;
-import com.maddox.rts.SectFile;
 import com.maddox.rts.Time;
 import com.maddox.util.HashMapExt;
 
@@ -381,10 +379,10 @@ public class GUIPad {
             // --------------------------------------------------
             try {
                 ResourceBundle resourcebundle = ResourceBundle.getBundle(s, RTSConf.cur.locale);
-                this.textDescription = " Original Brief for the mission:\n\n" + resourcebundle.getString("Description");
+                this.textDescription = /*" Original Brief for the mission:\n\n" + */resourcebundle.getString("Description");
             } catch (Exception ex) {
                 // TODO: +++ Modified by SAS~Storebror: Save last Briefing Text (e.g. for Network use)
-                if (getBriefingText() != null && getBriefingText().length() > 1) this.textDescription = " Original Brief for the mission:\n\n" + getBriefingText();
+                if (getBriefingText() != null && getBriefingText().length() > 1) this.textDescription = /*" Original Brief for the mission:\n\n" + */getBriefingText();
                 // ---
             }
             // --------------------------------------------------
@@ -2031,9 +2029,27 @@ public class GUIPad {
                 int x = this.renderMap2D.getViewPortWidth();
 
                 int y = this.renderMap2D.getViewPortHeight();
-                int Border = (int) (x * 0.08);
+                int Border = (int) (x * 0.08) + 1;
                 int col = 0xff000000;
+                
+                for (int bgx = -1; bgx < 2; bgx++) {
+                    for (int bgy = -1; bgy < 2; bgy++) {
+                        li = 5;
+                        this.smallFont.output(col, bgx + Border, bgy + y - Border - sp * li++, 0.0F, "Elapsed time: " + (mi <= 9 ? "0" + mi + "m " : mi + "m ") + (se <= 9 ? "0" + se + "s" : se + "s"));
+                        this.smallFont.output(col, bgx + Border, bgy + y - Border - sp * li++, 0.0F, "Mission started at: " + (h <= 9 ? "0" + h + ":" : h + ":") + (m <= 9 ? "0" + m : "" + m) + " hours");
+                        this.smallFont.output(col, bgx + Border, bgy + y - Border - sp * li++, 0.0F, "Enemy air kills: " + (enemyAirKill == 0 ? "none" : "" + enemyAirKill));
+                        this.smallFont.output(col, bgx + Border, bgy + y - Border - sp * li++, 0.0F, "Enemy ground kills: " + (enemyGroundKill == 0 ? "none" : "" + enemyGroundKill));
+                        this.smallFont.output(col, bgx + Border, bgy + y - Border - sp * li++, 0.0F, "Friendly kills: " + (friendlyKill == 0 ? "none" : "" + friendlyKill));
+                        this.smallFont.output(col, bgx + Border, bgy + y - Border - sp * li++, 0.0F, "Primary Targets pending: " + (TargetPrimary == 0 ? "none" : "" + TargetPrimary));
+                        this.smallFont.output(col, bgx + Border, bgy + y - Border - sp * li++, 0.0F, "Secondary Targets pending:  " + (TargetSecondary == 0 ? "none" : "" + TargetSecondary));
+                        this.smallFont.output(col, bgx + Border, bgy + y - Border - sp * li++, 0.0F, "Secret Targets pending: " + (TargetSecret == 0 ? "none" : "" + TargetSecret));
+                        this.smallFont.output(col, bgx + Border, bgy + y - Border - sp * li++, 0.0F, "Original mission brief:");
+                        this.writeLines(col, bgx + Border, bgy + y - Border - sp * li++, s, 0, s.length(), x, y, Border);
+                    }
+                }
 
+                col = 0xff00ffff;
+                li = 5;
                 this.smallFont.output(col, Border, y - Border - sp * li++, 0.0F, "Elapsed time: " + (mi <= 9 ? "0" + mi + "m " : mi + "m ") + (se <= 9 ? "0" + se + "s" : se + "s"));
                 this.smallFont.output(col, Border, y - Border - sp * li++, 0.0F, "Mission started at: " + (h <= 9 ? "0" + h + ":" : h + ":") + (m <= 9 ? "0" + m : "" + m) + " hours");
                 this.smallFont.output(col, Border, y - Border - sp * li++, 0.0F, "Enemy air kills: " + (enemyAirKill == 0 ? "none" : "" + enemyAirKill));
@@ -2047,7 +2063,7 @@ public class GUIPad {
             }
         }
     }
-
+    
     protected String textDescription() {
         return this.textDescription;
     }
@@ -2071,7 +2087,7 @@ public class GUIPad {
                     // gcanvas.draw(s, i, k1);
                     // if (k1 <= s.length() && k1 >= i)
                     // gridFont.output(c, x, y - sp * l, 0.0F, s.substring(i, k1));
-                    this.smallFont.outputClip(c, x, y - sp * l, 0.0F, s, i, k1, f3, f3, f1 - 2 * f3, f2 - f3);
+                    this.smallFont.outputClip(c, x + 2, y - sp * l, 0.0F, s, i, k1, f3, f3, f1 - 2 * f3, f2 - f3);
                     // gcanvas.cur.y += f3;
                     l++;
                     j -= k1;
