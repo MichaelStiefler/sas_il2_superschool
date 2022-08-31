@@ -165,15 +165,6 @@ public class GUIPad {
         }
 
         public void render() {
-//            System.out.println("No_Fog_Of_War_Icons=" + World.cur().diffCur.No_Fog_Of_War_Icons +
-//                    ", No_Icons=" + World.cur().diffCur.No_Icons + 
-//                    ", No_Map_Icons=" + World.cur().diffCur.No_Map_Icons + 
-//                    ", No_Outside_Views=" + World.cur().diffCur.No_Outside_Views + 
-//                    ", No_Padlock=" + World.cur().diffCur.No_Padlock + 
-//                    ", No_Player_Icon=" + World.cur().diffCur.No_Player_Icon + 
-//                    ", NoMinimapPath=" + World.cur().diffCur.NoMinimapPath + 
-//                    ", RealisticNavigationInstruments=" + World.cur().diffCur.RealisticNavigationInstruments
-//            );
             // TODO: Added by |ZUTI|
             GUIPad.this.zutiRenderPad_MDSWay();
         }
@@ -273,6 +264,17 @@ public class GUIPad {
     public void enter() {
         if (this.bActive) return;
 
+        System.out.println("No_Fog_Of_War_Icons=" + World.cur().diffCur.No_Fog_Of_War_Icons +
+              ", No_Icons=" + World.cur().diffCur.No_Icons + 
+              ", No_Map_Icons=" + World.cur().diffCur.No_Map_Icons + 
+              ", No_Outside_Views=" + World.cur().diffCur.No_Outside_Views + 
+              ", No_Padlock=" + World.cur().diffCur.No_Padlock + 
+              ", No_Player_Icon=" + World.cur().diffCur.No_Player_Icon + 
+              ", NoMinimapPath=" + World.cur().diffCur.NoMinimapPath + 
+              ", RealisticNavigationInstruments=" + World.cur().diffCur.RealisticNavigationInstruments
+        );
+                
+        
         /*
          * for( int i=0; i<Mission.cur().actors.size(); i++ ) { System.out.println("ACTOR CLASS=" + Mission.cur().actors.get(i).getClass()); }
          */
@@ -931,9 +933,9 @@ public class GUIPad {
                     pointOrtho.sub(pointAC);
                     orientAC.transformInv(pointOrtho);
 
-                    double x = ((Tuple3d) pointOrtho).x;
-                    double y = ((Tuple3d) pointOrtho).y;
-                    double z = ((Tuple3d) pointOrtho).z;
+                    double x = pointOrtho.x;
+                    double y = pointOrtho.y;
+                    double z = pointOrtho.z;
 
                     double FOV = Math.sqrt(x * x + y * y + z * z) / Math.sqrt(x * x + y * y); // Math.abs(((Tuple3d)(pointOrtho)).z) / 5.0F;
 
@@ -961,11 +963,11 @@ public class GUIPad {
                     pointOrtho.sub(pointAC);
                     orientAC.transformInv(pointOrtho);
 
-                    double x = ((Tuple3d) pointOrtho).x;
+                    double x = pointOrtho.x;
                     if (x > 5.0F) // Mayor que 5m, en frente del radar
                     {
-                        double y = ((Tuple3d) pointOrtho).y;
-                        double z = ((Tuple3d) pointOrtho).z;
+                        double y = pointOrtho.y;
+                        double z = pointOrtho.z;
 
                         double FOV = 1; // Math.abs(((Tuple3d)(pointOrtho)).x) / 5.0F;
 
@@ -1802,8 +1804,8 @@ public class GUIPad {
                                 pointOrtho.sub(pointAC);
                                 orientAC.transformInv(pointOrtho);
 
-                                double NewX = -((Tuple3d) pointOrtho).y;
-                                double NewY = ((Tuple3d) pointOrtho).x;
+                                double NewX = -pointOrtho.y;
+                                double NewY = pointOrtho.x;
 
                                 if (NewX >= -d && NewX <= d && NewY >= -d && NewY <= d) this.radarPlane.add(pointOrtho); // airs.add(actor);
                             }
@@ -1815,8 +1817,8 @@ public class GUIPad {
                             pointOrtho.sub(pointAC);
                             orientAC.transformInv(pointOrtho);
 
-                            double NewX = -((Tuple3d) pointOrtho).y;
-                            double NewY = ((Tuple3d) pointOrtho).x;
+                            double NewX = -pointOrtho.y;
+                            double NewY = pointOrtho.x;
 
                             if (NewX >= -d && NewX <= d && NewY >= -d && NewY <= d) this.radarOther.add(pointOrtho); // airs.add(actor);
                         }
@@ -1888,8 +1890,8 @@ public class GUIPad {
                                 pointOrtho.sub(pointAC);
                                 orientAC.transformInv(pointOrtho);
 
-                                double NewX = -((Tuple3d) pointOrtho).y;
-                                double NewY = ((Tuple3d) pointOrtho).z;
+                                double NewX = -pointOrtho.y;
+                                double NewY = pointOrtho.z;
 
                                 if (NewX >= -d && NewX <= d && NewY >= -d && NewY <= d) this.radarPlane.add(pointOrtho); // airs.add(actor);
                             }
@@ -1901,8 +1903,8 @@ public class GUIPad {
                             pointOrtho.sub(pointAC);
                             orientAC.transformInv(pointOrtho);
 
-                            double NewX = -((Tuple3d) pointOrtho).y;
-                            double NewY = ((Tuple3d) pointOrtho).z;
+                            double NewX = -pointOrtho.y;
+                            double NewY = pointOrtho.z;
 
                             if (NewX >= -d && NewX <= d && NewY >= -d && NewY <= d) this.radarOther.add(pointOrtho); // airs.add(actor);
                         }
