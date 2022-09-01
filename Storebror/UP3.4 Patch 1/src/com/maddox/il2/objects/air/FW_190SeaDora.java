@@ -30,7 +30,7 @@ public class FW_190SeaDora extends FW_190Sea
         Property.set(var_class, "PaintScheme", new PaintSchemeFMPar06());
         Property.set(var_class, "yearService", 1943.11F);
         Property.set(var_class, "yearExpired", 1948F);
-        Property.set(var_class, "FlightModel", "FlightModels/Fw-190D-13N.fmd");
+        Property.set(var_class, "FlightModel", "FlightModels/Fw-190D-13N (Ultrapack).fmd");
         Property.set(var_class, "cockpitClass", new Class[] {
             CockpitFW_190D11Sea.class
         });

@@ -12,7 +12,7 @@ public class FW_190A4 extends FW_190NEW {
         Property.set(class1, "PaintScheme", new PaintSchemeFMPar01());
         Property.set(class1, "yearService", 1942.6F);
         Property.set(class1, "yearExpired", 1948F);
-        Property.set(class1, "FlightModel", "FlightModels/Fw-190A-4.fmd");
+        Property.set(class1, "FlightModel", "FlightModels/Fw-190A-4 (Ultrapack).fmd");
         Property.set(class1, "cockpitClass", new Class[] { CockpitFW_190A4.class });
         Property.set(class1, "LOSElevation", 0.764106F);
         Aircraft.weaponTriggersRegister(class1, new int[] { 0, 0, 0, 0, 1, 1, 9, 9, 9, 9, 9, 9, 2, 2, 9, 9, 3 });

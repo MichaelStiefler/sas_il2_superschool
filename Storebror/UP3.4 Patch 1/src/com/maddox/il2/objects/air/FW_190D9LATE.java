@@ -12,7 +12,7 @@ public class FW_190D9LATE extends FW_190DNEW implements TypeFighterAceMaker {
         Property.set(class1, "PaintScheme", new PaintSchemeFMPar06());
         Property.set(class1, "yearService", 1944.6F);
         Property.set(class1, "yearExpired", 1948F);
-        Property.set(class1, "FlightModel", "FlightModels/Fw-190D-9Late.fmd");
+        Property.set(class1, "FlightModel", "FlightModels/Fw-190D-9Late (Ultrapack).fmd");
         Property.set(class1, "cockpitClass", new Class[] { CockpitFW_190D9LATE.class });
         Property.set(class1, "LOSElevation", 0.764106F);
         Aircraft.weaponTriggersRegister(class1, new int[] { 0, 0, 1, 1 });

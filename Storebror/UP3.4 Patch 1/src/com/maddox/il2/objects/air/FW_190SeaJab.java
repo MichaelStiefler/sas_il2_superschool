@@ -90,7 +90,7 @@ public class FW_190SeaJab extends FW_190Sea
         Property.set(var_class, "PaintScheme", new PaintSchemeBMPar03());
         Property.set(var_class, "yearService", 1944F);
         Property.set(var_class, "yearExpired", 1948F);
-        Property.set(var_class, "FlightModel", "FlightModels/Fw-190F-9N.fmd");
+        Property.set(var_class, "FlightModel", "FlightModels/Fw-190F-9N (Ultrapack).fmd");
         Property.set(var_class, "cockpitClass", new Class[] { CockpitFW_190F8T.class });
         Property.set(var_class, "LOSElevation", 0.764106F);
         Aircraft.weaponTriggersRegister(var_class, new int[] {

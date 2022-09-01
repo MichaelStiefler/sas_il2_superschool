@@ -12,7 +12,7 @@ public class FW_190D14Proto extends FW_190DNEW {
         Property.set(class1, "PaintScheme", new PaintSchemeFMPar05());
         Property.set(class1, "yearService", 1944.6F);
         Property.set(class1, "yearExpired", 1948F);
-        Property.set(class1, "FlightModel", "FlightModels/Fw-190D-14.fmd");
+        Property.set(class1, "FlightModel", "FlightModels/Fw-190D-14 (Ultrapack).fmd");
         Property.set(class1, "cockpitClass", new Class[] { CockpitFW_190D14.class });
         Property.set(class1, "LOSElevation", 0.764106F);
         Aircraft.weaponTriggersRegister(class1, new int[] { 0, 0, 3, 9, 9, 1, 1, 9, 9, 1, 1, 1, 1, 9, 9, 1, 1, 9, 9, 1, 1, 9, 9, 2, 2, 9, 9, 1, 1, 9, 9, 1 });

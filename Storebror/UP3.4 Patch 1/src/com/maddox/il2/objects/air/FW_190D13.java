@@ -12,7 +12,7 @@ public class FW_190D13 extends FW_190DNEW implements TypeStormovik {
         Property.set(class1, "PaintScheme", new PaintSchemeFMPar06());
         Property.set(class1, "yearService", 1943.11F);
         Property.set(class1, "yearExpired", 1948F);
-        Property.set(class1, "FlightModel", "FlightModels/Fw-190D-13.fmd");
+        Property.set(class1, "FlightModel", "FlightModels/Fw-190D-13 (Ultrapack).fmd");
         Property.set(class1, "cockpitClass", new Class[] { CockpitFW_190D13.class });
         Property.set(class1, "LOSElevation", 0.764106F);
         Aircraft.weaponTriggersRegister(class1, new int[] { 0, 1, 1, 9, 3, 9 });

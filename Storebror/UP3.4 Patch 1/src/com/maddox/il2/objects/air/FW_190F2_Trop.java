@@ -12,7 +12,7 @@ public class FW_190F2_Trop extends FW_190F {
         Property.set(class1, "PaintScheme", new PaintSchemeBMPar02());
         Property.set(class1, "yearService", 1942.6F);
         Property.set(class1, "yearExpired", 1948F);
-        Property.set(class1, "FlightModel", "FlightModels/Fw-190F-2.fmd");
+        Property.set(class1, "FlightModel", "FlightModels/Fw-190F-2 (Ultrapack).fmd");
         Property.set(class1, "cockpitClass", new Class[] { CockpitFW_190A5.class });
         Property.set(class1, "LOSElevation", 0.764106F);
         Aircraft.weaponTriggersRegister(class1, new int[] { 0, 0, 1, 1, 9, 9, 9, 9, 9, 9, 2, 2, 9, 9, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 9, 9, 3, 3, 9, 3, 3, 3, 3, 3, 3, 3, 3, 9 });

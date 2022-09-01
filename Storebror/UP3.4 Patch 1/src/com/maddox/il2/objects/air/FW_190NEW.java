@@ -412,8 +412,8 @@ public abstract class FW_190NEW extends Scheme1 implements TypeFighter, TypeBNZF
         } else {
             HotKeyCmd.getByRecordedId(348).enable(true);
         }
-        if (!this.FM.isPlayers() && this.FM.Gears.onGround()) {
-            if (this.FM.EI.engines[0].getRPM() < 100F) {
+        if ((!this.FM.isPlayers() || !(this.FM instanceof RealFlightModel) || !((RealFlightModel)this.FM).isRealMode()) && this.FM.Gears.onGround()) {
+            if (this.FM.getSpeedKMH() < 50F) {
                 this.FM.CT.cockpitDoorControl = 1.0F;
             } else {
                 this.FM.CT.cockpitDoorControl = 0.0F;

@@ -13,7 +13,7 @@ public class FW_190SeaFg extends FW_190Sea
         Property.set(var_class, "PaintScheme", new PaintSchemeFMPar01());
         Property.set(var_class, "yearService", 1942.6F);
         Property.set(var_class, "yearExpired", 1948F);
-        Property.set(var_class, "FlightModel", "FlightModels/Fw-190A-4N.fmd");
+        Property.set(var_class, "FlightModel", "FlightModels/Fw-190A-4N (Ultrapack).fmd");
         Property.set(var_class, "cockpitClass", new Class[] { CockpitFW_190A4T.class });
         Property.set(var_class, "LOSElevation", 0.764106F);
         Aircraft.weaponTriggersRegister(var_class, new int[] {

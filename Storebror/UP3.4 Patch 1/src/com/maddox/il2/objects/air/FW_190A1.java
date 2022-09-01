@@ -1,8 +1,25 @@
 package com.maddox.il2.objects.air;
 
+import com.maddox.il2.engine.HierMesh;
 import com.maddox.rts.Property;
 
 public class FW_190A1 extends FW_190NEW {
+
+    public static void moveGear(HierMesh hiermesh, float f) {
+        hiermesh.chunkSetAngles("GearL2_D0", 0.0F, 77F * f, 0.0F);
+        hiermesh.chunkSetAngles("GearR2_D0", 0.0F, 77F * f, 0.0F);
+        hiermesh.chunkSetAngles("GearL3_D0", 0.0F, 157F * f, 0.0F);
+        hiermesh.chunkSetAngles("GearR3_D0", 0.0F, 157F * f, 0.0F);
+        hiermesh.chunkSetAngles("GearC99_D0", 20F * f, 0.0F, 0.0F);
+        hiermesh.chunkSetAngles("GearC2_D0", 0.0F, 0.0F, 0.0F);
+        float f1 = Math.max(-f * 1500F, -94F);
+        hiermesh.chunkSetAngles("GearL5_D0", 0.0F, -f1, 0.0F);
+        hiermesh.chunkSetAngles("GearR5_D0", 0.0F, -f1, 0.0F);
+    }
+
+    protected void moveGear(float f) {
+        moveGear(this.hierMesh(), f);
+    }
 
     static {
         Class class1 = FW_190A1.class;

@@ -11,6 +11,7 @@ import com.maddox.il2.engine.ActorHMesh;
 import com.maddox.il2.engine.Config;
 import com.maddox.il2.engine.HierMesh;
 import com.maddox.il2.engine.Orient;
+import com.maddox.il2.fm.RealFlightModel;
 import com.maddox.il2.game.Main3D;
 import com.maddox.il2.objects.Wreckage;
 import com.maddox.rts.CmdEnv;
@@ -38,10 +39,6 @@ public abstract class FW_190F extends Scheme1 implements TypeFighter, TypeBNZFig
         this.doorSound = null;
         this.doorPrev = 0.0F;
         this.doorSndPos = null;
-        this.bSmokeEffect = false;
-        if (Config.cur.ini.get("Mods", "SmokeEffect", 0) > 0) {
-            this.bSmokeEffect = true;
-        }
     }
 
     public static void prepareWeapons(Class aircraftClass, HierMesh hierMesh, String thisWeaponsName) {
@@ -352,6 +349,7 @@ public abstract class FW_190F extends Scheme1 implements TypeFighter, TypeBNZFig
 //            this.hierMesh().chunkVisible("MGearR3C_D0", false);
 //        }
         FW_190F.prepareWeapons(this.getClass(), this.hierMesh(), this.thisWeaponsName);
+//        System.out.println("CockpitDoorControl: " + this.FM.CT.bHasCockpitDoorControl);
     }
 
     public void update(float f) {
@@ -392,13 +390,11 @@ public abstract class FW_190F extends Scheme1 implements TypeFighter, TypeBNZFig
         if (this.FM.AS.bIsAboutToBailout && !this.FM.isPlayers()) {
             this.hierMesh().chunkVisible("Wire_D0", false);
         }
-        if (this.bSmokeEffect) {
             if (((this.FM == World.getPlayerFM()) && (this.FM.CT.PowerControl >= 1.0F) && (this.FM.EI.engines[0].getRPM() > 100F)) || ((this.FM == World.getPlayerFM()) && this.FM.CT.getAfterburnerControl() && (this.FM.EI.engines[0].getRPM() > 100F))) {
                 this.FM.AS.setSootState(this, 0, 1);
             } else {
                 this.FM.AS.setSootState(this, 0, 0);
             }
-        }
         if ((Main3D.cur3D().cockpits != null) && (Main3D.cur3D().cockpits[0] != null) && this.FM.isPlayers()) {
             if (Main3D.cur3D().cockpits[0].isFocused() || ((this.FM.CT.cockpitDoorControl == 0.9F) && !this.FM.Gears.onGround()) || ((this.FM.CT.cockpitDoorControl == 0.9F) && !this.FM.Gears.getWheelsOnGround())) {
                 this.hierMesh().chunkVisible("Blister1_D0", false);
@@ -417,8 +413,8 @@ public abstract class FW_190F extends Scheme1 implements TypeFighter, TypeBNZFig
         } else {
             HotKeyCmd.getByRecordedId(348).enable(true);
         }
-        if (!this.FM.isPlayers() && this.FM.Gears.onGround()) {
-            if (this.FM.EI.engines[0].getRPM() < 100F) {
+        if ((!this.FM.isPlayers() || !(this.FM instanceof RealFlightModel) || !((RealFlightModel)this.FM).isRealMode()) && this.FM.Gears.onGround()) {
+            if (this.FM.getSpeedKMH() < 50F) {
                 this.FM.CT.cockpitDoorControl = 1.0F;
             } else {
                 this.FM.CT.cockpitDoorControl = 0.0F;
@@ -1085,7 +1081,6 @@ public abstract class FW_190F extends Scheme1 implements TypeFighter, TypeBNZFig
         }
     }
 
-    private boolean       bSmokeEffect;
     private float         trimElevator;
     private boolean       bHasElevatorControl;
     private float         X;
