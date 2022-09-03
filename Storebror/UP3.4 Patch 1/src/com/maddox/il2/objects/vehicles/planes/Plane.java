@@ -2096,6 +2096,8 @@ public abstract class Plane {
     
     public static class ME_P1101 extends PlaneGeneric {}
     
+    public static class IL_28 extends PlaneGeneric {}
+    
     static {
         new PlaneGeneric.SPAWN(P_51B10.class);
         new PlaneGeneric.SPAWN(SEAGLADIATOR2.class);
@@ -3142,5 +3144,6 @@ public abstract class Plane {
         new PlaneGeneric.SPAWN(ME_262HG_VB.class);
         new PlaneGeneric.SPAWN(ME_262TPF.class);
         new PlaneGeneric.SPAWN(ME_P1101.class);
+        new PlaneGeneric.SPAWN(IL_28.class);
     }
 }
