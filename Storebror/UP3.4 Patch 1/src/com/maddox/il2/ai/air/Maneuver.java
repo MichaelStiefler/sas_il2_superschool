@@ -68,12 +68,14 @@ import com.maddox.il2.objects.air.TypeDockable;
 import com.maddox.il2.objects.air.TypeFighter;
 import com.maddox.il2.objects.air.TypeGlider;
 import com.maddox.il2.objects.air.TypeGuidedBombCarrier;
+import com.maddox.il2.objects.air.TypeGuidedMissileCarrier;
 import com.maddox.il2.objects.air.TypeHasToKG;
 import com.maddox.il2.objects.air.TypeJazzPlayer;
 import com.maddox.il2.objects.air.TypeSailPlane;
 import com.maddox.il2.objects.air.TypeStormovik;
 import com.maddox.il2.objects.air.TypeSupersonic;
 import com.maddox.il2.objects.air.TypeTransport;
+import com.maddox.il2.objects.air.TypeX4Carrier;
 import com.maddox.il2.objects.ships.BigshipGeneric;
 import com.maddox.il2.objects.ships.TestRunway;
 import com.maddox.il2.objects.sounds.Voice;
@@ -534,6 +536,8 @@ public class Maneuver extends AIFlightModel {
     }
 
     public void set_maneuver(int i) {
+//        Exception test = new Exception("set_maneuver(" + i+ ")");
+//        test.printStackTrace();
         if (this.maneuver == 84) return;
         if ((i == 21 || i == 24) && (this.maneuver == 88 || this.maneuver == 89 || this.maneuver == 90 || this.maneuver == 91)) return;
         // TODO: +++ Cloud visibility fix +++
@@ -1073,6 +1077,11 @@ public class Maneuver extends AIFlightModel {
             this.set_maneuver(99);
         }
         // TODO: --- TD AI code backport from 4.13 ---
+        
+//        if (this.maneuver != this.oldManeuver) {
+//            System.out.println("##### Maneuver: " + this.oldManeuver + " -> " + this.maneuver);
+//            this.oldManeuver = this.maneuver;
+//        }
 
         switch (this.maneuver) {
             default:
@@ -2841,6 +2850,45 @@ public class Maneuver extends AIFlightModel {
                         this.CT.WeaponControl[2] = true;
                         ((Mig_17PF) this.actor).bToFire = false;
                     }
+                    
+                    // TODO: +++ By SAS~Storebror: Additional Checks for X-4 Launch
+                    if (this.actor instanceof TypeX4Carrier) {
+                        boolean canShootX4 = false;
+                        if (Reflection.getField(this.actor, "bToFire") != null && Reflection.getField(this.actor, "tX4Prev") != null) {
+                            canShootX4 = Reflection.getBoolean(this.actor, "bToFire");
+                            if (canShootX4) {
+                                Reflection.setBoolean(this.actor, "bToFire", false);
+                                Reflection.setLong(this.actor, "tX4Prev", Time.current());
+                            }
+                        } else {
+                            canShootX4 = this.CT.getbToFire();
+                            if (canShootX4) {
+                                if (Reflection.getField(this.actor, "tX4Prev") != null) {
+                                    if (Time.current() < Reflection.getLong(this.actor, "tX4Prev") + 10000L) {
+                                        canShootX4 = false;
+                                    } else {
+                                        Reflection.setLong(this.actor, "tX4Prev", Time.current());
+                                    }
+                                }
+                                if (canShootX4) {
+                                    this.CT.setbToFire(false);
+                                    this.CT.settX4Prev(Time.current());
+                                    if (Reflection.getField(this.actor, "bToFire") != null) {
+                                        Reflection.setBoolean(this.actor, "bToFire", false);
+                                    }
+                                }
+                            }
+                        }
+                        if (canShootX4) this.CT.WeaponControl[2] = true;
+                    }
+                    // ---
+                    
+                    // TODO: +++ By SAS~Storebror: Additional Checks for guided missile carrier
+                    if (this.actor instanceof TypeGuidedMissileCarrier) {
+                        ((TypeGuidedMissileCarrier)this.actor).getGuidedMissileUtils().update();
+                    }
+                    // ---
+                    
                     // TODO: +++ TD AI code backport from 4.13 +++
                     if (this.TargV.z < -100D)
                         // TODO: --- TD AI code backport from 4.13 ---
@@ -8278,6 +8326,8 @@ public class Maneuver extends AIFlightModel {
     }
 
     public void set_maneuver_imm(int i) {
+//        Exception test = new Exception("set_maneuver_imm(" + i+ ")");
+//        test.printStackTrace();
         int j = this.maneuver;
         this.maneuver = i;
         if (j != this.maneuver) this.set_flags();
