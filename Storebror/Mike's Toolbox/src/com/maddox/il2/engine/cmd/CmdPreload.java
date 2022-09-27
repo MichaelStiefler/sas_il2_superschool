@@ -43,6 +43,7 @@ import com.maddox.il2.game.Main;
 import com.maddox.il2.game.Mission;
 import com.maddox.il2.objects.air.Aircraft;
 import com.maddox.il2.objects.air.PaintScheme;
+import com.maddox.il2.objects.vehicles.planes.PlaneGeneric;
 import com.maddox.il2.objects.weapons.BombGun;
 import com.maddox.il2.objects.weapons.FuelTankGun;
 import com.maddox.il2.objects.weapons.RocketBombGun;
@@ -60,6 +61,7 @@ import com.maddox.rts.RTSConf;
 import com.maddox.rts.SFSInputStream;
 import com.maddox.rts.SFSReader;
 import com.maddox.rts.SectFile;
+import com.maddox.rts.Spawn;
 import com.maddox.sas1946.Junidecode;
 import com.maddox.sas1946.il2.util.Reflection;
 import com.maddox.util.NumberTokenizer;
@@ -2539,6 +2541,7 @@ public class CmdPreload extends Cmd {
         boolean generateLoadoutUpdates = false;
         boolean generateIl2Air = false;
         boolean generateIl2Maps = false;
+        boolean generateStationaryAircraft = false;
         String tableName = "fbdjstats";
         SectFile codIniSectfile = new SectFile("settings/fbdj.ini");
         if (codIniSectfile.sectionExist("Common")) {
@@ -2557,20 +2560,24 @@ public class CmdPreload extends Cmd {
             }
             if (codIniSectfile.varExist(commonSectionIndex, "generateIl2objectsUpdates")) {
                 generateIl2objectsUpdates = codIniSectfile.value(commonSectionIndex, codIniSectfile.varIndex(commonSectionIndex, "generateIl2objectsUpdates")).trim().equals("1");
-               System.out.println("Generate Il2 objects Updates set to: \"" + generateIl2objectsUpdates + "\"");
-           }
+                System.out.println("Generate Il2 objects Updates set to: \"" + generateIl2objectsUpdates + "\"");
+            }
             if (codIniSectfile.varExist(commonSectionIndex, "generateLoadoutUpdates")) {
                 generateLoadoutUpdates = codIniSectfile.value(commonSectionIndex, codIniSectfile.varIndex(commonSectionIndex, "generateLoadoutUpdates")).trim().equals("1");
-               System.out.println("Generate Loadout Updates set to: \"" + generateLoadoutUpdates + "\"");
-           }
+                System.out.println("Generate Loadout Updates set to: \"" + generateLoadoutUpdates + "\"");
+            }
             if (codIniSectfile.varExist(commonSectionIndex, "generateIl2Air")) {
                 generateIl2Air = codIniSectfile.value(commonSectionIndex, codIniSectfile.varIndex(commonSectionIndex, "generateIl2Air")).trim().equals("1");
-               System.out.println("Generate Il2 Air set to: \"" + generateIl2Air + "\"");
-           }
+                System.out.println("Generate Il2 Air set to: \"" + generateIl2Air + "\"");
+            }
             if (codIniSectfile.varExist(commonSectionIndex, "generateIl2Maps")) {
                 generateIl2Maps = codIniSectfile.value(commonSectionIndex, codIniSectfile.varIndex(commonSectionIndex, "generateIl2Maps")).trim().equals("1");
-               System.out.println("Generate Il2 Maps set to: \"" + generateIl2Maps + "\"");
-           }
+                System.out.println("Generate Il2 Maps set to: \"" + generateIl2Maps + "\"");
+            }
+            if (codIniSectfile.varExist(commonSectionIndex, "generateStationaryAircraft")) {
+                generateStationaryAircraft = codIniSectfile.value(commonSectionIndex, codIniSectfile.varIndex(commonSectionIndex, "generateStationaryAircraft")).trim().equals("1");
+                System.out.println("Generate Il2 Maps set to: \"" + generateStationaryAircraft + "\"");
+            }
         }
 
         SectFile airIniSectfile = new SectFile("com/maddox/il2/objects/air.ini");
@@ -2630,7 +2637,10 @@ public class CmdPreload extends Cmd {
                         } else {
                             if (generateIl2objectsUpdates) pwObjectsSql.println(",");
                         }
-                        if (generateIl2objectsUpdates) pwObjectsSql.print("(\"Plane\",\"" + airplaneNameDef + "\",\"" + airplaneNameI18N + "\",0)");
+                        if (generateIl2objectsUpdates) {
+                            pwObjectsSql.println("(\"Plane\",\"" + airplaneNameDef + "\",\"" + airplaneNameI18N + "\",0),");
+                            pwObjectsSql.print("(\"Plane\",\"" + airplaneName + "\",\"" + airplaneNameI18N + "\",0)");
+                        }
                         for (int loadoutIndex = 0; loadoutIndex < loadoutArray.length; loadoutIndex++) {
                             Aircraft._WeaponSlot[] weaponSlotArray = Aircraft.getWeaponSlotsRegistered(airplaneClass, loadoutArray[loadoutIndex]);
                             if (weaponSlotArray == null) {
@@ -2725,6 +2735,51 @@ public class CmdPreload extends Cmd {
                     }
                 }
             }
+        }
+        
+        if (generateStationaryAircraft) {
+            SectFile stationaryIniSectfile = new SectFile("com/maddox/il2/objects/stationary.ini", 0);
+            PrintWriter pwStationaryCsv = null;
+            try {
+                pwStationaryCsv = new PrintWriter(new BufferedWriter(new FileWriter(HomePath.toFileSystemName("fbdj/fbdjIL2StaticObjects.csv", 0), false)));
+                int sectionIndex = stationaryIniSectfile.sectionIndex("StationaryPlanes");
+                if (sectionIndex >= 0) {
+                    int numVars = stationaryIniSectfile.vars(sectionIndex);
+                    for (int varIndex = 0; varIndex < numVars; varIndex++) {
+                        String s = stationaryIniSectfile.value(sectionIndex, varIndex);
+                        StringTokenizer st = new StringTokenizer(s);
+                        if (st.hasMoreTokens()) {
+                            String nextToken = st.nextToken();
+//                            System.out.println("nextToken=" + nextToken);
+//                            Object o = Spawn.get_WithSoftClass("com.maddox.il2.objects." + nextToken);
+                            PlaneGeneric.SPAWN spawn = (PlaneGeneric.SPAWN)Spawn.get_WithSoftClass("com.maddox.il2.objects." + nextToken);
+                            try {
+//                                Class airplaneClass = Property.classValue((Class)o, "airClass");
+//                                Class airplaneClass = o.getClass();
+                                Class airplaneClass = spawn.proper.clazz;
+                                String keyName = Property.stringValue(airplaneClass, "keyName");
+                                String airplaneNameI18N = I18N.plane(keyName);
+                                if (debugAirClassNames) {
+                                    System.out.println("Class '" + airplaneClass.getName() + "' keyName='" + keyName + "' airplaneNameI18N='" + airplaneNameI18N + "' nextToken='" + nextToken + "'...");
+                                }
+                                pwStationaryCsv.println("\"Plane\",\"" + airplaneClass.getName().substring(27) + "\",\"" + airplaneNameI18N + "\",0");
+                            } catch (Exception exception) {
+                                exception.printStackTrace();
+                                System.out.println("Class for '" + s + "' not found");
+                                continue;
+                            }
+
+                        }
+                    }
+                }
+            } catch (Exception oe) {
+                oe.printStackTrace();
+            } finally {
+                if (pwStationaryCsv != null) {
+                    pwStationaryCsv.close();
+                }
+            }
+            
         }
 
         if (generateIl2Maps) {
