@@ -388,13 +388,6 @@ public abstract class FW_190NEW extends Scheme1 implements TypeFighter, TypeBNZF
         if (!this.bHasElevatorControl) {
             this.FM.CT.ElevatorControl = 0.0F;
         }
-        if ((!this.FM.isPlayers() || !(this.FM instanceof RealFlightModel) || !((RealFlightModel)this.FM).isRealMode()) && this.FM.Gears.onGround()) {
-            if (this.FM.getSpeedKMH() < 50F) {
-                this.FM.CT.cockpitDoorControl = 1.0F;
-            } else {
-                this.FM.CT.cockpitDoorControl = 0.0F;
-            }
-        }
         if (this.trimElevator != this.FM.CT.trimElevator) {
             this.trimElevator = this.FM.CT.trimElevator;
             this.hierMesh().chunkSetAngles("StabL_D0", 0.0F, -16F * this.trimElevator, 0.0F);

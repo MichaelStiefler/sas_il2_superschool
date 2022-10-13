@@ -11,29 +11,11 @@ public class HE_219UHU extends HE_219 implements TypeX4Carrier, TypeRadarLiSN2Ca
     }
     
     public static void prepareWeapons(Class aircraftClass, HierMesh hierMesh, String thisWeaponsName) {
-        if (thisWeaponsName.endsWith("R4")) {
-            hierMesh.chunkVisible("MG_FF1", true);
-            hierMesh.chunkVisible("MG_FF2", true);
-        }
-        if (thisWeaponsName.startsWith("SN2b")) {
-            hierMesh.chunkVisible("RadarSN2b", true);
-            hierMesh.chunkVisible("RadarSN2c", false);
-            hierMesh.chunkVisible("RadarSN2d", false);
-        }
-        else if (thisWeaponsName.startsWith("SN2c")) {
-            hierMesh.chunkVisible("RadarSN2b", false);
-            hierMesh.chunkVisible("RadarSN2c", true);
-            hierMesh.chunkVisible("RadarSN2d", false);
-        }
-        else if (thisWeaponsName.startsWith("SN2d")) {
-            hierMesh.chunkVisible("RadarSN2b", false);
-            hierMesh.chunkVisible("RadarSN2c", false);
-            hierMesh.chunkVisible("RadarSN2d", true);
-        } else {
-            hierMesh.chunkVisible("RadarSN2b", false);
-            hierMesh.chunkVisible("RadarSN2c", false);
-            hierMesh.chunkVisible("RadarSN2d", false);
-        }
+        hierMesh.chunkVisible("MG_FF1", thisWeaponsName.endsWith("R4"));
+        hierMesh.chunkVisible("MG_FF2", thisWeaponsName.endsWith("R4"));
+        hierMesh.chunkVisible("RadarSN2b", thisWeaponsName.startsWith("SN2b"));
+        hierMesh.chunkVisible("RadarSN2c", thisWeaponsName.startsWith("SN2c"));
+        hierMesh.chunkVisible("RadarSN2d", thisWeaponsName.startsWith("SN2d"));
     }
 
     public void doMurderPilot(int i) {

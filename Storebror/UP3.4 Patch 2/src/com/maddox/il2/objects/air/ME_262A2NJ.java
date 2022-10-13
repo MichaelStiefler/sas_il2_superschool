@@ -5,6 +5,7 @@ import com.maddox.il2.ai.World;
 import com.maddox.il2.ai.air.Maneuver;
 import com.maddox.il2.ai.air.Pilot;
 import com.maddox.il2.engine.Config;
+import com.maddox.il2.engine.HierMesh;
 import com.maddox.il2.engine.Orient;
 import com.maddox.il2.fm.RealFlightModel;
 import com.maddox.il2.game.Main3D;
@@ -27,6 +28,15 @@ public class ME_262A2NJ extends ME_262B implements TypeX4Carrier, TypeRadarLiSN2
         this.blisterRemoved[1] = false;
         this.radarGain = 50;
         this.radarMode = RadarLiSN2.RADAR_MODE_NORMAL;
+    }
+
+    public static void prepareWeapons(Class aircraftClass, HierMesh hierMesh, String thisWeaponsName) {
+        hierMesh.chunkVisible("Pylon_D0", !thisWeaponsName.equals("default") && !thisWeaponsName.equals("none"));
+    }
+    
+    public void onAircraftLoaded() {
+        super.onAircraftLoaded();
+        ME_262A2NJ.prepareWeapons(this.getClass(), this.hierMesh(), this.thisWeaponsName);
     }
 
     public void moveCockpitDoor(float f) {

@@ -107,6 +107,7 @@ public class BF_110H4 extends BF_110 implements TypeX4Carrier, TypeRadarLiSN2Car
         Property.set(class1, "FlightModel", "FlightModels/Bf-110H-4.fmd");
         Property.set(class1, "cockpitClass", new Class[] { CockpitBF_110H4.class, CockpitBF_110NJ_RadarOp.class });
         Property.set(class1, "LOSElevation", 0.66895F);
+        Property.set(class1, "hasRadar", 1);
         Aircraft.weaponTriggersRegister(class1, new int[] { 1, 1, 1, 0, 0 });
         Aircraft.weaponHooksRegister(class1, new String[] { "_MGUN01", "_MGUN02", "_CANNON01", "_CANNON03", "_CANNON04" });
     }

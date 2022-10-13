@@ -84,7 +84,7 @@ public class CockpitBF_110NJ_RadarOp extends CockpitPilot {
     }
     
     public boolean isEnableFocusing() {
-        if (this.aircraft().thisWeaponsName.startsWith("SN")) {
+        if (this.aircraft().thisWeaponsName.startsWith("SN") || Property.intValue(this.aircraft().getClass(), "hasRadar", 0) != 0) {
             return super.isEnableFocusing();
         }
         HotKeyCmd.exec("aircraftView", "cockpitSwitch2"); // Switch to Gunner Cockpit if not Night Fighter

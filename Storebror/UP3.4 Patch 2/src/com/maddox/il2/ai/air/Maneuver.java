@@ -24,7 +24,6 @@ import com.maddox.il2.ai.World;
 import com.maddox.il2.ai.ZutiSupportMethods_AI;
 import com.maddox.il2.ai.ground.TgtShip;
 import com.maddox.il2.engine.Actor;
-import com.maddox.il2.engine.ActorHMesh;
 import com.maddox.il2.engine.Config;
 import com.maddox.il2.engine.Engine;
 import com.maddox.il2.engine.GunGeneric;
@@ -56,6 +55,7 @@ import com.maddox.il2.objects.air.KI_46_OTSUHEI;
 import com.maddox.il2.objects.air.ME_163B1A;
 import com.maddox.il2.objects.air.MXY_7;
 import com.maddox.il2.objects.air.Mig_17PF;
+import com.maddox.il2.objects.air.NetAircraft;
 import com.maddox.il2.objects.air.SM79;
 import com.maddox.il2.objects.air.Scheme4;
 import com.maddox.il2.objects.air.Swordfish;
@@ -382,8 +382,8 @@ public class Maneuver extends AIFlightModel {
     private Vector3d           Vxy                         = new Vector3d();
     private static Vector3d    Vpl                         = new Vector3d();
     private AnglesFork         AFo                         = new AnglesFork();
-    private float[]            headPos                     = new float[3];
-    private float[]            headOr                      = new float[3];
+//    private float[]            headPos                     = new float[3];
+//    private float[]            headOr                      = new float[3];
     private static Point3d     P                           = new Point3d();
     private static Point2f     Pcur                        = new Point2f();
     private static Vector2d    Vcur                        = new Vector2d();
@@ -7715,91 +7715,167 @@ public class Maneuver extends AIFlightModel {
     }
 
     protected void headTurn(float f) {
-        if (this.actor == Main3D.cur3D().viewActor() && this.AS.astatePilotStates[0] < 90) {
-            boolean flag = false;
-            switch (this.get_task()) {
-                case 2:
-                    if (this.Leader != null) {
-                        Ve.set(this.Leader.Loc);
-                        flag = true;
-                    }
-                    break;
-                case 6:
-                    if (this.target != null) {
-                        Ve.set(this.target.Loc);
-                        flag = true;
-                    }
-                    break;
-                case 5:
-                    if (this.airClient != null) {
-                        Ve.set(this.airClient.Loc);
-                        flag = true;
-                    }
-                    break;
-                case 4:
-                    if (this.danger != null) {
-                        Ve.set(this.danger.Loc);
-                        flag = true;
-                    }
-                    break;
-                case 7:
-                    if (this.target_ground != null) {
-                        Ve.set(this.target_ground.pos.getAbsPoint());
-                        flag = true;
-                    }
-                    break;
-            }
-            float f1;
-            float f2;
-            if (flag) {
-                Ve.sub(this.Loc);
-                this.Or.transformInv(Ve);
-                tmpOr.setAT0(Ve);
-                f1 = tmpOr.getTangage();
-                f2 = tmpOr.getYaw();
-                // TODO: +++ TD AI code backport from 4.13 +++
-                if (f2 > 107F) f2 = 107F;
-                if (f2 < -107F) f2 = -107F;
-                if (f1 < -22F) f1 = -22F;
-                if (f1 > 57F) f1 = 57F;
-            } else if (this.maneuver == 88) {
-                f1 = 0.0F;
-                f2 = 107F;
-            } else if (this.maneuver == 89) {
-                f1 = 0.0F;
-                f2 = -107F;
-            } else if (this.maneuver == 90) {
-                f1 = 0.0F;
-                f2 = 90F;
-            } else if (this.maneuver == 91) {
-                f1 = 0.0F;
-                f2 = -90F;
-            } else if (this.get_maneuver() == 44) {
-                f2 = -15F;
-                f1 = -15F;
-            } else {
-                f1 = 0.0F;
-                f2 = 0.0F;
-            }
-            if (Math.abs(this.pilotHeadT - f1) > 3F) this.pilotHeadT += 90F * (this.pilotHeadT <= f1 ? 1.0F : -1F) * f;
-            else this.pilotHeadT = f1;
-            if (Math.abs(this.pilotHeadY - f2) > 2.0F) this.pilotHeadY += 60F * (this.pilotHeadY <= f2 ? 1.0F : -1F) * f;
-            else
-                // ((NetAircraft)actor).setHeadAngles(pilotHeadY, pilotHeadT); // would be 4.13 code...
-                tmpOr.setYPR(0.0F, 0.0F, 0.0F);
-            tmpOr.increment(0.0F, this.pilotHeadY, 0.0F);
-            tmpOr.increment(this.pilotHeadT, 0.0F, 0.0F);
-            tmpOr.increment(0.0F, 0.0F, -0.2F * this.pilotHeadT + 0.05F * this.pilotHeadY);
-            this.headOr[0] = tmpOr.getYaw();
-            this.headOr[1] = tmpOr.getPitch();
-            this.headOr[2] = tmpOr.getRoll();
-            this.headPos[0] = 5.0E-4F * Math.abs(this.pilotHeadY);
-            this.headPos[1] = -1.0E-4F * Math.abs(this.pilotHeadY);
-            this.headPos[2] = 0.0F;
-            ((ActorHMesh) this.actor).hierMesh().chunkSetLocate("Head1_D0", this.headPos, this.headOr);
-            // TODO: --- TD AI code backport from 4.13 ---
+        boolean flag = false;
+        switch (this.get_task()) {
+            case Maneuver.STAY_FORMATION:
+                if (this.Leader != null) {
+                    Maneuver.Ve.set(this.Leader.Loc);
+                    flag = true;
+                }
+                break;
+            case Maneuver.DEFENCE:
+                if (this.danger != null) {
+                    Maneuver.Ve.set(this.danger.Loc);
+                    flag = true;
+                }
+                break;
+            case Maneuver.DEFENDING:
+                if (this.airClient != null) {
+                    Maneuver.Ve.set(this.airClient.Loc);
+                    flag = true;
+                }
+                break;
+            case Maneuver.ATTACK_AIR:
+                if (this.target != null) {
+                    Maneuver.Ve.set(this.target.Loc);
+                    flag = true;
+                }
+                break;
+            case Maneuver.ATTACK_GROUND:
+                if (this.target_ground != null) {
+                    Maneuver.Ve.set(this.target_ground.pos.getAbsPoint());
+                    flag = true;
+                }
+                break;
         }
+        float f1;
+        float f2;
+        if (flag) {
+            Maneuver.Ve.sub(this.Loc);
+            this.Or.transformInv(Maneuver.Ve);
+            tmpOr.setAT0(Maneuver.Ve);
+            f1 = tmpOr.getTangage();
+            f2 = tmpOr.getYaw();
+            if (f2 > 75.0F) f2 = 75.0F;
+            if (f2 < -75.0F) f2 = -75.0F;
+            if (f1 < -15.0F) f1 = -15.0F;
+            if (f1 > 40.0F) f1 = 40.0F;
+        } else {
+            switch (this.maneuver) {
+                case Maneuver.FISHTAIL_LEFT:
+                case Maneuver.LOOKDOWN_LEFT:
+                    f1 = 0F;
+                    f2 = 75F;
+                    break;
+                case Maneuver.FISHTAIL_RIGHT:
+                case Maneuver.LOOKDOWN_RIGHT:
+                    f1 = 0F;
+                    f2 = -75F;
+                    break;
+                case Maneuver.PILOT_DEAD:
+                    f2 = -15F;
+                    f1 = -15F;
+                    break;
+                default:
+                    f1 = 0.0F;
+                    f2 = 0.0F;
+                    break;
+            }
+        }
+        if (Math.abs(this.pilotHeadT - f1) > 3.0F) this.pilotHeadT = this.pilotHeadT + 90.0F * (this.pilotHeadT <= f1 ? 1.0F : -1.0F) * f;
+        else this.pilotHeadT = f1;
+        if (Math.abs(this.pilotHeadY - f2) > 2.0F) this.pilotHeadY = this.pilotHeadY + 60.0F * (this.pilotHeadY <= f2 ? 1.0F : -1.0F) * f;
+        else this.pilotHeadY = f2;
+        ((NetAircraft)actor).setHeadAngles(this.pilotHeadY, this.pilotHeadT);
     }
+
+//    protected void headTurn(float f) {
+//        if (this.actor == Main3D.cur3D().viewActor() && this.AS.astatePilotStates[0] < 90) {
+//            boolean flag = false;
+//            switch (this.get_task()) {
+//                case 2:
+//                    if (this.Leader != null) {
+//                        Ve.set(this.Leader.Loc);
+//                        flag = true;
+//                    }
+//                    break;
+//                case 6:
+//                    if (this.target != null) {
+//                        Ve.set(this.target.Loc);
+//                        flag = true;
+//                    }
+//                    break;
+//                case 5:
+//                    if (this.airClient != null) {
+//                        Ve.set(this.airClient.Loc);
+//                        flag = true;
+//                    }
+//                    break;
+//                case 4:
+//                    if (this.danger != null) {
+//                        Ve.set(this.danger.Loc);
+//                        flag = true;
+//                    }
+//                    break;
+//                case 7:
+//                    if (this.target_ground != null) {
+//                        Ve.set(this.target_ground.pos.getAbsPoint());
+//                        flag = true;
+//                    }
+//                    break;
+//            }
+//            float f1;
+//            float f2;
+//            if (flag) {
+//                Ve.sub(this.Loc);
+//                this.Or.transformInv(Ve);
+//                tmpOr.setAT0(Ve);
+//                f1 = tmpOr.getTangage();
+//                f2 = tmpOr.getYaw();
+//                // TODO: +++ TD AI code backport from 4.13 +++
+//                if (f2 > 107F) f2 = 107F;
+//                if (f2 < -107F) f2 = -107F;
+//                if (f1 < -22F) f1 = -22F;
+//                if (f1 > 57F) f1 = 57F;
+//            } else if (this.maneuver == 88) {
+//                f1 = 0.0F;
+//                f2 = 107F;
+//            } else if (this.maneuver == 89) {
+//                f1 = 0.0F;
+//                f2 = -107F;
+//            } else if (this.maneuver == 90) {
+//                f1 = 0.0F;
+//                f2 = 90F;
+//            } else if (this.maneuver == 91) {
+//                f1 = 0.0F;
+//                f2 = -90F;
+//            } else if (this.get_maneuver() == 44) {
+//                f2 = -15F;
+//                f1 = -15F;
+//            } else {
+//                f1 = 0.0F;
+//                f2 = 0.0F;
+//            }
+//            if (Math.abs(this.pilotHeadT - f1) > 3F) this.pilotHeadT += 90F * (this.pilotHeadT <= f1 ? 1.0F : -1F) * f;
+//            else this.pilotHeadT = f1;
+//            if (Math.abs(this.pilotHeadY - f2) > 2.0F) this.pilotHeadY += 60F * (this.pilotHeadY <= f2 ? 1.0F : -1F) * f;
+//            else this.pilotHeadY = f2;
+//            ((NetAircraft)actor).setHeadAngles(pilotHeadY, pilotHeadT);  
+////                // ((NetAircraft)actor).setHeadAngles(pilotHeadY, pilotHeadT); // would be 4.13 code...
+////                tmpOr.setYPR(0.0F, 0.0F, 0.0F);
+////            tmpOr.increment(0.0F, this.pilotHeadY, 0.0F);
+////            tmpOr.increment(this.pilotHeadT, 0.0F, 0.0F);
+////            tmpOr.increment(0.0F, 0.0F, -0.2F * this.pilotHeadT + 0.05F * this.pilotHeadY);
+////            this.headOr[0] = tmpOr.getYaw();
+////            this.headOr[1] = tmpOr.getPitch();
+////            this.headOr[2] = tmpOr.getRoll();
+////            this.headPos[0] = 5.0E-4F * Math.abs(this.pilotHeadY);
+////            this.headPos[1] = -1.0E-4F * Math.abs(this.pilotHeadY);
+////            this.headPos[2] = 0.0F;
+////            ((ActorHMesh) this.actor).hierMesh().chunkSetLocate("Head1_D0", this.headPos, this.headOr);
+//            // TODO: --- TD AI code backport from 4.13 ---
+//        }
+//    }
 
     protected void turnOffTheWeapon() {
         this.CT.WeaponControl[0] = false;

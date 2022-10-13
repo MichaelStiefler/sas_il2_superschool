@@ -6,7 +6,6 @@ import com.maddox.JGP.Point3d;
 import com.maddox.JGP.Vector3d;
 import com.maddox.il2.ai.EventLog;
 import com.maddox.il2.ai.Shot;
-import com.maddox.il2.ai.War;
 import com.maddox.il2.ai.World;
 import com.maddox.il2.ai.air.Maneuver;
 import com.maddox.il2.engine.Actor;
@@ -21,30 +20,18 @@ import com.maddox.il2.game.AircraftHotKeys;
 import com.maddox.il2.game.HUD;
 import com.maddox.il2.game.Main3D;
 import com.maddox.il2.objects.Wreckage;
-import com.maddox.il2.objects.weapons.GuidedMissileUtils;
 import com.maddox.rts.MsgAction;
 import com.maddox.rts.NetMsgGuaranted;
 import com.maddox.rts.NetMsgInput;
 import com.maddox.rts.Property;
-import com.maddox.rts.Time;
+import com.maddox.sas1946.il2.util.AircraftTools;
 
-public class F9F_Cougar extends Scheme1
-    implements TypeFighter, TypeBNZFighter, TypeFighterAceMaker, TypeStormovik, TypeGSuit, TypeGuidedMissileCarrier, TypeCountermeasure, TypeThreatDetector, TypeFastJet, TypeSupersonic, TypeFuelDump, TypeZBReceiver
+public class Banshee_X extends Scheme1
+    implements TypeFighter, TypeBNZFighter, TypeFighterAceMaker, TypeSupersonic
 {
 
-    public F9F_Cougar()
+    public Banshee_X()
     {
-        guidedMissileUtils = null;
-        hasChaff = false;
-        hasFlare = false;
-        lastChaffDeployed = 0L;
-        lastFlareDeployed = 0L;
-        lastCommonThreatActive = 0L;
-        intervalCommonThreat = 1000L;
-        lastRadarLockThreatActive = 0L;
-        intervalRadarLockThreat = 1000L;
-        lastMissileLaunchThreatActive = 0L;
-        intervalMissileLaunchThreat = 1000L;
         oldthrl = -1F;
         curthrl = -1F;
         arrestor2 = 0.0F;
@@ -54,101 +41,19 @@ public class F9F_Cougar extends Scheme1
         k14Distance = 200F;
         overrideBailout = false;
         ejectComplete = false;
-        bToFire = false;
-        guidedMissileUtils = new GuidedMissileUtils(this);
-        isTrainer = false;
         this.transsonicEffects = new TransonicEffects(this, 0.0F, 9000F, 0.8F, 1.0F, 0.01F, 1.0F, 0.2F, 1.0F, 0.45F, 0.58F, 0.0F, 0.9F, 1.0F, 1.25F);
     }
 
-    public float getFlowRate()
-    {
-        return FlowRate;
+    public static void prepareWeapons(Class aircraftClass, HierMesh hierMesh, String thisWeaponsName) {
+        hierMesh.chunkVisible("Tank_L_D0", thisWeaponsName.startsWith("Wingtiptanks"));
+        hierMesh.chunkVisible("Tank_R_D0", thisWeaponsName.startsWith("Wingtiptanks"));
     }
-
-    public float getFuelReserve()
-    {
-        return FuelReserve;
-    }
-
-    public void getGFactors(TypeGSuit.GFactors theGFactors)
-    {
-        theGFactors.setGFactors(NEG_G_TOLERANCE_FACTOR, NEG_G_TIME_FACTOR, NEG_G_RECOVERY_FACTOR, POS_G_TOLERANCE_FACTOR, POS_G_TIME_FACTOR, POS_G_RECOVERY_FACTOR);
-//    private static final float NEG_G_TOLERANCE_FACTOR = 1.5F;
-//    private static final float NEG_G_TIME_FACTOR = 1.5F;
-//    private static final float NEG_G_RECOVERY_FACTOR = 1.0F;
-//    private static final float POS_G_TOLERANCE_FACTOR = 2.0F;
-//    private static final float POS_G_TIME_FACTOR = 2.0F;
-//    private static final float POS_G_RECOVERY_FACTOR = 2.0F;
-    }
-
-    public long getChaffDeployed()
-    {
-        if(hasChaff)
-            return lastChaffDeployed;
-        else
-            return 0L;
-    }
-
-    public long getFlareDeployed()
-    {
-        if(hasFlare)
-            return lastFlareDeployed;
-        else
-            return 0L;
-    }
-
-    public void setCommonThreatActive()
-    {
-        long curTime = Time.current();
-        if(curTime - lastCommonThreatActive > intervalCommonThreat)
-        {
-            lastCommonThreatActive = curTime;
-            doDealCommonThreat();
-        }
-    }
-
-    public void setRadarLockThreatActive()
-    {
-        long curTime = Time.current();
-        if(curTime - lastRadarLockThreatActive > intervalRadarLockThreat)
-        {
-            lastRadarLockThreatActive = curTime;
-            doDealRadarLockThreat();
-        }
-    }
-
-    public void setMissileLaunchThreatActive()
-    {
-        long curTime = Time.current();
-        if(curTime - lastMissileLaunchThreatActive > intervalMissileLaunchThreat)
-        {
-            lastMissileLaunchThreatActive = curTime;
-            doDealMissileLaunchThreat();
-        }
-    }
-
-    private void doDealCommonThreat()
-    {
-    }
-
-    private void doDealRadarLockThreat()
-    {
-    }
-
-    private void doDealMissileLaunchThreat()
-    {
-    }
-
-    public GuidedMissileUtils getGuidedMissileUtils()
-    {
-        return guidedMissileUtils;
-    }
-
+    
     public void onAircraftLoaded()
     {
         super.onAircraftLoaded();
         this.transsonicEffects.onAircraftLoaded();
-        guidedMissileUtils.onAircraftLoaded();
+        Banshee_X.prepareWeapons(this.getClass(), this.hierMesh(), this.thisWeaponsName);
     }
 
     public void rareAction(float f, boolean flag)
@@ -231,24 +136,6 @@ public class F9F_Cougar extends Scheme1
         k14Distance = netmsginput.readFloat();
     }
 
-    public void typeFighterAceMakerRangeFinder()
-    {
-        if(k14Mode == 0)
-            return;
-        hunted = Main3D.cur3D().getViewPadlockEnemy();
-        if(hunted == null)
-            hunted = War.GetNearestEnemyAircraft(this.FM.actor, 2000F, 9);
-        if(hunted != null)
-        {
-            k14Distance = (float)this.FM.actor.pos.getAbsPoint().distance(hunted.pos.getAbsPoint());
-            if(k14Distance > 1700F)
-                k14Distance = 1700F;
-            else
-            if(k14Distance < 200F)
-                k14Distance = 200F;
-        }
-    }
-
     public void moveArrestorHook(float f)
     {
         hierMesh().chunkSetAngles("Hook1_D0", 0.0F, 12.2F * f, 0.0F);
@@ -270,8 +157,9 @@ public class F9F_Cougar extends Scheme1
 
     protected void moveWingFold(HierMesh hiermesh, float f)
     {
-        hiermesh.chunkSetAngles("WingLMid_D0", 0.0F, Aircraft.cvt(f, 0.01F, 0.99F, 0.0F, 70F), 0.0F);
-        hiermesh.chunkSetAngles("WingRMid_D0", 0.0F, Aircraft.cvt(f, 0.01F, 0.99F, 0.0F, -70F), 0.0F);
+        hiermesh.chunkSetAngles("WingLMid_D0", 0.0F, Aircraft.cvt(f, 0.01F, 0.99F, 0.0F, 110F), 0.0F);
+        hiermesh.chunkSetAngles("WingRMid_D0", 0.0F, Aircraft.cvt(f, 0.01F, 0.99F, 0.0F, -110F), 0.0F);
+        AircraftTools.updateExternalWeaponHooks(this);
     }
 
     public void moveWingFold(float f)
@@ -294,11 +182,11 @@ public class F9F_Cougar extends Scheme1
         hiermesh.chunkSetAngles("GearC2_D0", 0.0F, -100F * f, 0.0F);
         hiermesh.chunkSetAngles("GearC3_D0", 0.0F, -40F * f, 0.0F);
         hiermesh.chunkSetAngles("GearC7_D0", 0.0F, 0.0F, 0.0F);
-        hiermesh.chunkSetAngles("GearC4_D0", 0.0F, Aircraft.cvt(f, 0.01F, 0.1F, 0.0F, 80F), 0.0F);
-        hiermesh.chunkSetAngles("GearC5_D0", 0.0F, Aircraft.cvt(f, 0.01F, 0.04F, 0.0F, -80F), 0.0F);
+        hiermesh.chunkSetAngles("GearC4_D0", 0.0F, 0.0F, 90F * f);
+        hiermesh.chunkSetAngles("GearC5_D0", 0.0F, 0.0F, -90F * f);
         hiermesh.chunkSetAngles("GearC7_D0", 0.0F, 0.0F, 0.0F);
-        hiermesh.chunkSetAngles("GearL2_D0", 0.0F, 70F * f, 0.0F);
-        hiermesh.chunkSetAngles("GearR2_D0", 0.0F, -70F * f, 0.0F);
+        hiermesh.chunkSetAngles("GearL2_D0", 0.0F, -90F * f, 0.0F);
+        hiermesh.chunkSetAngles("GearR2_D0", 0.0F, 90F * f, 0.0F);
         if(f < 0.5F)
             hiermesh.chunkSetAngles("GearL4_D0", 0.0F, Aircraft.cvt(f, 0.02F, 0.5F, 0.0F, -90F), 0.0F);
         else
@@ -326,46 +214,26 @@ public class F9F_Cougar extends Scheme1
 
     protected void moveRudder(float f)
     {
-        hierMesh().chunkSetAngles("Rudder1_D0", 0.0F, 25F * f, 0.0F);
-        if(this.FM.CT.GearControl > 0.5F)
-            hierMesh().chunkSetAngles("GearC7_D0", 0.0F, -60F * f, 0.0F);
-    }
-
-    protected void moveFlap(float f)
-    {
-        hierMesh().chunkSetAngles("Flap01_D0", 0.0F, 0.0F, 21F * f);
-        hierMesh().chunkSetAngles("Flap02_D0", 0.0F, 0.0F, 21F * f);
-        hierMesh().chunkSetAngles("Flap03_D0", 0.0F, 0.0F, 40F * f);
-        hierMesh().chunkSetAngles("Flap04_D0", 0.0F, 0.0F, 40F * f);
-    }
-
-    protected void moveAileron(float f)
-    {
-        if(f < 0.0F)
-            hierMesh().chunkSetAngles("AroneL_D0", 0.0F, -55F * f, 0.0F);
-        if(f > 0.0F)
-            hierMesh().chunkSetAngles("AroneR_D0", 0.0F, -55F * f, 0.0F);
-        hierMesh().chunkSetAngles("Yaw_Damper_D0", 0.0F, -25F * f, 0.0F);
+        hierMesh().chunkSetAngles("Rudder1_D0", 30F * f, 0.0F, 0.0F);
     }
 
     protected void moveElevator(float f)
     {
-        if(f > 0.0F)
-        {
-            hierMesh().chunkSetAngles("VatorL_D0", 0.0F, -6.5F * f, 0.0F);
-            hierMesh().chunkSetAngles("VatorR_D0", 0.0F, -6.5F * f, 0.0F);
-        }
-        if(f < 0.0F)
-        {
-            hierMesh().chunkSetAngles("VatorL_D0", 0.0F, -4.5F * f, 0.0F);
-            hierMesh().chunkSetAngles("VatorR_D0", 0.0F, -4.5F * f, 0.0F);
-        }
+        hierMesh().chunkSetAngles("VatorL_D0", 0.0F, 0.0F, -30F * f);
+        hierMesh().chunkSetAngles("VatorR_D0", 0.0F, 0.0F, -30F * f);
     }
 
-    protected void moveAirBrake(float f)
+    protected void moveAileron(float f)
     {
-        hierMesh().chunkSetAngles("Brake01_D0", 0.0F, -46F * f, 0.0F);
-        hierMesh().chunkSetAngles("Brake02_D0", 0.0F, -46F * f, 0.0F);
+        hierMesh().chunkSetAngles("AroneL_D0", 0.0F, 0.0F, 30F * f);
+        hierMesh().chunkSetAngles("AroneR_D0", 0.0F, 0.0F, -30F * f);
+    }
+
+    protected void moveFlap(float f)
+    {
+        float f1 = 55F * f;
+        hierMesh().chunkSetAngles("Flap03_D0", 0.0F, 0.0F, f1);
+        hierMesh().chunkSetAngles("Flap04_D0", 0.0F, 0.0F, f1);
     }
 
     protected void moveFan(float f1)
@@ -660,8 +528,7 @@ public class F9F_Cougar extends Scheme1
 
     public void update(float f)
     {
-        typeFighterAceMakerRangeFinder();
-        if(!isTrainer && (this.FM.AS.bIsAboutToBailout || overrideBailout) && !ejectComplete && !this.FM.Gears.onGround())
+        if((this.FM.AS.bIsAboutToBailout || overrideBailout) && !ejectComplete && this.FM.getSpeedKMH() > 15F)
         {
             overrideBailout = true;
             this.FM.AS.bIsAboutToBailout = false;
@@ -701,26 +568,38 @@ public class F9F_Cougar extends Scheme1
                     arrestor2 = 45F;
                 hierMesh().chunkSetAngles("Hook2_D0", 0.0F, arrestor2, 0.0F);
             }
+        if ((!this.FM.isPlayers() || !(this.FM instanceof RealFlightModel) || !((RealFlightModel)this.FM).isRealMode()) && this.FM.Gears.onGround()) {
+            if (this.FM.getSpeedKMH() < 100F) {
+                this.FM.CT.cockpitDoorControl = 1.0F;
+            } else {
+                this.FM.CT.cockpitDoorControl = 0.0F;
+            }
+        }
         engineSurge(f);
-        guidedMissileUtils.update();
         this.soundbarier();
         super.update(f);
     }
 
-    public void moveCockpitDoor(float paramFloat)
+    protected void moveAirBrake(float f)
+    {
+        hierMesh().chunkSetAngles("Flap03_D0", 0.0F, 0.0F, 60F * f);
+        hierMesh().chunkSetAngles("Flap04_D0", 0.0F, 0.0F, 60F * f);
+    }
+
+    public void moveCockpitDoor(float f)
     {
         resetYPRmodifier();
-        Aircraft.xyz[1] = Aircraft.cvt(paramFloat, 0.01F, 0.95F, 0.0F, 0.9F);
-        Aircraft.xyz[2] = Aircraft.cvt(paramFloat, 0.01F, 0.95F, 0.0F, 0.07F);
-        hierMesh().chunkSetLocate("Blister1_D0", Aircraft.xyz, Aircraft.ypr);
-        float f = (float)Math.sin(Aircraft.cvt(paramFloat, 0.4F, 0.99F, 0.0F, 3.141593F));
-        hierMesh().chunkSetAngles("Pilot1_D0", 0.0F, 0.0F, 9F * f);
-        hierMesh().chunkSetAngles("Head1_D0", 14F * f, 0.0F, 0.0F);
+        Aircraft.xyz[1] = Aircraft.cvt(f, 0.01F, 0.95F, 0.0F, 0.9F);
+        Aircraft.xyz[2] = Aircraft.cvt(f, 0.01F, 0.95F, 0.0F, 0.07F);
+        hierMesh().chunkSetLocate("Blister2_D0", Aircraft.xyz, Aircraft.ypr);
+        float f1 = (float)Math.sin(Aircraft.cvt(f, 0.4F, 0.99F, 0.0F, 3.141593F));
+        hierMesh().chunkSetAngles("Pilot1_D0", 0.0F, 0.0F, 9F * f1);
+        hierMesh().chunkSetAngles("Head1_D0", 14F * f1, 0.0F, 0.0F);
         if(Config.isUSE_RENDER())
         {
             if(Main3D.cur3D().cockpits != null && Main3D.cur3D().cockpits[0] != null)
-                Main3D.cur3D().cockpits[0].onDoorMoved(paramFloat);
-            setDoorSnd(paramFloat);
+                Main3D.cur3D().cockpits[0].onDoorMoved(f);
+            setDoorSnd(f);
         }
     }
 
@@ -744,7 +623,7 @@ public class F9F_Cougar extends Scheme1
                 {
                 case 2:
                     if(this.FM.CT.cockpitDoorControl < 0.5F)
-                        doRemoveBlister1();
+                        doRemoveBlister2();
                     break;
 
                 case 3:
@@ -753,19 +632,19 @@ public class F9F_Cougar extends Scheme1
                 }
                 if(this.FM.AS.isMaster())
                     this.FM.AS.netToMirrors(20, this.FM.AS.astateBailoutStep, 1, null);
-                AircraftState tmp178_177 = this.FM.AS;
-                tmp178_177.astateBailoutStep = (byte)(tmp178_177.astateBailoutStep + 1);
+                AircraftState aircraftstate = this.FM.AS;
+                aircraftstate.astateBailoutStep = (byte)(aircraftstate.astateBailoutStep + 1);
                 if(this.FM.AS.astateBailoutStep == 4)
                     this.FM.AS.astateBailoutStep = 11;
             } else
             if(this.FM.AS.astateBailoutStep >= 11 && this.FM.AS.astateBailoutStep <= 19)
             {
-                int i = this.FM.AS.astateBailoutStep;
+                byte byte0 = this.FM.AS.astateBailoutStep;
                 if(this.FM.AS.isMaster())
                     this.FM.AS.netToMirrors(20, this.FM.AS.astateBailoutStep, 1, null);
-                AircraftState tmp383_382 = this.FM.AS;
-                tmp383_382.astateBailoutStep = (byte)(tmp383_382.astateBailoutStep + 1);
-                if(i == 11)
+                AircraftState aircraftstate1 = this.FM.AS;
+                aircraftstate1.astateBailoutStep = (byte)(aircraftstate1.astateBailoutStep + 1);
+                if(byte0 == 11)
                 {
                     this.FM.setTakenMortalDamage(true, null);
                     if((this.FM instanceof Maneuver) && ((Maneuver)this.FM).get_maneuver() != 44)
@@ -775,10 +654,10 @@ public class F9F_Cougar extends Scheme1
                             ((Maneuver)this.FM).set_maneuver(44);
                     }
                 }
-                if(this.FM.AS.astatePilotStates[i - 11] < 99)
+                if(this.FM.AS.astatePilotStates[byte0 - 11] < 99)
                 {
-                    doRemoveBodyFromPlane(i - 10);
-                    if(i == 11)
+                    doRemoveBodyFromPlane(byte0 - 10);
+                    if(byte0 == 11)
                     {
                         doEjectCatapult();
                         this.FM.setTakenMortalDamage(true, null);
@@ -788,33 +667,37 @@ public class F9F_Cougar extends Scheme1
                         overrideBailout = false;
                         this.FM.AS.bIsAboutToBailout = true;
                         ejectComplete = true;
-                        if(i > 10 && i <= 19)
-                            EventLog.onBailedOut(this, i - 11);
+                        if(byte0 > 10 && byte0 <= 19)
+                            EventLog.onBailedOut(this, byte0 - 11);
                     }
                 }
             }
+    }
+
+    private void doRemoveBlister2()
+    {
     }
 
     public void doEjectCatapult()
     {
         new MsgAction(false, this) {
 
-            public void doAction(Object paramObject)
+            public void doAction(Object obj)
             {
-                Aircraft localAircraft = (Aircraft)paramObject;
-                if(Actor.isValid(localAircraft))
+                Aircraft aircraft = (Aircraft)obj;
+                if(Actor.isValid(aircraft))
                 {
-                    Loc localLoc1 = new Loc();
-                    Loc localLoc2 = new Loc();
-                    Vector3d localVector3d = new Vector3d(0.0D, 0.0D, 10D);
-                    HookNamed localHookNamed = new HookNamed(localAircraft, "_ExternalSeat01");
-                    localAircraft.pos.getAbs(localLoc2);
-                    localHookNamed.computePos(localAircraft, localLoc2, localLoc1);
-                    localLoc1.transform(localVector3d);
-                    localVector3d.x += localAircraft.FM.Vwld.x;
-                    localVector3d.y += localAircraft.FM.Vwld.y;
-                    localVector3d.z += localAircraft.FM.Vwld.z;
-                    new EjectionSeat(4, localLoc1, localVector3d, localAircraft);
+                    Loc loc = new Loc();
+                    Loc loc1 = new Loc();
+                    Vector3d vector3d = new Vector3d(0.0D, 0.0D, 10D);
+                    HookNamed hooknamed = new HookNamed(aircraft, "_ExternalSeat01");
+                    aircraft.pos.getAbs(loc1);
+                    hooknamed.computePos(aircraft, loc1, loc);
+                    loc.transform(vector3d);
+                    vector3d.x += aircraft.FM.Vwld.x;
+                    vector3d.y += aircraft.FM.Vwld.y;
+                    vector3d.z += aircraft.FM.Vwld.z;
+                    new EjectionSeat(1, loc, vector3d, aircraft);
                 }
             }
 
@@ -829,30 +712,17 @@ public class F9F_Cougar extends Scheme1
         this.FM.CT.bHasElevatorControl = false;
     }
 
-    private final void doRemoveBlister1()
-    {
-        if(hierMesh().chunkFindCheck("Blister1_D0") != -1 && this.FM.AS.getPilotHealth(0) > 0.0F)
-        {
-            hierMesh().hideSubTrees("Blister1_D0");
-            Wreckage localWreckage = new Wreckage(this, hierMesh().chunkFind("Blister1_D0"));
-            localWreckage.collide(false);
-            Vector3d localVector3d = new Vector3d();
-            localVector3d.set(this.FM.Vwld);
-            localWreckage.setSpeed(localVector3d);
-        }
-    }
-
     private final void doRemoveBlisters()
     {
         for(int i = 2; i < 10; i++)
             if(hierMesh().chunkFindCheck("Blister" + i + "_D0") != -1 && this.FM.AS.getPilotHealth(i - 1) > 0.0F)
             {
                 hierMesh().hideSubTrees("Blister" + i + "_D0");
-                Wreckage localWreckage = new Wreckage(this, hierMesh().chunkFind("Blister" + i + "_D0"));
-                localWreckage.collide(false);
-                Vector3d localVector3d = new Vector3d();
-                localVector3d.set(this.FM.Vwld);
-                localWreckage.setSpeed(localVector3d);
+                Wreckage wreckage = new Wreckage(this, hierMesh().chunkFind("Blister" + i + "_D0"));
+                wreckage.collide(false);
+                Vector3d vector3d = new Vector3d();
+                vector3d.set(this.FM.Vwld);
+                wreckage.setSpeed(vector3d);
             }
 
     }
@@ -892,28 +762,6 @@ public class F9F_Cougar extends Scheme1
     private float engineSurgeDamage;
     private boolean overrideBailout;
     private boolean ejectComplete;
-    private static Actor hunted = null;
-    private GuidedMissileUtils guidedMissileUtils;
-    public boolean bToFire;
-    protected boolean isTrainer;
-    public static float FlowRate = 8.5F;
-    public static float FuelReserve = 1230F;
-    private static final float NEG_G_TOLERANCE_FACTOR = 1.5F;
-    private static final float NEG_G_TIME_FACTOR = 1.5F;
-    private static final float NEG_G_RECOVERY_FACTOR = 1F;
-    private static final float POS_G_TOLERANCE_FACTOR = 2F;
-    private static final float POS_G_TIME_FACTOR = 2F;
-    private static final float POS_G_RECOVERY_FACTOR = 2F;
-    private boolean hasChaff;
-    private boolean hasFlare;
-    private long lastChaffDeployed;
-    private long lastFlareDeployed;
-    private long lastCommonThreatActive;
-    private long intervalCommonThreat;
-    private long lastRadarLockThreatActive;
-    private long intervalRadarLockThreat;
-    private long lastMissileLaunchThreatActive;
-    private long intervalMissileLaunchThreat;
     public static boolean bChangedPit = false;
     private float arrestor2;
     public float AirBrakeControl;
@@ -923,7 +771,7 @@ public class F9F_Cougar extends Scheme1
 
     static 
     {
-        Class class1 = F9F_Cougar.class;
+        Class class1 = Banshee_X.class;
         Property.set(class1, "originCountry", PaintScheme.countryUSA);
     }
 }

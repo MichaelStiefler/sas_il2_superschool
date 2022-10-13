@@ -668,7 +668,7 @@ public class FI_103RIV extends Scheme1 implements TypeDockable, MsgCollisionRequ
         Property.set(class1, "originCountry", PaintScheme.countryGermany);
         Property.set(class1, "yearService", 1944F);
         Property.set(class1, "yearExpired", 1945.5F);
-        Property.set(class1, "FlightModel", "FlightModels/V-1.fmd:V1_FM");
+        Property.set(class1, "FlightModel", "FlightModels/V-1.fmd");
         Property.set(class1, "cockpitClass", new Class[] { CockpitFI_103R.class });
         Aircraft.weaponTriggersRegister(class1, new int[] { 0 });
         Aircraft.weaponHooksRegister(class1, new String[] { "_Clip00" });

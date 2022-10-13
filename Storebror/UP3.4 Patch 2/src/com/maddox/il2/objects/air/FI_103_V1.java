@@ -655,7 +655,7 @@ public class FI_103_V1 extends Scheme1 implements TypeDockable, MsgCollisionRequ
         Property.set(class1, "originCountry", PaintScheme.countryGermany);
         Property.set(class1, "yearService", 1942F);
         Property.set(class1, "yearExpired", 1945.5F);
-        Property.set(class1, "FlightModel", "FlightModels/V-1.fmd:V1_FM");
+        Property.set(class1, "FlightModel", "FlightModels/V-1.fmd");
         Aircraft.weaponTriggersRegister(class1, new int[] { 0 });
         Aircraft.weaponHooksRegister(class1, new String[] { "_Clip00" });
     }

@@ -7,10 +7,8 @@ import com.maddox.il2.ai.Shot;
 import com.maddox.il2.ai.War;
 import com.maddox.il2.ai.World;
 import com.maddox.il2.engine.Actor;
-import com.maddox.il2.engine.Config;
 import com.maddox.il2.engine.Eff3DActor;
 import com.maddox.il2.engine.HierMesh;
-import com.maddox.il2.engine.Orient;
 import com.maddox.il2.fm.Controls;
 import com.maddox.il2.objects.bridges.BridgeSegment;
 import com.maddox.rts.NetMsgGuaranted;
@@ -605,37 +603,38 @@ public abstract class Swordfish extends Scheme1 implements TypeBomber, TypeStorm
 
     public abstract boolean typeBomberToggleAutomation();
 
-    // TODO: Storebror: Head Movement Bugfix for Swordfish
-    private float         headPos[] = { 0, 0, 0 };
-    private float         headOr[]  = { 0, 0, 0 };
-    private static Orient tmpOrLH   = new Orient();
-    private float         headYp;
-    private float         headTp;
-    private float         headYm;
-    private float         headTm;
+//    // TODO: Storebror: Head Movement Bugfix for Swordfish
+//    private float         headPos[] = { 0, 0, 0 };
+//    private float         headOr[]  = { 0, 0, 0 };
+//    private static Orient tmpOrLH   = new Orient();
+//    private float         headYp;
+//    private float         headTp;
+//    private float         headYm;
+//    private float         headTm;
 
     public void movePilotsHead(float f, float f1) {
-        f *= -1F;
-        if (Config.isUSE_RENDER() && (this.headTp < f1 || this.headTm > f1 || this.headYp < f || this.headYm > f)) {
-            this.headTp = f1 + 0.0005F;
-            this.headTm = f1 - 0.0005F;
-            this.headYp = f + 0.0005F;
-            this.headYm = f - 0.0005F;
-
-            tmpOrLH.setYPR(0.0F, 0.0F, 0.0F);
-            tmpOrLH.increment(0.0F, f, 0.0F);
-            tmpOrLH.increment(0.0F, 0.0F, -f1);
-            tmpOrLH.increment(-0.2F * f1 + 0.05F * f1, 0.0F, 0.0F);
-
-            this.headOr[0] = tmpOrLH.getYaw();
-            this.headOr[1] = tmpOrLH.getPitch();
-            this.headOr[2] = tmpOrLH.getRoll();
-
-            this.headPos[0] = 0.0005F * Math.abs(f);
-            this.headPos[1] = -0.0001F * Math.abs(f);
-            this.headPos[2] = 0.0F;
-            this.hierMesh().chunkSetLocate("Head1_D0", this.headPos, this.headOr);
-        }
+        super.movePilotsHead(-f, f1);
+//        f *= -1F;
+//        if (Config.isUSE_RENDER() && (this.headTp < f1 || this.headTm > f1 || this.headYp < f || this.headYm > f)) {
+//            this.headTp = f1 + 0.0005F;
+//            this.headTm = f1 - 0.0005F;
+//            this.headYp = f + 0.0005F;
+//            this.headYm = f - 0.0005F;
+//
+//            tmpOrLH.setYPR(0.0F, 0.0F, 0.0F);
+//            tmpOrLH.increment(0.0F, f, 0.0F);
+//            tmpOrLH.increment(0.0F, 0.0F, -f1);
+//            tmpOrLH.increment(-0.2F * f1 + 0.05F * f1, 0.0F, 0.0F);
+//
+//            this.headOr[0] = tmpOrLH.getYaw();
+//            this.headOr[1] = tmpOrLH.getPitch();
+//            this.headOr[2] = tmpOrLH.getRoll();
+//
+//            this.headPos[0] = 0.0005F * Math.abs(f);
+//            this.headPos[1] = -0.0001F * Math.abs(f);
+//            this.headPos[2] = 0.0F;
+//            this.hierMesh().chunkSetLocate("Head1_D0", this.headPos, this.headOr);
+//        }
     }
 
     public boolean  bPitUnfocused;
