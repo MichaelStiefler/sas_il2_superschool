@@ -87,6 +87,11 @@ public abstract class FW_190F extends Scheme1 implements TypeFighter, TypeBNZFig
           hierMesh.chunkVisible("ETC_501", weaponSlotsRegistered[4] != null || weaponSlotsRegistered[48] != null);
           return;
       }
+      
+      if (planeVersion.startsWith("F8LATE")) {
+          hierMesh.chunkVisible("ETC_501", weaponSlotsRegistered[22] != null || weaponSlotsRegistered[32] != null);
+          return;
+      }
 
       if (planeVersion.startsWith("F8")) {
           hierMesh.chunkVisible("ETC71_L", weaponSlotsRegistered[4] != null);
