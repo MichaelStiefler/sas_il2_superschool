@@ -36,17 +36,19 @@ public class RocketX7 extends RocketX4 {
             if (((this.getOwner() != World.getPlayerAircraft()) || !((RealFlightModel) this.fm).isRealMode()) && (this.fm instanceof Pilot)) {
                 smoothFactor /= 4;
                 Pilot pilot = (Pilot) this.fm;
+                Actor target = pilot.target_ground;
                 if ((pilot.target_ground != null) || (pilot.target != null)) {
                     if (pilot.target_ground != null) {
                         pilot.target_ground.pos.getAbs(pT);
                     } else {
                         ((FlightModelMain) (pilot.target)).Loc.get(pT);
+                        target = pilot.target.actor;
                     }
                     pT.sub(p);
                     or.transformInv(pT);
                     
                     if (pT.x > -10D) {
-                        this.stepBeamRider(((Pilot) this.fm).target_ground);
+                        this.stepBeamRider(target);
                         deltaAzimuth = deltaTangage = 0.0F;
                     }
                 }

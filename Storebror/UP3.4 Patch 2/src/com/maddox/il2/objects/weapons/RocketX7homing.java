@@ -113,6 +113,7 @@ public class RocketX7homing extends RocketX4
     static 
     {
         Class class1 = RocketX7homing.class;
+        Property.set(class1, "mesh", "3do/arms/X-7/mono.sim");
         Property.set(class1, "timeLife", 300F);
         Property.set(class1, "timeFire", 2.5F);
         Property.set(class1, "massa", 90F);

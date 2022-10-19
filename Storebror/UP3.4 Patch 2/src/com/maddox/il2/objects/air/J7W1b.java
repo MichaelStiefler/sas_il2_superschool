@@ -248,7 +248,8 @@ public class J7W1b extends J7Wx
         Property.set(class1, "PaintScheme", new PaintSchemeFMPar01());
         Property.set(class1, "yearService", 1945F);
         Property.set(class1, "yearExpired", 1949F);
-        Property.set(class1, "FlightModel", "FlightModels/J7W1b.fmd");
+        Property.set(class1, "FlightModel", "FlightModels/J7W1b_Vasya.fmd");
+//        Property.set(class1, "FlightModel", "FlightModels/J7W1b.fmd");
         Property.set(class1, "cockpitClass", new Class[] {
             CockpitJ7W.class
         });

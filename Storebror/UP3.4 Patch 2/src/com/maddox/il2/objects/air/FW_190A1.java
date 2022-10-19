@@ -32,7 +32,15 @@ public class FW_190A1 extends FW_190NEW {
         Property.set(class1, "FlightModel", "FlightModels/Fw-190A-1 (Ultrapack).fmd");
         Property.set(class1, "cockpitClass", new Class[] { CockpitFW_190A1.class });
         Property.set(class1, "LOSElevation", 0.764106F);
-        Aircraft.weaponTriggersRegister(class1, new int[] { 0, 0, 1, 1, 1, 1, 9, 9, 3 });
-        Aircraft.weaponHooksRegister(class1, new String[] { "_MGUN01", "_MGUN02", "_CANNON01", "_CANNON02", "_CANNON03", "_CANNON04", "_ExternalDev01", "_ExternalDev02", "_ExternalBomb01" });
+//        Aircraft.weaponTriggersRegister(class1, new int[] { 0, 0, 1, 1, 1, 1, 9, 9, 3 });
+//        Aircraft.weaponHooksRegister(class1, new String[] { "_MGUN01", "_MGUN02", "_CANNON01", "_CANNON02", "_CANNON03", "_CANNON04", "_ExternalDev01", "_ExternalDev02", "_ExternalBomb01" });
+        Aircraft.weaponTriggersRegister(class1, new int[] {
+                0, 0, 1, 1, 1, 1, 9, 9, 3, 3, 
+                9, 3, 3, 3, 3, 3, 3, 3, 3
+            });
+            Aircraft.weaponHooksRegister(class1, new String[] {
+                "_MGUN01", "_MGUN02", "_CANNON01", "_CANNON02", "_CANNON03", "_CANNON04", "_ExternalDev01", "_ExternalDev02", "_ExternalBomb01", "_ExternalBomb01", 
+                "_ExternalDev11", "_ExternalBomb10", "_ExternalBomb10", "_ExternalBomb11", "_ExternalBomb11", "_ExternalBomb08", "_ExternalBomb08", "_ExternalBomb09", "_ExternalBomb09"
+            });
     }
 }

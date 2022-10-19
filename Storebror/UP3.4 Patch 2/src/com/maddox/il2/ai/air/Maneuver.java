@@ -6546,6 +6546,9 @@ public class Maneuver extends AIFlightModel {
             // TODO: --- TD AI code backport from 4.13 ---
             f = this.target.actor.collisionR();
         else f = 15.0F;
+        
+//        f = 10.0F; // TESTING!
+        
         this.setRandomTargDeviation(0.8F);
         switch (i) {
             case 0:
@@ -6677,6 +6680,7 @@ public class Maneuver extends AIFlightModel {
         if (this.CT.Weapons[1] != null && this.CT.Weapons[1][0].countBullets() > 0) f1 = ((GunGeneric) this.CT.Weapons[1][0]).bulletSpeed();
         else if (this.CT.Weapons[0] != null) f1 = ((GunGeneric) this.CT.Weapons[0][0]).bulletSpeed();
         if (f1 > 0.01F) this.bullTime = 1.0F / f1;
+//        System.out.println("### setBomberAttackType(" + i + "), f=" + f + ", ApproachR=" + ApproachR + ", TargY=" + TargY + ", TargZ=" + TargZ + ", TargYS=" + TargYS + ", TargZS=" + TargZS + ", bullTime=" + bullTime);
     }
 
     public void fighterVsBomber(float f) {
