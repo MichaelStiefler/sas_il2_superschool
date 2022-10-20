@@ -6,7 +6,7 @@ import com.maddox.il2.engine.Config;
 import com.maddox.il2.fm.RealFlightModel;
 import com.maddox.il2.fm.Turret;
 import com.maddox.il2.game.HUD;
-import com.maddox.il2.objects.weapons.MGunNull;
+import com.maddox.il2.objects.weapons.MGunDummy;
 import com.maddox.rts.Property;
 import com.maddox.rts.Time;
 import com.maddox.sas1946.il2.util.CommonTools;
@@ -106,9 +106,9 @@ public class BP_Defiant extends DefiantRAF implements TypeTNBFighter {
             default:
                 break;
         }
-        if (this.FM.CT.Weapons[0][0] instanceof MGunNull) {
-            MGunNull gun = (MGunNull) this.FM.CT.Weapons[0][0];
-            if (this.FM.CT.Weapons[10][0].haveBullets()) {
+        if (this.FM.CT.Weapons[0][0] instanceof MGunDummy) {
+            MGunDummy gun = (MGunDummy) this.FM.CT.Weapons[0][0];
+            if (this.FM.CT.Weapons[10][0].haveBullets() && this.FM.turret[0].health > 0F) {
                 gun.loadBullets();
             } else {
                 gun.emptyGun();
@@ -238,6 +238,9 @@ public class BP_Defiant extends DefiantRAF implements TypeTNBFighter {
     private void animateFairings(float lockPos) {
         this.hierMesh().chunkSetAngles("Fairing1_D0", 0.0F, 0.0F, CommonTools.smoothCvt(lockPos, 0F, 1F, -6F, 0F));
         this.hierMesh().chunkSetAngles("Fairing2_D0", 0.0F, 0.0F, CommonTools.smoothCvt(lockPos, 0F, 1F, 23F, 0F));
+        this.resetYPRmodifier();
+        Aircraft.xyz[1] = CommonTools.smoothCvt(lockPos, 0F, 1F, -0.14F, 0F);
+        this.hierMesh().chunkSetLocate("Actuator2_D0", Aircraft.xyz, Aircraft.ypr);
     }
 
     public byte getTurretMode() {

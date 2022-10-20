@@ -50,13 +50,13 @@ public class TA_183 extends Scheme1 implements TypeFighter, TypeBNZFighter, Type
         Aircraft.ypr[0] = Aircraft.ypr[1] = Aircraft.ypr[2] = Aircraft.xyz[0] = Aircraft.xyz[1] = Aircraft.xyz[2] = 0.0F;
         Aircraft.xyz[1] = Aircraft.cvt(var1, 0.2F, 0.6F, 0.0F, 0.65F);
         var0.chunkSetLocate("GearL5_D0", Aircraft.xyz, Aircraft.ypr);
-        var0.chunkSetAngles("GearL6_D0", 0.0F, Aircraft.cvt(var1, 0.1F, 0.2F, 0.0F, -60.0F), 0.0F);
+        var0.chunkSetAngles("GearL6_D0", 0.0F, Aircraft.cvt(var1, 0.1F, 0.2F, 0.0F, -40.0F) + Aircraft.cvt(var1, 0.8F, 0.9F, 0.0F, 20.0F), 0.0F);
         var0.chunkSetAngles("GearR2_D0", 0.0F, Aircraft.cvt(var1, 0.2F, 0.6F, 0.0F, -60.0F), 0.0F);
         var0.chunkSetAngles("GearR4_D0", 0.0F, Aircraft.cvt(var1, 0.2F, 0.6F, 0.0F, -65.0F), 0.0F);
         Aircraft.ypr[0] = Aircraft.ypr[1] = Aircraft.ypr[2] = Aircraft.xyz[0] = Aircraft.xyz[1] = Aircraft.xyz[2] = 0.0F;
         Aircraft.xyz[1] = Aircraft.cvt(var1, 0.2F, 0.6F, 0.0F, 0.65F);
         var0.chunkSetLocate("GearR5_D0", Aircraft.xyz, Aircraft.ypr);
-        var0.chunkSetAngles("GearR6_D0", 0.0F, Aircraft.cvt(var1, 0.1F, 0.2F, 0.0F, -60.0F), 0.0F);
+        var0.chunkSetAngles("GearR6_D0", 0.0F, Aircraft.cvt(var1, 0.1F, 0.2F, 0.0F, -40.0F) + Aircraft.cvt(var1, 0.8F, 0.9F, 0.0F, 20.0F), 0.0F);
     }
 
     protected void moveGear(float var1) {
@@ -512,11 +512,17 @@ public class TA_183 extends Scheme1 implements TypeFighter, TypeBNZFighter, Type
         Property.set(class1, "FlightModel", "FlightModels/Ta-183.fmd");
         Property.set(class1, "cockpitClass", new Class[] { CockpitTA_183.class });
         Property.set(class1, "LOSElevation", 1.2158F);
-        Aircraft.weaponTriggersRegister(class1, new int[] { 0, 0, 0, 0, 9, 9, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2 });
+        Aircraft.weaponTriggersRegister(class1, new int[] {
+                0, 0, 0, 0, 9, 9, 2, 2, 2, 2,
+                2, 2, 2, 2, 2, 2, 2, 2, 2, 2,
+                2, 2, 2, 2, 2, 2, 2, 2, 2, 2,
+                2, 2, 2, 2, 2, 2, 2, 2, 3, 3,
+                3, 3, 9, 9});
         Aircraft.weaponHooksRegister(class1,
-                new String[] { "_MGUN01", "_MGUN02", "_MGUN03", "_MGUN04", "_ExternalDev01", "_ExternalDev02", "_ExternalRock01", "_ExternalRock02", "_ExternalRock03", "_ExternalRock04", "_ExternalRock05", "_ExternalRock06", "_ExternalRock07",
-                        "_ExternalRock08", "_ExternalRock09", "_ExternalRock10", "_ExternalRock11", "_ExternalRock12", "_ExternalRock13", "_ExternalRock14", "_ExternalRock15", "_ExternalRock16", "_ExternalRock17", "_ExternalRock18", "_ExternalRock19",
-                        "_ExternalRock20", "_ExternalRock21", "_ExternalRock22", "_ExternalRock23", "_ExternalRock24", "_ExternalRock25", "_ExternalRock25", "_ExternalRock26", "_ExternalRock26", "_ExternalRock27", "_ExternalRock27", "_ExternalRock28",
-                        "_ExternalRock28" });
+                new String[] { "_MGUN01", "_MGUN02", "_MGUN03", "_MGUN04", "_ExternalDev01", "_ExternalDev02", "_ExternalRock01", "_ExternalRock02", "_ExternalRock03", "_ExternalRock04",
+                        "_ExternalRock05", "_ExternalRock06", "_ExternalRock07", "_ExternalRock08", "_ExternalRock09", "_ExternalRock10", "_ExternalRock11", "_ExternalRock12", "_ExternalRock13", "_ExternalRock14",
+                        "_ExternalRock15", "_ExternalRock16", "_ExternalRock17", "_ExternalRock18", "_ExternalRock19", "_ExternalRock20", "_ExternalRock21", "_ExternalRock22", "_ExternalRock23", "_ExternalRock24",
+                        "_ExternalRock25", "_ExternalRock25", "_ExternalRock26", "_ExternalRock26", "_ExternalRock27", "_ExternalRock27", "_ExternalRock28", "_ExternalRock28", "_ExternalBomb01", "_ExternalBomb01",
+                        "_ExternalBomb02", "_ExternalBomb02", "_ExternalDev03", "_ExternalDev04"});
     }
 }
