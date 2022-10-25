@@ -5,6 +5,7 @@ import com.maddox.il2.ai.BulletEmitter;
 import com.maddox.il2.ai.World;
 import com.maddox.il2.ai.air.Maneuver;
 import com.maddox.il2.ai.air.Pilot;
+import com.maddox.il2.engine.Actor;
 import com.maddox.il2.engine.HierMesh;
 import com.maddox.il2.fm.RealFlightModel;
 import com.maddox.il2.objects.electronics.RadarLiSN2;
@@ -294,6 +295,16 @@ public class ME_410B extends ME_210 implements TypeBNZFighter, TypeStormovik, Ty
         return this.radarMode;
     }
 
+    protected void nextDMGLevel(String s, int i, Actor actor) {
+        super.nextDMGLevel(s, i, actor);
+        if (this.FM.isPlayers()) bChangedPit = true;
+    }
+
+    protected void nextCUTLevel(String s, int i, Actor actor) {
+        super.nextCUTLevel(s, i, actor);
+        if (this.FM.isPlayers()) bChangedPit = true;
+    }
+
     private int           curPilot  = 1;
     private int           radarGain = 50;
     private int           radarMode = RadarLiSN2.RADAR_MODE_NORMAL;;
@@ -305,6 +316,7 @@ public class ME_410B extends ME_210 implements TypeBNZFighter, TypeStormovik, Ty
     private BulletEmitter g1;
     public boolean        bToFire;
     private long          tX4Prev;
+    public static boolean bChangedPit = false;
 
     static {
         Class class1 = ME_410B.class;

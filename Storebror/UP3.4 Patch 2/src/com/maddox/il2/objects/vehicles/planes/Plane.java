@@ -2098,6 +2098,95 @@ public abstract class Plane {
     
     public static class Spiteful14 extends PlaneGeneric {}
     
+    public static class J4M1 extends PlaneGeneric {}
+    public static class J4M4 extends PlaneGeneric {}
+    public static class J4M5 extends PlaneGeneric {}
+    public static class J4M2 extends PlaneGeneric {}
+    public static class J5N1 extends PlaneGeneric {}
+    public static class J6K1 extends PlaneGeneric {}
+    public static class J7W1a extends PlaneGeneric {}
+    public static class J7W1b extends PlaneGeneric {}
+    public static class J7W2 extends PlaneGeneric {}
+    public static class J7W2_A extends PlaneGeneric {}
+    public static class J7W3 extends PlaneGeneric {}
+    public static class J8M1 extends PlaneGeneric {}
+    public static class J8M3 extends PlaneGeneric {}
+    public static class Ki_83 extends PlaneGeneric {}
+    public static class Ki_93 extends PlaneGeneric {}
+    public static class KI_96 extends PlaneGeneric {}
+    public static class KI_98_1 extends PlaneGeneric {}
+    public static class KI_98_2 extends PlaneGeneric {}
+    public static class KI_98_3 extends PlaneGeneric {}
+    public static class KI_102b extends PlaneGeneric {}
+    public static class KI_108_KAI extends PlaneGeneric {}
+    public static class KI_109_I extends PlaneGeneric {}
+    public static class R2Y1 extends PlaneGeneric {}
+    public static class XF5U1 extends PlaneGeneric {}
+    public static class F2H_3 extends PlaneGeneric {}
+    public static class F94B extends PlaneGeneric {}
+    public static class TB2D1 extends PlaneGeneric {}
+    public static class Ar_240A extends PlaneGeneric {}
+    public static class Ar_240C extends PlaneGeneric {}
+    public static class Ar_240C2 extends PlaneGeneric {}
+    public static class BF_109V48 extends PlaneGeneric {}
+    public static class BF_109CRP extends PlaneGeneric {}
+    public static class BF_109W2 extends PlaneGeneric {}
+    public static class Ha_1112_M1L extends PlaneGeneric {}
+    public static class BF_110A extends PlaneGeneric {}
+    public static class BF_110B4 extends PlaneGeneric {}
+    public static class FW_187A0 extends PlaneGeneric {}
+    public static class FW_187A1 extends PlaneGeneric {}
+    public static class FW_190V13 extends PlaneGeneric {}
+    public static class FW_190V18 extends PlaneGeneric {}
+    public static class FW_190V29 extends PlaneGeneric {}
+    public static class FW_190V32 extends PlaneGeneric {}
+    public static class FI_103_V1 extends PlaneGeneric {}
+    public static class FI_103RIV extends PlaneGeneric {}
+    public static class GO_229A2 extends PlaneGeneric {}
+    public static class GO_229A3 extends PlaneGeneric {}
+    public static class JU_52_TRANS extends PlaneGeneric {}
+    public static class JU_187A extends PlaneGeneric {}
+    public static class ME_155B2 extends PlaneGeneric {}
+    public static class ME_155B4 extends PlaneGeneric {}
+    public static class BV_155B1 extends PlaneGeneric {}
+    public static class ME_209_IIA extends PlaneGeneric {}
+    public static class ME_209_IIB extends PlaneGeneric {}
+    public static class ME_309B2 extends PlaneGeneric {}
+    public static class ME_309C2 extends PlaneGeneric {}
+    public static class ME_509A2 extends PlaneGeneric {}
+    public static class TA_183l extends PlaneGeneric {}
+    public static class Jetman extends PlaneGeneric {}
+    public static class LA_9 extends PlaneGeneric {}
+    public static class LA_9M extends PlaneGeneric {}
+    public static class LA_11 extends PlaneGeneric {}
+    public static class La_15 extends PlaneGeneric {}
+    public static class MIG_7 extends PlaneGeneric {}
+    public static class MIG_11 extends PlaneGeneric {}
+    public static class YAK_17 extends PlaneGeneric {}
+    public static class MB5 extends PlaneGeneric {}
+    public static class Hornet_F1 extends PlaneGeneric {}
+    public static class Hornet_F3 extends PlaneGeneric {}
+    public static class SeaHornet_F20 extends PlaneGeneric {}
+    public static class SeaHornet_NF21 extends PlaneGeneric {}
+    public static class DH_Venom extends PlaneGeneric {}
+    public static class Sea_Venom2 extends PlaneGeneric {}
+    public static class Sea_Venom extends PlaneGeneric {}
+    public static class Wyvern extends PlaneGeneric {}
+    public static class A2H2_Wyvern extends PlaneGeneric {}
+    public static class ATTACKER_FB2 extends PlaneGeneric {}
+    public static class SeaHawk extends PlaneGeneric {}
+    public static class DH116 extends PlaneGeneric {}
+    public static class Hunter_F1 extends PlaneGeneric {}
+    public static class Hunter_F4 extends PlaneGeneric {}
+    public static class Hunter_F6 extends PlaneGeneric {}
+    public static class Hunter_FGA9 extends PlaneGeneric {}
+    public static class ANSON_MKIa extends PlaneGeneric {}
+    public static class Civil_Mars extends PlaneGeneric {}
+    public static class JRM_Mars extends PlaneGeneric {}
+    public static class H_4 extends PlaneGeneric {}
+    public static class P_108 extends PlaneGeneric {}
+    public static class P_149 extends PlaneGeneric {}
+    
     public static class GenericSpawnPointPlane extends PlaneGeneric {}
 
     static {
@@ -3148,5 +3237,93 @@ public abstract class Plane {
         new PlaneGeneric.SPAWN(ME_P1101.class);
         new PlaneGeneric.SPAWN(IL_28.class);
         new PlaneGeneric.SPAWN(GenericSpawnPointPlane.class);
+        new PlaneGeneric.SPAWN(J4M1.class);
+        new PlaneGeneric.SPAWN(J4M4.class);
+        new PlaneGeneric.SPAWN(J4M5.class);
+        new PlaneGeneric.SPAWN(J4M2.class);
+        new PlaneGeneric.SPAWN(J5N1.class);
+        new PlaneGeneric.SPAWN(J6K1.class);
+        new PlaneGeneric.SPAWN(J7W1a.class);
+        new PlaneGeneric.SPAWN(J7W1b.class);
+        new PlaneGeneric.SPAWN(J7W2.class);
+        new PlaneGeneric.SPAWN(J7W2_A.class);
+        new PlaneGeneric.SPAWN(J7W3.class);
+        new PlaneGeneric.SPAWN(J8M1.class);
+        new PlaneGeneric.SPAWN(J8M3.class);
+        new PlaneGeneric.SPAWN(Ki_83.class);
+        new PlaneGeneric.SPAWN(Ki_93.class);
+        new PlaneGeneric.SPAWN(KI_96.class);
+        new PlaneGeneric.SPAWN(KI_98_1.class);
+        new PlaneGeneric.SPAWN(KI_98_2.class);
+        new PlaneGeneric.SPAWN(KI_98_3.class);
+        new PlaneGeneric.SPAWN(KI_102b.class);
+        new PlaneGeneric.SPAWN(KI_108_KAI.class);
+        new PlaneGeneric.SPAWN(KI_109_I.class);
+        new PlaneGeneric.SPAWN(R2Y1.class);
+        new PlaneGeneric.SPAWN(XF5U1.class);
+        new PlaneGeneric.SPAWN(F2H_3.class);
+        new PlaneGeneric.SPAWN(F94B.class);
+        new PlaneGeneric.SPAWN(TB2D1.class);
+        new PlaneGeneric.SPAWN(Ar_240A.class);
+        new PlaneGeneric.SPAWN(Ar_240C.class);
+        new PlaneGeneric.SPAWN(Ar_240C2.class);
+        new PlaneGeneric.SPAWN(BF_109V48.class);
+        new PlaneGeneric.SPAWN(BF_109CRP.class);
+        new PlaneGeneric.SPAWN(BF_109W2.class);
+        new PlaneGeneric.SPAWN(Ha_1112_M1L.class);
+        new PlaneGeneric.SPAWN(BF_110A.class);
+        new PlaneGeneric.SPAWN(BF_110B4.class);
+        new PlaneGeneric.SPAWN(FW_187A0.class);
+        new PlaneGeneric.SPAWN(FW_187A1.class);
+        new PlaneGeneric.SPAWN(FW_190V13.class);
+        new PlaneGeneric.SPAWN(FW_190V18.class);
+        new PlaneGeneric.SPAWN(FW_190V29.class);
+        new PlaneGeneric.SPAWN(FW_190V32.class);
+        new PlaneGeneric.SPAWN(FI_103_V1.class);
+        new PlaneGeneric.SPAWN(FI_103RIV.class);
+        new PlaneGeneric.SPAWN(GO_229A2.class);
+        new PlaneGeneric.SPAWN(GO_229A3.class);
+        new PlaneGeneric.SPAWN(JU_52_TRANS.class);
+        new PlaneGeneric.SPAWN(JU_187A.class);
+        new PlaneGeneric.SPAWN(ME_155B2.class);
+        new PlaneGeneric.SPAWN(ME_155B4.class);
+        new PlaneGeneric.SPAWN(BV_155B1.class);
+        new PlaneGeneric.SPAWN(ME_209_IIA.class);
+        new PlaneGeneric.SPAWN(ME_209_IIB.class);
+        new PlaneGeneric.SPAWN(ME_309B2.class);
+        new PlaneGeneric.SPAWN(ME_309C2.class);
+        new PlaneGeneric.SPAWN(ME_509A2.class);
+        new PlaneGeneric.SPAWN(TA_183l.class);
+        new PlaneGeneric.SPAWN(Jetman.class);
+        new PlaneGeneric.SPAWN(LA_9.class);
+        new PlaneGeneric.SPAWN(LA_9M.class);
+        new PlaneGeneric.SPAWN(LA_11.class);
+        new PlaneGeneric.SPAWN(La_15.class);
+        new PlaneGeneric.SPAWN(MIG_7.class);
+        new PlaneGeneric.SPAWN(MIG_11.class);
+        new PlaneGeneric.SPAWN(YAK_17.class);
+        new PlaneGeneric.SPAWN(MB5.class);
+        new PlaneGeneric.SPAWN(Hornet_F1.class);
+        new PlaneGeneric.SPAWN(Hornet_F3.class);
+        new PlaneGeneric.SPAWN(SeaHornet_F20.class);
+        new PlaneGeneric.SPAWN(SeaHornet_NF21.class);
+        new PlaneGeneric.SPAWN(DH_Venom.class);
+        new PlaneGeneric.SPAWN(Sea_Venom2.class);
+        new PlaneGeneric.SPAWN(Sea_Venom.class);
+        new PlaneGeneric.SPAWN(Wyvern.class);
+        new PlaneGeneric.SPAWN(A2H2_Wyvern.class);
+        new PlaneGeneric.SPAWN(ATTACKER_FB2.class);
+        new PlaneGeneric.SPAWN(SeaHawk.class);
+        new PlaneGeneric.SPAWN(DH116.class);
+        new PlaneGeneric.SPAWN(Hunter_F1.class);
+        new PlaneGeneric.SPAWN(Hunter_F4.class);
+        new PlaneGeneric.SPAWN(Hunter_F6.class);
+        new PlaneGeneric.SPAWN(Hunter_FGA9.class);
+        new PlaneGeneric.SPAWN(ANSON_MKIa.class);
+        new PlaneGeneric.SPAWN(Civil_Mars.class);
+        new PlaneGeneric.SPAWN(JRM_Mars.class);
+        new PlaneGeneric.SPAWN(H_4.class);
+        new PlaneGeneric.SPAWN(P_108.class);
+        new PlaneGeneric.SPAWN(P_149.class);
     }
 }

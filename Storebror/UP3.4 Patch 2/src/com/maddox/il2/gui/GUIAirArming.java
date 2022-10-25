@@ -624,16 +624,16 @@ public class GUIAirArming extends GameState {
         this.zutiSelectedBornPlace = null;
 
         try {
-            Object localObject1;
+            Object alQuickListPlane;
             Object localObject2;
             int k;
-            Object localObject3;
-            Object localObject4;
+            Object lAllRegiments;
+            Object treeMapRegiments;
             Object localObject5;
             int i2;
             Object localObject6;
             Object localObject8;
-            Object localObject9;
+            Object cName;
             Object localObject10;
             Object localObject12;
             if (this.resCountry == null) this.resCountry = ResourceBundle.getBundle("i18n/country", RTSConf.cur.locale, LDRres.loader());
@@ -695,9 +695,9 @@ public class GUIAirArming extends GameState {
                     localSectFile = Main.cur().currentMissionFile;
                     localObject2 = localSectFile.get("MAIN", "player", (String) null);
                     this.planeName = (String) localObject2;
-                    localObject3 = ((String) localObject2).substring(0, ((String) localObject2).length() - 1);
-                    localObject4 = ((String) localObject3).substring(0, ((String) localObject3).length() - 1);
-                    Regiment localRegiment = (Regiment) Actor.getByName((String) localObject4);
+                    lAllRegiments = ((String) localObject2).substring(0, ((String) localObject2).length() - 1);
+                    treeMapRegiments = ((String) lAllRegiments).substring(0, ((String) lAllRegiments).length() - 1);
+                    Regiment localRegiment = (Regiment) Actor.getByName((String) treeMapRegiments);
                     localObject5 = localSectFile.get(this.planeName, "Class", (String) null);
                     localObject6 = ObjIO.classForName((String) localObject5);
                     localObject8 = Property.stringValue((Class) localObject6, "keyName", null);
@@ -706,6 +706,7 @@ public class GUIAirArming extends GameState {
                     this.cAircraft.setSelected(0, true, false);
                     this.countryLst.add(localRegiment.branch());
                     this.cCountry.add(this.resCountry.getString(localRegiment.branch()));
+//                    System.out.println("Add (01) " + this.resCountry.getString(localRegiment.branch()));
                     this.cCountry.setSelected(0, true, false);
                     localObject10 = new ArrayList();
                     ((ArrayList) localObject10).add(localRegiment);
@@ -761,6 +762,7 @@ public class GUIAirArming extends GameState {
                     this.cAircraft.setSelected(0, true, false);
                     this.countryLst.add(GUINetAircraft.selectedRegiment().branch());
                     this.cCountry.add(this.resCountry.getString(GUINetAircraft.selectedRegiment().branch()));
+//                    System.out.println("Add (02) " + this.resCountry.getString(GUINetAircraft.selectedRegiment().branch()));
                     this.cCountry.setSelected(0, true, false);
                     localObject2 = new ArrayList();
                     ((ArrayList) localObject2).add(GUINetAircraft.selectedRegiment());
@@ -796,13 +798,13 @@ public class GUIAirArming extends GameState {
                         ZutiSupportMethods_GUI.setFuelSelectionForAircraft(GUIAirArming.this, this.zutiSelectedBornPlace, selection);
                         // -----------------------------------------------------------------------------------------
 
-                        localObject1 = NetEnv.host();
-                        k = ((NetUser) localObject1).getBornPlace();
-                        localObject3 = World.cur().bornPlaces.get(k);
+                        alQuickListPlane = NetEnv.host();
+                        k = ((NetUser) alQuickListPlane).getBornPlace();
+                        lAllRegiments = World.cur().bornPlaces.get(k);
 
                         // TODO: Added by |ZUTI|
                         // ----------------------------------------------------------------------------------------------------------
-                        this.zutiSelectedBornPlace = (BornPlace) localObject3;
+                        this.zutiSelectedBornPlace = (BornPlace) lAllRegiments;
                         ArrayList zutiLimitedCountriesList = this.zutiSelectedBornPlace.zutiHomeBaseCountries;
                         // ----------------------------------------------------------------------------------------------------------
 
@@ -818,9 +820,9 @@ public class GUIAirArming extends GameState {
                                 this.cAircraft.add(I18N.plane((String) localObject5));
                             }
                         if (this.airNames.size() == 0 && !this.zutiSelectedBornPlace.zutiEnablePlaneLimits) {
-                            localObject4 = Main.cur().airClasses;
-                            for (l = 0; l < ((ArrayList) localObject4).size(); ++l) {
-                                localObject5 = ((ArrayList) localObject4).get(l);
+                            treeMapRegiments = Main.cur().airClasses;
+                            for (l = 0; l < ((ArrayList) treeMapRegiments).size(); ++l) {
+                                localObject5 = ((ArrayList) treeMapRegiments).get(l);
                                 localObject6 = Property.stringValue((Class) localObject5, "keyName");
                                 if (!Property.containsValue((Class) localObject5, "cockpitClass")) continue;
                                 this.airNames.add(localObject6);
@@ -828,11 +830,11 @@ public class GUIAirArming extends GameState {
                             }
                         }
 
-                        localObject4 = Regiment.getAll();
+                        treeMapRegiments = Regiment.getAll();
                         TreeMap localTreeMap = new TreeMap();
-                        i2 = ((List) localObject4).size();
+                        i2 = ((List) treeMapRegiments).size();
                         for (int i3 = 0; i3 < i2; ++i3) {
-                            localObject8 = ((List) localObject4).get(i3);
+                            localObject8 = ((List) treeMapRegiments).get(i3);
                             localObject10 = ((Regiment) localObject8).name();
 
                             if (!this.regHash.containsKey(localObject10)) {
@@ -895,18 +897,20 @@ public class GUIAirArming extends GameState {
                             localException2.printStackTrace();
                         }
 
-                        localObject9 = localTreeMap.keySet().iterator();
+                        cName = localTreeMap.keySet().iterator();
 
-                        while (((Iterator) localObject9).hasNext()) {
-                            localObject10 = ((Iterator) localObject9).next();
+                        while (((Iterator) cName).hasNext()) {
+                            localObject10 = ((Iterator) cName).next();
                             // Modified by |ZUTI
                             // ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------
                             if (zutiLimitedCountriesList == null || zutiLimitedCountriesList.size() <= 0) {
                                 this.countryLst.add(localTreeMap.get(localObject10));
                                 this.cCountry.add((String) localObject10);
+//                                System.out.println("Add (03) " + (String) localObject10);
                             } else if (zutiLimitedCountriesList.contains(localObject10)) {
                                 this.countryLst.add(localTreeMap.get(localObject10));
                                 this.cCountry.add((String) localObject10);
+//                                System.out.println("Add (04) " + (String) localObject10);
                             }
                             // ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------
                         }
@@ -998,7 +1002,7 @@ public class GUIAirArming extends GameState {
                         break;
                     }
                 case 4:
-                    Object localObject11;
+                    Object tmp;
                     if (this.quikPlayer) {
                         this.wMashineGun.showWindow();
                         this.wCannon.showWindow();
@@ -1033,66 +1037,67 @@ public class GUIAirArming extends GameState {
                     ZutiSupportMethods_GUI.setFuelSelectionForAircraft(GUIAirArming.this, this.zutiSelectedBornPlace, selection);
                     // -----------------------------------------------------------------------------------------
 
-                    localObject1 = this.quikListPlane;
-                    for (k = 0; k < ((ArrayList) localObject1).size(); ++k) {
-                        localObject3 = ((ArrayList) localObject1).get(k);
-                        localObject4 = Property.stringValue((Class) localObject3, "keyName");
-                        if (this.quikPlayer && !Property.containsValue((Class) localObject3, "cockpitClass")) continue;
-                        this.airNames.add(localObject4);
-                        this.cAircraft.add(I18N.plane((String) localObject4));
+                    alQuickListPlane = this.quikListPlane;
+                    for (k = 0; k < ((ArrayList) alQuickListPlane).size(); ++k) {
+                        lAllRegiments = ((ArrayList) alQuickListPlane).get(k);
+                        treeMapRegiments = Property.stringValue((Class) lAllRegiments, "keyName");
+                        if (this.quikPlayer && !Property.containsValue((Class) lAllRegiments, "cockpitClass")) continue;
+                        this.airNames.add(treeMapRegiments);
+                        this.cAircraft.add(I18N.plane((String) treeMapRegiments));
                     }
 
-                    localObject3 = Regiment.getAll();
-                    localObject4 = new TreeMap();
-                    int i1 = ((List) localObject3).size();
-                    for (i2 = 0; i2 < i1; ++i2) {
-                        Regiment regimentMW = (Regiment) ((List) localObject3).get(i2);
+                    lAllRegiments = Regiment.getAll();
+                    treeMapRegiments = new TreeMap();
+                    int allRegimentsSize = ((List) lAllRegiments).size();
+                    for (i2 = 0; i2 < allRegimentsSize; ++i2) {
+                        Regiment regimentMW = (Regiment) ((List) lAllRegiments).get(i2);
                         if (regimentMW.getArmy() != this.quikArmy) continue;
-                        localObject9 = regimentMW.name();
+                        cName = regimentMW.name();
 
-                        if (!this.regHash.containsKey(localObject9)) {
-                            this.regHash.put(localObject9, regimentMW);
-                            localObject11 = this.regList.get(regimentMW.branch());
-                            if (localObject11 == null) {
+                        if (!this.regHash.containsKey(cName)) {
+                            this.regHash.put(cName, regimentMW);
+                            tmp = this.regList.get(regimentMW.branch());
+                            if (tmp == null) {
                                 localObject12 = null;
                                 try {
                                     localObject12 = this.resCountry.getString(regimentMW.branch());
                                 } catch (Exception localException5) {
                                     continue;
                                 }
-                                localObject11 = new ArrayList();
-                                this.regList.put(regimentMW.branch(), localObject11);
-                                ((TreeMap) localObject4).put(localObject12, regimentMW.branch());
+                                tmp = new ArrayList();
+                                this.regList.put(regimentMW.branch(), tmp);
+                                ((TreeMap) treeMapRegiments).put(localObject12, regimentMW.branch());
                             }
-                            if (localObject11 != null) ((ArrayList) localObject11).add(regimentMW);
+                            if (tmp != null) ((ArrayList) tmp).add(regimentMW);
                         }
                     }
 
-                    Object localObject7 = ((TreeMap) localObject4).keySet().iterator();
+                    Object localObject7 = ((TreeMap) treeMapRegiments).keySet().iterator();
                     while (((Iterator) localObject7).hasNext()) {
-                        localObject9 = ((Iterator) localObject7).next();
-                        this.countryLst.add(((TreeMap) localObject4).get(localObject9));
-                        this.cCountry.add((String) localObject9);
+                        cName = ((Iterator) localObject7).next();
+                        this.countryLst.add(((TreeMap) treeMapRegiments).get(cName));
+                        this.cCountry.add((String) cName);
+//                        System.out.println("Add (05) " + (String) cName);
                     }
-                    ((TreeMap) localObject4).clear();
+                    ((TreeMap) treeMapRegiments).clear();
 
                     this.cCountry.setSelected(0, true, false);
                     this.fillRegiments();
 
                     if (this.quikRegiment != null) {
-                        localObject9 = this.regHash.get(this.quikRegiment);
-                        if (localObject9 != null) {
-                            localObject11 = ((Regiment) localObject9).branch();
+                        cName = this.regHash.get(this.quikRegiment);
+                        if (cName != null) {
+                            tmp = ((Regiment) cName).branch();
                             int i8 = 0;
                             for (; i8 < this.countryLst.size(); ++i8)
-                                if (((String) localObject11).equals(this.countryLst.get(i8))) break;
+                                if (((String) tmp).equals(this.countryLst.get(i8))) break;
 
                             if (i8 < this.countryLst.size()) {
                                 this.cCountry.setSelected(i8, true, false);
                                 this.fillRegiments();
                                 ArrayList localArrayList1 = (ArrayList) this.regList.get(this.countryLst.get(i8));
                                 if (localArrayList1 != null) for (i8 = 0; i8 < localArrayList1.size(); ++i8)
-                                    if (localObject9.equals(localArrayList1.get(i8))) {
+                                    if (cName.equals(localArrayList1.get(i8))) {
                                         this.cRegiment.setSelected(i8, true, false);
                                         break;
                                     }

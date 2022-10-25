@@ -199,7 +199,7 @@ public abstract class Aircraft extends NetAircraft implements MsgCollisionListen
     public float                   wingfold_         = 0.0F;
     public float                   cockpitDoor_      = 0.0F;
     public float                   arrestor_         = 0.0F;
-    protected float[]              propPos           = { 0.0F, 21.6F, 45.9F, 66.9F, 45.0F, 9.2F };
+    protected float[]              propPos           = { 0.0F, 21.6F, 45.9F, 66.9F, 45.0F, 9.2F, 10.0F, 31.6F, 55.9F, 76.9F, 55.0F, 19.2F };
     // TODO: Edited by |ZUTI|
     // Changed from protected to public
     // ---------------------------------------------------------------------------------------------------------

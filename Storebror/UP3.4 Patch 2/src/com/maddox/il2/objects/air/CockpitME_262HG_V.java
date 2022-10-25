@@ -414,8 +414,10 @@ public class CockpitME_262HG_V extends CockpitPilot
             aircraft().hierMesh().chunkVisible("Head1_D0", !this.fm.AS.isPilotDead(0));
             aircraft().hierMesh().chunkVisible("Pilot1_D1", this.fm.AS.isPilotDead(0));
         }
-        aircraft().hierMesh().chunkVisible("Blister1_D0", !((ME_262HG_V)aircraft()).blisterRemoved[0]);
-        aircraft().hierMesh().chunkVisible("Blister2_D0", !((ME_262HG_V)aircraft()).blisterRemoved[1]);
+//        aircraft().hierMesh().chunkVisible("Blister1_D0", !((ME_262HG_V)aircraft()).blisterRemoved[0]);
+//        aircraft().hierMesh().chunkVisible("Blister2_D0", !((ME_262HG_V)aircraft()).blisterRemoved[1]);
+        aircraft().hierMesh().chunkVisible("Blister1_D0", ((ME_262HG_V)aircraft()).bHasBlister);
+        aircraft().hierMesh().chunkVisible("Blister2_D0", true);
         super.doFocusLeave();
     }
 

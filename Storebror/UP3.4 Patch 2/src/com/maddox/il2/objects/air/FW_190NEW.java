@@ -401,13 +401,13 @@ public abstract class FW_190NEW extends Scheme1 implements TypeFighter, TypeBNZF
 
         if (!this.FM.AS.isMaster() || !Config.isUSE_RENDER()) return;
         
-        if ((Main3D.cur3D().cockpits != null) && (Main3D.cur3D().cockpits[0] != null) && this.FM.isPlayers()) {
-            if (Main3D.cur3D().cockpits[0].isFocused() || ((this.FM.CT.cockpitDoorControl == 0.9F) && !this.FM.Gears.onGround()) || ((this.FM.CT.cockpitDoorControl == 0.9F) && !this.FM.Gears.getWheelsOnGround())) {
-                this.hierMesh().chunkVisible("Blister1_D0", false);
-            } else if (!this.FM.AS.bIsAboutToBailout || (this.FM.AS.bIsAboutToBailout && this.FM.Gears.onGround() && (this.FM.CT.cockpitDoorControl > 0.9F))) {
-                this.hierMesh().chunkVisible("Blister1_D0", true);
-            }
-        }
+//        if ((Main3D.cur3D().cockpits != null) && (Main3D.cur3D().cockpits[0] != null) && this.FM.isPlayers()) {
+//            if (Main3D.cur3D().cockpits[0].isFocused() || ((this.FM.CT.cockpitDoorControl == 0.9F) && !this.FM.Gears.onGround()) || ((this.FM.CT.cockpitDoorControl == 0.9F) && !this.FM.Gears.getWheelsOnGround())) {
+//                this.hierMesh().chunkVisible("Blister1_D0", false);
+//            } else if (!this.FM.AS.bIsAboutToBailout || (this.FM.AS.bIsAboutToBailout && this.FM.Gears.onGround() && (this.FM.CT.cockpitDoorControl > 0.9F))) {
+//                this.hierMesh().chunkVisible("Blister1_D0", true);
+//            }
+//        }
         if (HotKeyCmd.getByRecordedId(272).isActive() && this.FM.isPlayers()) {
             CmdEnv.top().exec("fov 90");
             this.hierMesh().chunkVisible("Wire_D0", false);
@@ -470,9 +470,9 @@ public abstract class FW_190NEW extends Scheme1 implements TypeFighter, TypeBNZF
 
     public void setOnGround(Point3d point3d, Orient orient, Vector3d vector3d) {
         super.setOnGround(point3d, orient, vector3d);
-        if (this.FM.isPlayers()) {
-            this.FM.CT.dvCockpitDoor = 80F;
-        }
+//        if (this.FM.isPlayers()) {
+//            this.FM.CT.dvCockpitDoor = 80F;
+//        }
         this.FM.CT.cockpitDoorControl = 1.0F;
     }
 

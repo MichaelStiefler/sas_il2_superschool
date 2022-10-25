@@ -1046,11 +1046,15 @@ public class AircraftState {
         // TODO: +++ By SAS~Storebror: Make sure that the FM's "Operate" flag is set accordingly
         if (!(actor instanceof Aircraft)) return;
         Aircraft aircraft = (Aircraft)this.actor;
-        int part = aircraft.part("Engine" + (engineIndex + 1));
-//        System.out.println("Repair Engine No. " + (engineIndex + 1) + "(Part=" + part + ")");
-//        System.out.println("Operate before: " + Long.toBinaryString(aircraft.FM.Operate));
-        aircraft.FM.Operate |= (1L << part);
-//        System.out.println("Operate after: " + Long.toBinaryString(aircraft.FM.Operate));
+        try {
+            int part = aircraft.part("Engine" + (engineIndex + 1));
+    //        System.out.println("Repair Engine No. " + (engineIndex + 1) + "(Part=" + part + ")");
+    //        System.out.println("Operate before: " + Long.toBinaryString(aircraft.FM.Operate));
+            aircraft.FM.Operate |= (1L << part);
+    //        System.out.println("Operate after: " + Long.toBinaryString(aircraft.FM.Operate));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         // ---
     }
 

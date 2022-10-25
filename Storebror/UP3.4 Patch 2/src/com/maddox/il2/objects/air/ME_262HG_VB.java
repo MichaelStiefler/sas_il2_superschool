@@ -300,7 +300,7 @@ public class ME_262HG_VB extends ME_262 implements TypeX4Carrier, TypeRadarLiSN2
         if (this.FM.isPlayers() && !Main3D.cur3D().isViewOutside()) {
             this.hierMesh().chunkVisible("Blister1_D0", false);
         } else {
-            this.hierMesh().chunkVisible("Blister1_D0", true);
+            this.hierMesh().chunkVisible("Blister1_D0", this.bHasBlister);
         }
         if (this.FM.AS.bIsAboutToBailout) {
             this.hierMesh().chunkVisible("Blister1_D0", false);

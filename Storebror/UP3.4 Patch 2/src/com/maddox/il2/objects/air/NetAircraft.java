@@ -2644,6 +2644,7 @@ public abstract class NetAircraft extends SndAircraft {
     float viewTangage = 0.0F;
 
     public void setHeadAngles(float f, float f1) {
+//        System.out.println("setHeadAngles(" + f + ", " + f1 + ")");
         this.viewAzimut = f % 360F;
         this.viewTangage = f1;
         if (this.viewAzimut > 180F) this.viewAzimut -= 360F;

@@ -168,6 +168,7 @@ public class TransonicEffects {
     }
     
     private void playSonicBoom(boolean play, boolean internal) {
+        if (!Config.isUSE_RENDER()) return; // TODO: By SAS~Storebror: IMPORTANT! No Sounds on DServer!
         if (aircraft.draw == null) return;
         if (internal) {
             if (!play) {
@@ -231,6 +232,7 @@ public class TransonicEffects {
                 this.sonicBoom = true;
             }
         }
+        if (!Config.isUSE_RENDER()) return; // TODO: By SAS~Storebror: IMPORTANT! No Effects on DServer!
         if (machFactor < this.lowerTranssonicVaporBoundary || machFactor > this.upperTranssonicVaporBoundary) {
             if (this.sonicVapor) {
                 if (this.shockwave != null) Eff3DActor.finish(this.shockwave);

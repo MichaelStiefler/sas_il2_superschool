@@ -1280,7 +1280,7 @@ public class ZutiSupportMethods {
     public static boolean allowRRR(Aircraft aircraft) {
         if (aircraft == null || !Actor.isValid(aircraft)) return false;
         
-        if (Config.cur.ini.get("Mods", "offlineRRR", 0) == 1 && Mission.isSingle()) return true;
+        if (Config.isUSE_RENDER() && Config.cur.ini.get("Mods", "offlineRRR", 0) == 1 && Mission.isSingle()) return true;
 
         boolean positionedOnRRRArea = false;
         if (ZutiSupportMethods_FM.isFMOnZAP(aircraft.FM) || ZutiAirfieldPoint.isLocatedTestRunway(aircraft.FM.Loc) || ZutiAirfieldPoint.isLocatedOnCarrier(aircraft.FM.Loc)) positionedOnRRRArea = true;

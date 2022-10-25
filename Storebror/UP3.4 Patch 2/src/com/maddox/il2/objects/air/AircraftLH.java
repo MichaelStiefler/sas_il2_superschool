@@ -13,7 +13,6 @@ import com.maddox.il2.ai.Explosion;
 import com.maddox.il2.ai.Shot;
 import com.maddox.il2.ai.World;
 import com.maddox.il2.engine.Actor;
-import com.maddox.il2.engine.Config;
 import com.maddox.il2.engine.Orient;
 import com.maddox.il2.engine.hotkey.HookPilot;
 import com.maddox.il2.fm.AircraftState;
@@ -126,7 +125,7 @@ public abstract class AircraftLH extends Aircraft {
 //    private float         headTm;
     private float         oldHeadAzimut = 0F;
     private float         oldHeadTangage = 0F;
-    private static int    AI_HEAD_SMOOTH_FACTOR = 20;
+    private static int    AI_HEAD_SMOOTH_FACTOR = 5;
 
     public void update(float f) {
         super.update(f);
@@ -227,7 +226,8 @@ public abstract class AircraftLH extends Aircraft {
 
     public void movePilotsHead(float f, float f1) {
 //        if (this == World.getPlayerAircraft()) System.out.println("movePilotsHead(" + f + ", " + f1 + ")");
-        if (!Config.isUSE_RENDER() || Math.abs(f1 - this.oldHeadAzimut) < 0.0005D || Math.abs(f1 - this.oldHeadTangage) < 0.0005D) return;
+//        if (!Config.isUSE_RENDER() || Math.abs(f1 - this.oldHeadAzimut) < 0.0005D || Math.abs(f1 - this.oldHeadTangage) < 0.0005D) return;
+        if (Math.abs(f1 - this.oldHeadAzimut) < 0.0005D || Math.abs(f1 - this.oldHeadTangage) < 0.0005D) return;
         float newHeadAzimut = f;
         float newHeadTangage = f1;
         if (!this.FM.isPlayers() || !(this.FM instanceof RealFlightModel) || !((RealFlightModel)this.FM).isRealMode()) {

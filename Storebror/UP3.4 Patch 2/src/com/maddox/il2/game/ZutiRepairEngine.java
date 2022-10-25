@@ -33,7 +33,7 @@ public class ZutiRepairEngine {
 
         int engineRepairTime = Mission.MDS_VARIABLES().zutiReload_EngineRepairSeconds;
         if (this.bornPlace != null) engineRepairTime = this.bornPlace.zutiEngineRepairSeconds;
-        if (Config.cur.ini.get("Mods", "offlineRRR", 0) == 1 && Mission.isSingle()) engineRepairTime = 1;
+        if (Config.isUSE_RENDER() && Config.cur.ini.get("Mods", "offlineRRR", 0) == 1 && Mission.isSingle()) engineRepairTime = 1;
 
         this.repairTime = engineRepairTime * repairPenalty;
         System.out.println("Engine Repair Time: " + engineRepairTime + "s.");

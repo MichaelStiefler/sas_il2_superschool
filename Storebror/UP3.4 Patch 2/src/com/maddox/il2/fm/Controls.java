@@ -1088,6 +1088,7 @@ public class Controls {
     private void updateX4() {
         if (!(this.FM.actor instanceof TypeX4Carrier)) return;
         if (!this.FM.isTick(44, 0)) return;
+        if (!this.FM.AS.isMaster()) return;
         if (this.FM instanceof RealFlightModel && ((RealFlightModel)this.FM).isRealMode()) return;
         if (!(this.FM instanceof Pilot)) return;
         

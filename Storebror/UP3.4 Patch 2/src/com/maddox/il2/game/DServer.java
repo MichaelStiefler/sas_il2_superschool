@@ -242,7 +242,9 @@ public class DServer extends Main {
                     if (l2 <= 0L) continue;
                     try {
                         Thread.sleep(l2); // FIXME: By SAS~Storebror: Consider wait instead of sleep!
-                    } catch (Exception ex) {}
+                    } catch (Exception ex) {
+                        ex.printStackTrace(); // TODO: By SAS~Storebror: Patch 2 - let us know what happened on DServer in case of crashes!
+                    }
 
                     // TEST By SAS~Storebror
 //                    synchronized (tickWaitObject) {
@@ -365,7 +367,8 @@ public class DServer extends Main {
                     int j = 0;
                     try {
                         j = System.in.read(this.inputBuf);
-                    } catch (Exception localException3) {
+                    } catch (Exception ex) {
+                        ex.printStackTrace(); // TODO: By SAS~Storebror: Patch 2 - let us know what happened on DServer in case of crashes!
                         break;
                     }
                     if (j < 0) break;
@@ -384,7 +387,9 @@ public class DServer extends Main {
                             }
                             try {
                                 Thread.sleep(10L);
-                            } catch (Exception localException3) {}
+                            } catch (Exception ex) {
+                                ex.printStackTrace(); // TODO: By SAS~Storebror: Patch 2 - let us know what happened on DServer in case of crashes!
+                            }
                         }
                         while (true) {
                             synchronized (DServer.this.oCommandSync) {
@@ -393,7 +398,9 @@ public class DServer extends Main {
                             }
                             try {
                                 Thread.sleep(10L);
-                            } catch (Exception localException2) {}
+                            } catch (Exception ex) {
+                                ex.printStackTrace(); // TODO: By SAS~Storebror: Patch 2 - let us know what happened on DServer in case of crashes!
+                            }
                         }
                         i = 1;
                     } else {
@@ -402,10 +409,14 @@ public class DServer extends Main {
                         System.out.print(RTSConf.cur.console.getEnv().curNumCmd() + 1 + ">");
                         System.out.flush();
                     }
-                } catch (Exception ex) {}
+                } catch (Exception ex) {
+                    ex.printStackTrace(); // TODO: By SAS~Storebror: Patch 2 - let us know what happened on DServer in case of crashes!
+                }
                 try {
                     Thread.sleep(1L);
-                } catch (Exception localException3) {}
+                } catch (Exception ex) {
+                    ex.printStackTrace(); // TODO: By SAS~Storebror: Patch 2 - let us know what happened on DServer in case of crashes!
+                }
             }
         }
     }

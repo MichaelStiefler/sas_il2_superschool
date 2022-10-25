@@ -959,7 +959,8 @@ public class Maneuver extends AIFlightModel {
 //    private int oldManeuver = 0; // TODO: Cloudfix TEST
 
     public void update(float f) {
-        if (Config.isUSE_RENDER()) this.headTurn(f);
+//        if (Config.isUSE_RENDER()) this.headTurn(f);
+        this.headTurn(f);
         if (showFM) this.OutCT(20);
         // TODO: Cheater Protection
         this.checkCheater();
@@ -7790,7 +7791,9 @@ public class Maneuver extends AIFlightModel {
         else this.pilotHeadT = f1;
         if (Math.abs(this.pilotHeadY - f2) > 2.0F) this.pilotHeadY = this.pilotHeadY + 60.0F * (this.pilotHeadY <= f2 ? 1.0F : -1.0F) * f;
         else this.pilotHeadY = f2;
-        ((NetAircraft)actor).setHeadAngles(this.pilotHeadY, this.pilotHeadT);
+        if (actor instanceof NetAircraft && ((NetAircraft)actor).FM.AS.isMaster()) {
+            ((NetAircraft)actor).setHeadAngles(this.pilotHeadY, this.pilotHeadT);
+        }
     }
 
 //    protected void headTurn(float f) {
