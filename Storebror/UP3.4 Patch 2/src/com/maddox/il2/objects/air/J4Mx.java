@@ -55,19 +55,19 @@ public abstract class J4Mx extends Scheme1
         hierMesh.chunkVisible("A6MPLN4BodyR4", thisWeaponsName.startsWith("8x") || thisWeaponsName.indexOf("10xType3Bombs") != -1 || thisWeaponsName.startsWith("10x30kg"));
         String planeVersion = aircraftClass.getName().substring(30);
         if (planeVersion.startsWith("4")) {
-            hierMesh.chunkVisible("cannon1_D0", !thisWeaponsName.startsWith("S:"));
-            hierMesh.chunkVisible("cannon1a_D0", thisWeaponsName.startsWith("S:"));
-            hierMesh.chunkVisible("cannon1b_D0", thisWeaponsName.startsWith("S:"));
-            hierMesh.chunkVisible("cannon1c_D0", thisWeaponsName.startsWith("S:"));
-            hierMesh.chunkVisible("cannon1d_D0", thisWeaponsName.startsWith("S:"));
-            hierMesh.chunkVisible("Radar_D0", thisWeaponsName.startsWith("S:"));
+            hierMesh.chunkVisible("cannon1_D0", !thisWeaponsName.startsWith("S_"));
+            hierMesh.chunkVisible("cannon1a_D0", thisWeaponsName.startsWith("S_"));
+            hierMesh.chunkVisible("cannon1b_D0", thisWeaponsName.startsWith("S_"));
+            hierMesh.chunkVisible("cannon1c_D0", thisWeaponsName.startsWith("S_"));
+            hierMesh.chunkVisible("cannon1d_D0", thisWeaponsName.startsWith("S_"));
+            hierMesh.chunkVisible("Radar_D0", thisWeaponsName.startsWith("S_"));
         } else if (planeVersion.startsWith("5")) {
-            hierMesh.chunkVisible("cannon1_D0", !thisWeaponsName.startsWith("Sa:") && !thisWeaponsName.startsWith("Sb:"));
-            hierMesh.chunkVisible("cannon1a_D0", thisWeaponsName.startsWith("Sa:") || thisWeaponsName.startsWith("Sb:"));
-            hierMesh.chunkVisible("cannon1b_D0", thisWeaponsName.startsWith("Sa:") || thisWeaponsName.startsWith("Sb:"));
-            hierMesh.chunkVisible("cannon1c_D0", thisWeaponsName.startsWith("Sa:"));
-            hierMesh.chunkVisible("cannon1d_D0", thisWeaponsName.startsWith("Sa:"));
-            hierMesh.chunkVisible("Radar_D0", thisWeaponsName.startsWith("Sa:") || thisWeaponsName.startsWith("Sb:"));
+            hierMesh.chunkVisible("cannon1_D0", !thisWeaponsName.startsWith("Sa_") && !thisWeaponsName.startsWith("Sb_"));
+            hierMesh.chunkVisible("cannon1a_D0", thisWeaponsName.startsWith("Sa_") || thisWeaponsName.startsWith("Sb_"));
+            hierMesh.chunkVisible("cannon1b_D0", thisWeaponsName.startsWith("Sa_") || thisWeaponsName.startsWith("Sb_"));
+            hierMesh.chunkVisible("cannon1c_D0", thisWeaponsName.startsWith("Sa_"));
+            hierMesh.chunkVisible("cannon1d_D0", thisWeaponsName.startsWith("Sa_"));
+            hierMesh.chunkVisible("Radar_D0", thisWeaponsName.startsWith("Sa_") || thisWeaponsName.startsWith("Sb_"));
         }
 
     }
@@ -75,9 +75,9 @@ public abstract class J4Mx extends Scheme1
     public void onAircraftLoaded() {
         super.onAircraftLoaded();
         J4Mx.prepareWeapons(this.getClass(), this.hierMesh(), this.thisWeaponsName);
-        if(thisWeaponsName.startsWith("S:") || thisWeaponsName.startsWith("Sa:")) {
+        if(thisWeaponsName.startsWith("S_") || thisWeaponsName.startsWith("Sa_")) {
             this.FM.M.massEmpty += 320F;
-        } else if (thisWeaponsName.startsWith("Sb:")) {
+        } else if (thisWeaponsName.startsWith("Sb_")) {
             this.FM.M.massEmpty += 200F;
         }
     }
