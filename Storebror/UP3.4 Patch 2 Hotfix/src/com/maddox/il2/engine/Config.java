@@ -200,10 +200,14 @@ public class Config {
     private void loadNet() {
         this.netLocalPort = this.ini.get("NET", "localPort", this.netLocalPort, 1000, 65000);
         this.netRemotePort = this.ini.get("NET", "remotePort", this.netRemotePort, 1000, 65000);
-        this.netSpeed = this.ini.get("NET", "speed", this.netSpeed, 300, 0xf4240);
+        this.netSpeed = this.ini.get("NET", "speed", this.netSpeed, 300, 1000000);
         // TODO: +++ Mods Settings GUI by SAS~Storebror +++
-        this.bNetBoost = this.ini.get("Mods", "HighSpeedNet", 0) != 0;
-        if (this.bNetBoost) this.netSpeed = NET_SPEED_HIGH;
+        this.bNetBoost = this.ini.get("Mods", "HighSpeedNet", 1) != -1;
+        if (this.bNetBoost && this.netSpeed < NET_SPEED_HIGH) this.netSpeed = NET_SPEED_HIGH;
+        if (this.netSpeed < 100000) { // New Minimum Threshold to detect unset network speed
+            this.netSpeed = NET_SPEED_HIGH;
+            this.bNetBoost = true;
+        }
         this.bAddDefaultCountryNone = this.ini.get("Mods", "AddDefaultCountryNone", 0) != 0;
         this.bUseAutoAdminLogin = this.ini.get("Mods", "useNetLogin", 0) != 0;
         this.sAutoAdminPassword = this.ini.get("Mods", "netLogin", "");
@@ -263,7 +267,7 @@ public class Config {
         }
 
         // TODO: +++ Mods Settings GUI by SAS~Storebror +++
-        this.ini.setValue("Mods", "HighSpeedNet", this.bNetBoost ? "1" : "0");
+        this.ini.setValue("Mods", "HighSpeedNet", this.bNetBoost ? "1" : "-1");
         this.ini.setValue("Mods", "AddDefaultCountryNone", this.bAddDefaultCountryNone ? "1" : "0");
         this.ini.setValue("Mods", "useNetLogin", this.bUseAutoAdminLogin ? "1" : "0");
         this.ini.setValue("Mods", "netLogin", this.sAutoAdminPassword);
@@ -550,7 +554,7 @@ public class Config {
         this.netRemotePort = 21000;
         this.netLocalHost = null;
         this.netRemoteHost = "";
-        this.netSpeed = 5000;
+        this.netSpeed = 1000000; // was 5000
         this.netRouteChannels = 0;
         this.netServerChannels = 8;
         this.netSkinDownload = true;
@@ -690,7 +694,7 @@ public class Config {
     private static final String   MIN_PATCH_LEVEL       = "2".intern();
     private static final String   MAX_PATCH_LEVEL       = "2".intern();
     private static final String   PATCH_LEVEL           = "2".intern();
-    private static final String   HOTFIX_VERSION        = "4".intern();
+    private static final String   HOTFIX_VERSION        = "5".intern();
     private static final String[] PATCHLEVEL_G          = { "2".intern() };
     private static final String[] PATCHLEVEL_Y          = { "1".intern() };
 
