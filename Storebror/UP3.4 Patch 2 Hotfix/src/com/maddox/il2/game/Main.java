@@ -352,8 +352,10 @@ public abstract class Main {
         else if ("lt".equals(Locale.getDefault().getLanguage())) RTSConf.charEncoding = "Cp1257";
         else if ("ja".equals(Locale.getDefault().getLanguage())) RTSConf.charEncoding = "SJIS";
         if (cur != null) throw new RuntimeException("Traying recurse execute main method");
-        Runtime.getRuntime().traceInstructions(false);
-        Runtime.getRuntime().traceMethodCalls(false);
+//        try {
+//            Runtime.getRuntime().traceInstructions(false);
+//            Runtime.getRuntime().traceMethodCalls(false);
+//        } catch (Exception e) {}
         Main.cur = main;
         if (!main.isLifeLimitted()) {
             try {

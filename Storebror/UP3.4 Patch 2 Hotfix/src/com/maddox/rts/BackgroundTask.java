@@ -1,5 +1,7 @@
 package com.maddox.rts;
 
+import com.maddox.il2.game.Main;
+
 public class BackgroundTask
 {
 
@@ -206,9 +208,11 @@ public class BackgroundTask
         catch(BackgroundTaskCancelException backgroundtaskcancelexception) { }
         catch(Exception exception)
         {
-            System.out.println(exception.getMessage());
-            exception.printStackTrace();
-            throw new RuntimeException("BackgroundTask crashed:");
+            if (Main.cur().mission != null && !Main.cur().mission.isDestroyed()) {
+                System.out.println(exception.getMessage());
+                exception.printStackTrace();
+                throw new RuntimeException("BackgroundTask crashed:");
+            }
         }
         RTSConf.cur.backgroundLoop.curTask = null;
         backgroundtask.afterRun();
