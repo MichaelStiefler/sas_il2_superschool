@@ -190,18 +190,36 @@ public class CmdMusic extends Cmd {
     }
 
     private static int getRandomInt(ArrayList list, int neglim, int poslim) {
-        if (RTSConf.isRequestExitApp()) return 0;
-        if (neglim >= poslim) throw new IllegalArgumentException("positive limit must be at least 1 greater than negative limit!");
-        SecureRandom secRandom = new SecureRandom();
-        secRandom.setSeed(System.currentTimeMillis());
-        RangeRandom rr = new RangeRandom(secRandom.nextLong());
-        int ran = Math.round(rr.nextFloat(0.0F, 1.0F) * (poslim - 1 - neglim) + neglim);
-        for (int i = 0; i < list.size(); i++) {
-            if (RTSConf.isRequestExitApp()) return 0;
-            if (ran == Integer.parseInt((String) list.get(i))) return getRandomInt(list, neglim, poslim);
+        try {
+            if (RTSConf.isRequestExitApp()) {
+                if (list == null || list.size() < 1) return 0;
+                for (int i = 0; i < list.size(); i++) {
+                    if (RTSConf.isRequestExitApp()) return 0;
+                    int listElement = Integer.parseInt((String) list.get(i));
+                    if (listElement >= neglim || listElement < poslim) return listElement;
+                }
+                return 0;
+            }
+            if (neglim >= poslim) throw new IllegalArgumentException("positive limit must be at least 1 greater than negative limit!");
+            RangeRandom rr = null;
+            try {
+                SecureRandom secRandom = new SecureRandom();
+                secRandom.setSeed(System.currentTimeMillis());
+                rr = new RangeRandom(secRandom.nextLong());
+            } catch (Exception e) {
+                rr = new RangeRandom(System.currentTimeMillis());
+            }
+            if (list == null || poslim - neglim < list.size()) return (neglim + poslim) >>> 1;
+            int ran = Math.round(rr.nextFloat(0.0F, 1.0F) * (poslim - 1 - neglim) + neglim);
+            for (int i = 0; i < list.size(); i++) {
+                if (RTSConf.isRequestExitApp()) return 0;
+                if (ran == Integer.parseInt((String) list.get(i))) return getRandomInt(list, neglim, poslim);
+            }
+            list.add(ran + "");
+            return ran;
+        } catch (Exception e) {
+            return (neglim + poslim) >>> 1;
         }
-        list.add(ran + "");
-        return ran;
     }
 
     public static void setList(final Map map) {

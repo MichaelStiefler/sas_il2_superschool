@@ -135,7 +135,14 @@ public abstract class B_36X extends Scheme7 implements TypeBomber, TypeTransport
         if (this.FM.turret.length > 1) this.FM.turret[1].obsDir = Turret.FRONT;
 
         this.lastTurretActivationRequested = Time.current() - B_36X.TURRET_ACTIVATED_DURATION - 1L;
-        this.FM.CT.setStepControl(1.0F);
+        //this.FM.CT.setStepControl(1.0F); // Causes erratic Log Output!
+        Reflection.setFloat(this.FM.CT, "StepControl", 1.0F);
+        for (int i = 0; i < 12; i++) {
+            if ((i < this.FM.EI.getNum()) && (this.FM.EI.bCurControl[i])) {
+                this.FM.CT.StepControlArr[i] = 1.0F;
+            }
+        }
+        //---
         this.initialMixtureSet = false;
         this.initialCompressorSettingsLeft = 10;
         for (int i=0; i<4; i++) this.lastJetPowerConfirmed[i] = Time.current();
