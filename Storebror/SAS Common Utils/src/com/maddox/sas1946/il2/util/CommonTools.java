@@ -11,7 +11,7 @@ package com.maddox.sas1946.il2.util;
  * @author SAS~Storebror
  */
 public class CommonTools {
-
+    
 	/**
 	 * Override default Constructor to avoid instanciation
 	 * @throws Exception
@@ -304,7 +304,6 @@ public class CommonTools {
         if (!loadNative()) return -1;
         return (float)jniGetTimeZoneBias() / 60.0F;
     }
-
     
     // *****************************************************************************************************************************************************************************************************
     // Native Methods implementation section.

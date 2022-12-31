@@ -9,7 +9,7 @@ import java.io.IOException;
  * This Class is used to provide helper methods for File Handling.
  * <p>
  * 
- * @version 1.1.2
+ * @version 1.1.4
  * @since 1.1.2
  * @author SAS~Storebror
  */
@@ -68,6 +68,96 @@ public class FileTools {
         return doResolveSymbolicLink(file);
     }
 
+    /**
+     * Gets the sizes (in bytes) of all files in a given directory (excluding sub-directories).
+     * @param path
+     *            The folder which has to be scanned
+     * @param searchPattern
+     *            The search pattern for files to be searched for
+     * @param scanSubFolders
+     *            Boolean parameter specifying whether or not subfolders should be scanned
+     * @return Array of {@link FileSizeRecord} elements holding the names and sizes of all files found in the given directory.
+     * @since 1.1.4
+     */
+    public final static FileSizeRecord[] getFileSizes(String path, String searchPattern, boolean scanSubFolders) {
+        return doGetFileSizes(path, searchPattern, scanSubFolders);
+    }
+
+    /**
+     * Gets the sizes (in bytes) of all files in a given directory (excluding sub-directories).
+     * @param path
+     *            The directory in question
+     * @return The real file / directory on the given file system.
+     * @since 1.1.4
+     */
+
+    
+    
+    /**
+     * Class holding folder names, names and sizes of files found when calling the {@link FileTools#getFileSizes(String, String, boolean) getFileSizes} method.
+     * 
+     * @author SAS~Storebror
+     * @since 1.1.4
+     */
+    public static class FileSizeRecord implements Comparable {
+        
+        /**
+         * The folder name value of a file found.
+         * The folder name is relative to the search path specified in the {@link FileTools#getFileSizes(String, String, boolean) getFileSizes} method.
+         */
+        public String folder;
+        
+        /**
+         * The name value of a file found.
+         */
+        public String name;
+        
+        /**
+         * The size value of a file found.
+         */
+        public long size;
+        
+        /**
+         * Default Constructor for the {@link FileSizeRecord} class.
+         */
+        public FileSizeRecord() {
+            folder = new String();
+            name = new String();
+            size = 0;
+        }
+        
+        /**
+         * Converts a {@link FileSizeRecord} to printable format.
+         */
+        public String toString() {   
+            return "[" + folder + "\\" + name + "=" + size + "]";   
+        }
+        
+        /**
+         * Compare two {@link FileSizeRecord} according to {@link Comparable} implementation standards
+         * @param obj1 first {@link FileSizeRecord} to compare
+         * @param obj2 second {@link FileSizeRecord} to compare
+         * @return Returns -1, 0 or 1 depending on the natural name's sort order result according to {@link Comparable} implementation standards
+         */
+        public int compare(Object obj1, Object obj2) {
+            if (!(obj1 instanceof FileSizeRecord) || !(obj2 instanceof FileSizeRecord)) return 0;
+            FileSizeRecord fsr1 = (FileSizeRecord)obj1;
+            FileSizeRecord fsr2 = (FileSizeRecord)obj2;
+            return (fsr1.folder + fsr1.name).compareTo(fsr2.folder + fsr2.name);
+        }
+        
+        /**
+         * Compare the current {@link FileSizeRecord} element to another {@link FileSizeRecord} element according to {@link Comparable} implementation standards
+         * @param obj the other {@link FileSizeRecord} element to compare with
+         * @return Returns -1, 0 or 1 depending on the natural name's sort order result according to {@link Comparable} implementation standards
+         */
+        public int compareTo(Object obj) {
+            if (!(obj instanceof FileSizeRecord)) return 0;
+            FileSizeRecord fsr = (FileSizeRecord)obj;
+            return (this.folder + this.name).compareTo(fsr.folder + fsr.name);
+        }
+    }
+    
     // *****************************************************************************************************************************************************************************************************
     // Private implementation section.
     // Do whatever you like here but keep it private to this class.
@@ -117,6 +207,11 @@ public class FileTools {
         return new File(resolvedPath);
     }
 
+    private final static FileSizeRecord[] doGetFileSizes(String path, String searchPattern, boolean scanSubFolders) {
+        if (!loadNative()) return new FileSizeRecord[]{};
+        return jniGetFileSizes(path, searchPattern, scanSubFolders);
+    }
+    
     private long start;
     
     // *****************************************************************************************************************************************************************************************************
@@ -142,4 +237,5 @@ public class FileTools {
     private static boolean initAttemptDone = false;
     private static native boolean jniIsSymbolicLink(String path); 
     private static native String jniResolveSymbolicLink(String path); 
+    private static native FileSizeRecord[] jniGetFileSizes(String path, String searchPattern, boolean scanSubFolders); 
 }

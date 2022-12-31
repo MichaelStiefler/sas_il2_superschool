@@ -3,8 +3,17 @@ package com.maddox.sas1946.il2.util;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 
+import com.maddox.il2.ai.BulletEmitter;
+import com.maddox.il2.ai.World;
+import com.maddox.il2.engine.ActorException;
+import com.maddox.il2.engine.Eff3DActor;
+import com.maddox.il2.engine.GunGeneric;
+import com.maddox.il2.engine.Hook;
 import com.maddox.il2.objects.air.Aircraft;
 import com.maddox.il2.objects.air.Aircraft._WeaponSlot;
+import com.maddox.il2.objects.weapons.BombGun;
+import com.maddox.il2.objects.weapons.Pylon;
+import com.maddox.il2.objects.weapons.RocketBombGun;
 import com.maddox.rts.Finger;
 import com.maddox.util.HashMapInt;
 import com.maddox.util.NumberTokenizer;
@@ -15,7 +24,7 @@ import com.maddox.util.NumberTokenizer;
  * This Class is used to provide helpers and missing functions for Aircrafts in IL-2 Sturmovik 1946.
  * <p>
  * 
- * @version 1.1.0
+ * @version 1.1.3
  * @since 1.0.4
  * @author SAS~Storebror
  */
@@ -73,7 +82,46 @@ public class AircraftTools {
 		doWeaponsRegister(airClass, slotName, theWeapons);
 	}
 	
-	// *****************************************************************************************************************************************************************************************************
+    /**
+     * This method provides a simple means of keeping wing weapons visible and usable while<br>
+     * an Aircraft is folding its wings.<br>
+     * &nbsp;<br>
+     * In Stock game (and most mods up to the year 2021), weapons residing on wing stores become hidden<br>
+     * and unusable while wings are being folded.<br>
+     * This is the Java Code found in such Aircraft Classes, the responsible method is "moveWingFold":<br>
+     * &nbsp;<br>
+     * <code>public void moveWingFold(float f) {<br>
+        &nbsp;&nbsp;if (f &lt; 0.001F) {<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;this.setGunPodsOn(true);<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;this.hideWingWeapons(false);<br>
+        &nbsp;&nbsp;} else {<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;this.setGunPodsOn(false);<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;this.FM.CT.WeaponControl[0] = false;<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;this.hideWingWeapons(true);<br>
+        &nbsp;&nbsp;}<br>
+        &nbsp;&nbsp;this.moveWingFold(this.hierMesh(), f);<br>
+    }</code><br>
+     * &nbsp;<br>
+     * Using this helper Method, the Code changes to:<br>
+     * &nbsp;<br>
+     * <code>public void moveWingFold(float f) {<br>
+        &nbsp;&nbsp;this.moveWingFold(this.hierMesh(), f);<br>
+        &nbsp;&nbsp;AircraftTools.updateExternalWeaponHooks(this);<br>
+    }</code><br>
+     * &nbsp;<br>
+     * This causes the wing weapons to remain visible and usable while wings are being folded/unfolded.<br>
+     * &nbsp;<br>
+     *
+     * @param aircraft
+     *            The aircraft which needs to have its wing weapons updated while folding wings
+     * @since 1.1.3
+     */
+    public final static void updateExternalWeaponHooks(Aircraft aircraft) {
+        doUpdateExternalWeaponHooks(aircraft);
+    }
+    
+
+    // *****************************************************************************************************************************************************************************************************
 	// Private implementation section.
 	// Do whatever you like here but keep it private to this class.
 	// *****************************************************************************************************************************************************************************************************
@@ -162,22 +210,70 @@ public class AircraftTools {
 		return (int[])Reflection.invokeMethod(aircraftGetWeaponTriggersRegistered, new Object[] { class1 });
 	}
 	
-//	private static double directionalDistanceToGround(double maxRangeInMeters) {
-//        long lFreq = TestCounter.getFrequency();
-//        long lStart = TestCounter.getCounter();
-//        double retVal = Double.POSITIVE_INFINITY;
-//        Point3d pThis = new Point3d(this.pos.getAbsPoint());
-//        Point3d pMaxRange = new Point3d(maxRangeInMeters, 0.0D, -maxRangeInMeters);
-//        this.pos.getAbsOrient().transform(pMaxRange);
-//        pMaxRange.add(pThis);
-//        Point3d pHit = new Point3d();
-//        if(Landscape.rayHitHQ(pThis, pMaxRange, pHit))
-//            retVal = pHit.distance(pThis);
-//        long lNanoSeconds = (TestCounter.getCounter()-lStart) * 1000000000 / lFreq;
-//        HUD.training("DTG: " + df.format(retVal) + ", took " + lNanoSeconds + "ns");
-//        return retVal;
-//    }
-	
-	
+    private static String dumpName(String hookName) {
+        int i = hookName.length() - 1;
+        while (i >= 0 && Character.isDigit(hookName.charAt(i))) i--;
+        i++;
+        return hookName.substring(0, i) + "Dump" + hookName.substring(i);
+    }
+	  
+    private static boolean doUpdateExternalWeaponHooks(Aircraft aircraft) {
+        boolean retVal = true;
+        String[] weaponHookArray = Aircraft.getWeaponHooksRegistered(aircraft.getClass());
+        int[] weaponTriggerArray = Aircraft.getWeaponTriggersRegistered(aircraft.getClass());
+        for (int i = 0; i < weaponHookArray.length; i++) {
+            if (weaponTriggerArray.length > i && weaponTriggerArray[i] > 9) continue;
+            try {
+                BulletEmitter be = aircraft.getBulletEmitterByHookName(weaponHookArray[i]);
+                if (be instanceof Pylon) {
+                    Pylon py = (Pylon)be;
+                    py.pos.getRel().set(0, 0, 0, 0, 0, 0);
+                    py.set(aircraft, py.getHookName());
+                    continue;
+                }
+                if (be instanceof GunGeneric) {
+                    GunGeneric gg = (GunGeneric)be;
+                    gg.pos.getRel().set(0, 0, 0, 0, 0, 0);
+                    try {
+                        Hook localHook = aircraft.findHook(weaponHookArray[i]);
+                        gg.pos.setBase(aircraft, localHook, false);
+                    } catch (ActorException e) {
+                        continue;
+                    }
+                    gg.pos.changeHookToRel();
+                    gg.visibilityAsBase(true);
+                    gg.pos.setUpdateEnable(false);
+                    gg.pos.reset();
+                    Eff3DActor shells = (Eff3DActor)Reflection.getValue(gg, "shells");
+                    if (shells != null) {
+                        shells.pos.getRel().set(0, 0, 0, 0, 0, 0);
+                        try {
+                            Hook localHook = aircraft.findHook(dumpName(weaponHookArray[i]));
+                            shells.pos.setBase(aircraft, localHook, false);
+                        } catch (ActorException e) {
+                            continue;
+                        }
+                        shells.pos.changeHookToRel();
+                        shells.visibilityAsBase(true);
+                        shells.pos.setUpdateEnable(false);
+                        shells.pos.reset();
+                    }
+                    continue;
+                }
+                if (!be.haveBullets()) {
+                    continue;
+                }
+                if (be instanceof BombGun && !be.getHookName().toLowerCase().startsWith("_external")) continue;
+                if (BaseGameVersion.is410orLater() && be instanceof RocketBombGun && !be.getHookName().toLowerCase().startsWith("_external")) continue;
+                int bullets = ((aircraft == World.getPlayerAircraft()) && !World.cur().diffCur.Limited_Ammo) ? -1 : be.countBullets();
+                be.loadBullets(0);
+                be.loadBullets(bullets);
+            } catch (Exception e) {
+                e.printStackTrace();
+                retVal = false;
+            }
+        }
+        return retVal;
+    }
 	
 }
