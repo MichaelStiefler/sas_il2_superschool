@@ -2027,58 +2027,61 @@ public abstract class NetAircraft extends SndAircraft {
         this.netCockpitEnter(actor, i, (NetChannel) null);
     }
 
-    private void netCockpitEnter(Actor actor, int i, NetChannel netchannel) {
-        int i_141_ = this.netCockpitIndxPilot;
-        if (actor instanceof NetGunner) i_141_ = ((NetGunner) actor).netCockpitIndxPilot;
-        Object object_143_ = Property.value(this.getClass(), "cockpitClass");
-        if (object_143_ != null) {
-            Class var_class;
-            Class var_class_144_;
-            if (object_143_ instanceof Class) {
-                if (i_141_ > 0 || i > 0) return;
-                var_class = var_class_144_ = (Class) object_143_;
+    private void netCockpitEnter(Actor actor, int cockpitIndex, NetChannel netchannel) {
+        int nCIP = this.netCockpitIndxPilot;
+        if (actor instanceof NetGunner) nCIP = ((NetGunner) actor).netCockpitIndxPilot;
+        Object cockpitClassObject = Property.value(this.getClass(), "cockpitClass");
+        if (cockpitClassObject != null) {
+            Class cockpitClass;
+            Class cockpitClass2;
+            if (cockpitClassObject instanceof Class) {
+                if (nCIP > 0 || cockpitIndex > 0) return;
+                cockpitClass = cockpitClass2 = (Class) cockpitClassObject;
             } else {
-                Class[] var_classes = (Class[]) object_143_;
-                if (i_141_ >= var_classes.length || i >= var_classes.length) return;
-                var_class = var_classes[i_141_];
-                var_class_144_ = var_classes[i];
+                Class[] cockpitClassObjectArray = (Class[]) cockpitClassObject;
+                if (nCIP >= cockpitClassObjectArray.length || cockpitIndex >= cockpitClassObjectArray.length || nCIP < 0 || cockpitIndex < 0) return;
+                cockpitClass = cockpitClassObjectArray[nCIP];
+                cockpitClass2 = cockpitClassObjectArray[cockpitIndex];
             }
-            if (!CockpitPilot.class.isAssignableFrom(var_class)) {
-                int i_145_ = Property.intValue(var_class, "aiTuretNum", 0);
-                Turret turret = this.FM.turret[i_145_];
+            if (!CockpitPilot.class.isAssignableFrom(cockpitClass)) {
+                int turretNum = Property.intValue(cockpitClass, "aiTuretNum", 0);
+                if (turretNum < 0 || turretNum >= this.FM.turret.length) return;
+                Turret turret = this.FM.turret[turretNum];
                 turret.bIsNetMirror = false;
             }
-            if (!CockpitPilot.class.isAssignableFrom(var_class_144_)) {
-                int i_146_ = Property.intValue(var_class_144_, "aiTuretNum", 0);
-                Turret turret = this.FM.turret[i_146_];
+            if (!CockpitPilot.class.isAssignableFrom(cockpitClass2)) {
+                int turretNum = Property.intValue(cockpitClass2, "aiTuretNum", 0);
+                if (turretNum < 0 || turretNum >= this.FM.turret.length) return;
+                Turret turret = this.FM.turret[turretNum];
                 turret.bIsNetMirror = actor.net.isMirror();
             }
-            if (actor instanceof NetGunner) ((NetGunner) actor).netCockpitIndxPilot = i;
-            else this.netCockpitIndxPilot = i;
-            this.netCockpitDriverSet(actor, i);
-            int i_147_ = 0;
-            int i_148_ = -1;
-            if (!CockpitPilot.class.isAssignableFrom(var_class_144_)) {
-                i_148_ = Property.intValue(var_class_144_, "aiTuretNum", 0);
-                Turret turret = this.FM.turret[i_148_];
-                if (turret.bIsAIControlled) i_148_ = -1;
-                else i_147_ = Property.intValue(var_class_144_, "weaponControlNum", 10);
+            if (actor instanceof NetGunner) ((NetGunner) actor).netCockpitIndxPilot = cockpitIndex;
+            else this.netCockpitIndxPilot = cockpitIndex;
+            this.netCockpitDriverSet(actor, cockpitIndex);
+            int weaponControlNum = 0;
+            int turretNum = -1;
+            if (!CockpitPilot.class.isAssignableFrom(cockpitClass2)) {
+                turretNum = Property.intValue(cockpitClass2, "aiTuretNum", 0);
+                if (turretNum < 0 || turretNum >= this.FM.turret.length) return;
+                Turret turret = this.FM.turret[turretNum];
+                if (turret.bIsAIControlled) turretNum = -1;
+                else weaponControlNum = Property.intValue(cockpitClass2, "weaponControlNum", 10);
             }
             if (actor instanceof NetGunner) {
-                ((NetGunner) actor).netCockpitTuretNum = i_148_;
-                ((NetGunner) actor).netCockpitWeaponControlNum = i_147_;
+                ((NetGunner) actor).netCockpitTuretNum = turretNum;
+                ((NetGunner) actor).netCockpitWeaponControlNum = weaponControlNum;
             } else {
-                this.netCockpitTuretNum = i_148_;
-                this.netCockpitWeaponControlNum = i_147_;
+                this.netCockpitTuretNum = turretNum;
+                this.netCockpitWeaponControlNum = weaponControlNum;
             }
-            int i_149_ = this.net.countMirrors();
-            if (this.net.isMirror()) i_149_++;
-            if (netchannel != null) i_149_--;
-            if (i_149_ > 0) try {
+            int countMirrors = this.net.countMirrors();
+            if (this.net.isMirror()) countMirrors++;
+            if (netchannel != null) countMirrors--;
+            if (countMirrors > 0) try {
                 NetMsgGuaranted netmsgguaranted = new NetMsgGuaranted();
                 netmsgguaranted.writeByte(12);
                 netmsgguaranted.writeNetObj(actor.net);
-                netmsgguaranted.writeByte(i);
+                netmsgguaranted.writeByte(cockpitIndex);
                 this.net.postExclude(netchannel, netmsgguaranted);
             } catch (Exception exception) {
                 printDebug(exception);

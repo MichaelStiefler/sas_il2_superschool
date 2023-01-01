@@ -233,9 +233,11 @@ public class HUD {
         int colorNormal = 0xc0e0e0e0;
         // TODO: --- Additional Player Info Mod for Admins by SAS~Storebror ---
         Actor actorCur = Main3D.cur3D().camera3D.pos.base();
+        if (!Mission.isPlaying()) return;
         if (this.iDrawSpeed != 0 && this.bDrawAllMessages && (Main.cur().netServerParams == null || Main.cur().netServerParams.isShowSpeedBar() || Mission.isSingle()) && (actorCur == World.getPlayerAircraft() || (actorCur instanceof Aircraft && isAdminMode())) && !World.cur().diffCur.NoSpeedBar) {
             Aircraft aircraftCur = (Aircraft) actorCur;
             FlightModel curFM = (actorCur == World.getPlayerAircraft()?World.getPlayerFM():aircraftCur.FM);
+            if (curFM == null) return;
             int direction = Math.round(curFM.Or.getYaw());
             direction = direction > 90 ? 450 - direction : 90 - direction;
             boolean loadlimit = false;

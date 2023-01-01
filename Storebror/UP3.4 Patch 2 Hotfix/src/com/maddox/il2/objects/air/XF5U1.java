@@ -763,13 +763,13 @@ public class XF5U1 extends Scheme2a implements TypeFighter, TypeBNZFighter, Type
         super.hitProp(i, j, actor);
         this.FM.cut(this.part("Engine" + (i + 1)), j, actor);
         if (this.isChunkAnyDamageVisible("Prop" + (i + 1)) || this.isChunkAnyDamageVisible("PropRot" + (i + 1))) {
-            for (int k = 0; j < Props[i][0].length; k++) {
+            for (int k = 0; k < Props[i][0].length; k++) {
                 this.hierMesh().chunkVisible(Props[i][0][k], false);
             }
-            for (int k = 0; j < Props[i][1].length; k++) {
+            for (int k = 0; k < Props[i][1].length; k++) {
                 this.hierMesh().chunkVisible(Props[i][1][k], false);
             }
-            for (int k = 0; j < Props[i][2].length; k++) {
+            for (int k = 0; k < Props[i][2].length; k++) {
                 this.hierMesh().chunkVisible(Props[i][2][k], true);
             }
         }
