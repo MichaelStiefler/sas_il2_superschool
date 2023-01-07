@@ -4,7 +4,6 @@ package com.maddox.il2.gui;
 import java.io.File;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 import java.util.PropertyResourceBundle;
@@ -1253,9 +1252,8 @@ public class GUIAirArming extends GameState {
             int i = this.cAircraft.getSelected();
             String skinsPath = Main.cur().netFileServerSkin.primaryPath();
             String aircraftName = validateFileName((String) this.airNames.get(i));
-            FileTools.FileSizeRecord[] fileSizeRecords = FileTools.getFileSizes(HomePath.toFileSystemName(skinsPath + "/" + aircraftName, 0), "*.bmp", false);
+            FileTools.FileSizeRecord[] fileSizeRecords = FileTools.getFileSizes(HomePath.toFileSystemName(skinsPath + "/" + aircraftName, 0), "*.bmp", false, true, false);
             if (fileSizeRecords != null) {
-                if (fileSizeRecords.length > 1) Arrays.sort(fileSizeRecords);
                 for (int fsri=0; fsri<fileSizeRecords.length; fsri++) {
                     if (fileSizeRecords[fsri].name.endsWith(".bmp") && fileSizeRecords[fsri].name.length() + aircraftName.length() <= 122) {
                         if (!Mission.isNet() || Math.abs(fileSizeRecords[fsri].size - 263036) < 200 || Math.abs(fileSizeRecords[fsri].size - 1049176) < 500) this.cSkin.add(fileSizeRecords[fsri].name);

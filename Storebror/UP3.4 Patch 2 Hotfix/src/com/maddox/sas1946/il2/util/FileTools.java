@@ -2,6 +2,8 @@ package com.maddox.sas1946.il2.util;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Arrays;
+import java.util.Comparator;
 
 /**
  * "FileTools" Class of the "SAS Common Utils"
@@ -9,7 +11,7 @@ import java.io.IOException;
  * This Class is used to provide helper methods for File Handling.
  * <p>
  * 
- * @version 1.1.4
+ * @version 1.1.5
  * @since 1.1.2
  * @author SAS~Storebror
  */
@@ -71,7 +73,11 @@ public class FileTools {
     /**
      * Gets the sizes (in bytes) of all files in a given directory (excluding sub-directories).
      * @param path
-     *            The directory in question
+     *            The folder which has to be scanned
+     * @param searchPattern
+     *            The search pattern for files to be searched for
+     * @param scanSubFolders
+     *            Boolean parameter specifying whether or not subfolders should be scanned
      * @return Array of {@link FileSizeRecord} elements holding the names and sizes of all files found in the given directory.
      * @since 1.1.4
      */
@@ -82,12 +88,22 @@ public class FileTools {
     /**
      * Gets the sizes (in bytes) of all files in a given directory (excluding sub-directories).
      * @param path
-     *            The directory in question
-     * @return The real file / directory on the given file system.
-     * @since 1.1.4
+     *            The folder which has to be scanned
+     * @param searchPattern
+     *            The search pattern for files to be searched for
+     * @param scanSubFolders
+     *            Boolean parameter specifying whether or not subfolders should be scanned
+     * @param sorted
+     *            Boolean parameter specifying whether or not the returned Array of {@link FileSizeRecord} should be sorted (by Subfolder / Filenames that is)
+     * @param caseSensitive
+     *            Boolean parameter specifying whether or not the sort order should be case sensitive, only valid if sorted equals "true"
+     * @return Array of {@link FileSizeRecord} elements holding the names and sizes of all files found in the given directory.
+     * @since 1.1.5
      */
-
-    
+    public final static FileSizeRecord[] getFileSizes(String path, String searchPattern, boolean scanSubFolders, boolean sorted, boolean caseSensitive) {
+        if (sorted) return doGetFileSizesSorted(path, searchPattern, scanSubFolders, caseSensitive);
+        return doGetFileSizes(path, searchPattern, scanSubFolders);
+    }    
     
     /**
      * Class holding folder names, names and sizes of files found when calling the {@link FileTools#getFileSizes(String, String, boolean) getFileSizes} method.
@@ -202,12 +218,45 @@ public class FileTools {
         }
         return new File(resolvedPath);
     }
+    
+    private static final boolean isMatch(String haystack, String needle) {
+        char[] check = needle.toCharArray();
+        for(int i=0; i < check.length; i++) if (haystack.indexOf(check[i]) != -1) return true;
+        return false;
+    }
 
     private final static FileSizeRecord[] doGetFileSizes(String path, String searchPattern, boolean scanSubFolders) {
-        if (!loadNative()) return new FileSizeRecord[]{};
-        return jniGetFileSizes(path, searchPattern, scanSubFolders);
+        try {
+            if (!loadNative()) return new FileSizeRecord[]{};
+            if (isMatch(path.substring(2), ":?*\"<>|")) return new FileSizeRecord[]{};
+            if (isMatch(searchPattern, "\\/:|")) return new FileSizeRecord[]{};
+            FileSizeRecord[] fileSizeRecords = jniGetFileSizes(path, searchPattern, scanSubFolders);
+            if (fileSizeRecords == null) fileSizeRecords = new FileSizeRecord[]{};
+            return fileSizeRecords;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new FileSizeRecord[]{};
+        }
     }
     
+    private final static FileSizeRecord[] doGetFileSizesSorted(String path, String searchPattern, boolean scanSubFolders, boolean caseSensitive) {
+        FileSizeRecord[] fileSizeRecords = doGetFileSizes(path, searchPattern, scanSubFolders);
+        if (fileSizeRecords.length > 1) {
+            if (caseSensitive) {
+                Arrays.sort(fileSizeRecords);
+            } else {
+                Arrays.sort(fileSizeRecords, new Comparator() {
+                    public int compare(Object obj1, Object obj2) {
+                        if (!(obj1 instanceof FileSizeRecord) || !(obj2 instanceof FileSizeRecord)) return 0;
+                        FileSizeRecord fsr1 = (FileSizeRecord)obj1;
+                        FileSizeRecord fsr2 = (FileSizeRecord)obj2;
+                        return (fsr1.folder + fsr1.name).toLowerCase().compareTo((fsr2.folder + fsr2.name).toLowerCase());
+                    }
+                });
+            }
+        }
+        return fileSizeRecords;
+    }
     private long start;
     
     // *****************************************************************************************************************************************************************************************************
