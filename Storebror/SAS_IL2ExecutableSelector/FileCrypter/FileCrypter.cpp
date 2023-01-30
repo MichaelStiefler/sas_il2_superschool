@@ -136,10 +136,10 @@ int main(int argc, char* argv[])
 {
     initOutputFiles();
     WIN32_FIND_DATAA ffd;
-    LARGE_INTEGER filesize;
+    //LARGE_INTEGER filesize;
     CHAR cDir[MAX_PATH];
     CHAR cName[MAX_PATH];
-    size_t length_of_arg;
+    //size_t length_of_arg;
     HANDLE hFind = INVALID_HANDLE_VALUE;
     DWORD dwError = 0;
 

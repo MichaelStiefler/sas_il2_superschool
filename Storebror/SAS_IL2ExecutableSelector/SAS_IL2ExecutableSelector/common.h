@@ -46,26 +46,25 @@
 #define SPLASH_SCREEN_VISIBLE		1
 #define SPLASH_SCREEN_TOPMOST		2
 
+#define DUMP_MODE_SFS_ACCESS		1
+#define DUMP_MODE_DUMP_FILES		2
+
 #define IL2_WINDOW_CAPTION			L"Il2-Sturmovik Forgotten Battles"
 #define IL2_WINDOW_CLASS			L"MaddoxRtsWndClassW"
 
 #define IL2_EXE_NAME				L"il2fb.exe"
 #define WRAPPER_DLL_NAME			L"wrapper.dll"
 #define DINPUT_DLL_NAME				L"DINPUT.dll"
-#define IL2_MOD_NAME				L"basefiles\\mod\\il2fb.exe"
-#define IL2_STOCK_NAME				L"basefiles\\stock\\il2fb.exe"
-#define WRAPPER_BASE_NAME			L"basefiles\\mod\\wrapper.dll"
+#define IL2_BASEFILES				L"basefiles\\"
+#define IL2FB_EXE_MOD_NAME			L"mod\\il2fb.exe"
+#define IL2FB_EXE_STOCK_NAME		L"stock\\il2fb.exe"
+#define WRAPPER_DLL_MOD_NAME		L"mod\\wrapper.dll"
+#define WRAPPER_DLL_STOCK_NAME		L""
 #define DINPUT_BASE_NAME			L"basefiles\\DINPUT.dll"
 #define HYPERLOBBY_INI				L"HyperLobby\\hyperlobby.ini"
 #define EXPERT_KEY					L"40930"
 #define CACHED_WRAPPER_KEY			L"89857"
 #define EDIT_KEY_RESET				L"Auth. Code"
-
-#define KEY_ERROR_1					L"Looks like you entered the wrong Authorization key, please try again."
-#define KEY_ERROR_2					L"Did you ever consider the beauty of manuals?"
-#define KEY_ERROR_3					L"This is no try and error thing, it's about knowing or not what to enter here."
-#define KEY_ERROR_4					L"You should better not enable this setting as it seems."
-#define KEY_ERROR_5					L"Not clever."
 
 #define lengthof(a) (sizeof a / sizeof a[0])
 #define RunWorker(ThreadStartRoutine) 	CloseHandle(CreateThread(NULL,0,(LPTHREAD_START_ROUTINE)ThreadStartRoutine,NULL,0,NULL))
@@ -124,11 +123,8 @@ BOOL SASES_OnInitDialog(HWND hwnd, HWND hwndFocus, LPARAM lParam);
 bool SASES_OnCreate(HWND hwndDlg, LPCREATESTRUCT lpCS);
 void SASES_OnDestroy(HWND hwndDlg);
 void SASES_OnCommand(HWND hwnd, int id, HWND hwndCtl, UINT codeNotify);
-void SASES_OnSize(HWND hwnd, UINT state, int cx, int cy);
 void SASES_OnHScroll(HWND hwnd, HWND hwndCtl, UINT code, int pos);
 HBRUSH SASES_OnCtlColorEdit(HWND hwnd, HDC hdc, HWND hwndChild, int type);
-LRESULT SASES_OnEraseBkgnd(HWND hwnd, HDC hDc);
-LRESULT SASES_OnPaint(HWND hwnd);
 void SASES_OnTimer(HWND hwnd, UINT_PTR nIDEvent);
 void SASES_OnDrawItem(HWND hwndDlg, const DRAWITEMSTRUCT* lpDIS);
 void SASES_OnIl2Started();
@@ -167,20 +163,10 @@ void SetRAMStatus();
 
 INT_PTR CALLBACK SASES_DialogProc(HWND hwndDlg, UINT uMsg, WPARAM wParam, LPARAM lParam);
 
-BOOL bShowRamUsage();
-BOOL bShowRamUsageEdit();
 BOOL bShowExitOnIl2Quit();
-BOOL bShowExpertMode();
-BOOL bShowMemStrategy();
 BOOL bShowModFilesCache();
 BOOL bShowMultipleInstances();
 BOOL bShowAdjustHyperlobby();
 BOOL bShowAdjustHyperlobbyOptions();
-BOOL bShowAdditionalJvmParams();
-void ResetExpertKey();
-void ResetCachedWrapperKey();
-void ShowRandomErrorMessage();
-BOOL CheckExpertKey();
-BOOL CheckCachedWrapperKey();
 LRESULT APIENTRY EditSubclassProcExpert(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 LRESULT APIENTRY EditSubclassProcCachedWrapper(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam);

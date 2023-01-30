@@ -170,11 +170,14 @@ void GetFilesAndPaths()
     _tcscpy(szDinputFile, szGamePath);
     _tcscat(szDinputFile, DINPUT_DLL_NAME);
     _tcscpy(szLauncherModBaseFile, szSelectorPath);
-    _tcscat(szLauncherModBaseFile, IL2_MOD_NAME);
+    _tcscat(szLauncherModBaseFile, IL2_BASEFILES);
+    _tcscat(szLauncherModBaseFile, IL2FB_EXE_MOD_NAME);
     _tcscpy(szLauncherStockBaseFile, szSelectorPath);
-    _tcscat(szLauncherStockBaseFile, IL2_STOCK_NAME);
+    _tcscat(szLauncherStockBaseFile, IL2_BASEFILES);
+    _tcscat(szLauncherStockBaseFile, IL2FB_EXE_STOCK_NAME);
     _tcscpy(szWrapperBaseFile, szSelectorPath);
-    _tcscat(szWrapperBaseFile, WRAPPER_BASE_NAME);
+    _tcscat(szWrapperBaseFile, IL2_BASEFILES);
+    _tcscat(szWrapperBaseFile, WRAPPER_DLL_MOD_NAME);
     _tcscpy(szDinputBaseFile, szSelectorPath);
     _tcscat(szDinputBaseFile, DINPUT_BASE_NAME);
     _stprintf(szHyperlobbyIniFile, L"%s\\%s", _wgetenv(L"AppData"), HYPERLOBBY_INI);
@@ -287,14 +290,9 @@ void CheckCreateFile(LPCTSTR lpCheckFile, LPCTSTR lpBaseFile)
 //************************************
 void CreateIl2FbExe()
 {
-    if(g_iModType == 0) {  // Stock game selected
-        CheckCreateFile(szLauncherFile, szLauncherStockBaseFile);
-        CheckCreateFile(szDinputFile, szDinputBaseFile);
-    } else { // Modded game selected
-        CheckCreateFile(szLauncherFile, szLauncherModBaseFile);
-        CheckCreateFile(szWrapperFile, szWrapperBaseFile);
-        CheckCreateFile(szDinputFile, szDinputBaseFile);
-    }
+    CheckCreateFile(szLauncherFile, g_szModTypeIl2fbExe[g_iModType]);
+    CheckCreateFile(szDinputFile, szDinputBaseFile);
+    CheckCreateFile(szWrapperFile, g_szModTypeWrapperDll[g_iModType]);
 }
 
 //************************************

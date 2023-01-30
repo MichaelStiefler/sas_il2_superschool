@@ -37,7 +37,7 @@
 #include <vector>
 #include <algorithm>
 #include <string>
-#include "jni.h"
+//#include "jni.h"
 
 
 #define lengthof(a) (sizeof a / sizeof a[0])
@@ -64,8 +64,10 @@
 typedef unsigned int __cdecl TSFS_open(char *filename, int flags);
 typedef unsigned int __cdecl TSFS_openf(unsigned __int64 hash, int flags);
 typedef unsigned int __cdecl TCalcCryptDump(int checkSecond2, BYTE* baseAddrData, int len);
-typedef unsigned int __stdcall TSFS_read(int filePointer, LPVOID lpBuffer, DWORD* nNumberOfBytesToRead);
-typedef unsigned int __stdcall TSFS_lseek(int filePointer, LONG lDistanceToMove, int moveMethod);
+//typedef unsigned int __stdcall TSFS_read(int filePointer, LPVOID lpBuffer, DWORD* nNumberOfBytesToRead);
+//typedef unsigned int __stdcall TSFS_lseek(int filePointer, LONG lDistanceToMove, int moveMethod);
+typedef unsigned int __stdcall TSFS_open_cpp(char* filename, int flags);
+typedef unsigned int __stdcall TSFS_openf_cpp(unsigned __int64 hash, int flags);
 
 struct MyFileListItem {
 	unsigned __int64 hash;
@@ -73,17 +75,22 @@ struct MyFileListItem {
 	DWORD	dwIndex;
 };
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-	JNIEXPORT int JNICALL Java_com_maddox_il2_net_NetServerParams_readDump(JNIEnv *, jobject, jint);
+//#ifdef __cplusplus
+//extern "C" {
+//#endif
+//	JNIEXPORT int JNICALL Java_com_maddox_il2_net_NetServerParams_readDump(JNIEnv *, jobject, jint);
+//
+//#ifdef __cplusplus
+//}
+//#endif
 
-#ifdef __cplusplus
-}
-#endif
-
-SASIL2WRAPPER_C_API void __cdecl ReadDump(void *buf, unsigned len);
+//SASIL2WRAPPER_C_API void __cdecl ReadDump(void *buf, unsigned len);
+//SASIL2WRAPPER_C_API int __stdcall __SFS_openf(const unsigned __int64 hash, const int flags);
+#ifdef USE_415_CODE
+SASIL2WRAPPER_C_API int __stdcall __SFS_openf(const unsigned __int64 hash, const int flags);
+#else
 SASIL2WRAPPER_C_API int __cdecl __SFS_openf(const unsigned __int64 hash, const int flags);
+#endif
 void ListFiles(LPCTSTR lpParent, LPCTSTR lpRoot, LPCTSTR lpAddFront);
 unsigned __int64 SFS_hashW(const unsigned __int64 hash, LPCTSTR buf, const int len);
 unsigned __int64 SFS_hash(const unsigned __int64 hash, const void *buf, const int len);

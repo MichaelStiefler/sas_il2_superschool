@@ -14,8 +14,8 @@
     <XPDeprecationWarning>false</XPDeprecationWarning>
   </PropertyGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{0D82EC7C-74AC-4CD3-BC13-143EC5CECC1F}</ProjectGuid>
-    <RootNamespace>Il2SelectorLauncher</RootNamespace>
+    <ProjectGuid>{3ff18734-eaa8-4648-b5b2-2dc61e1897c9}</ProjectGuid>
+    <RootNamespace>SASIL2Wrapper</RootNamespace>
     <Keyword>Win32Proj</Keyword>
     <WindowsTargetPlatformVersion>7.0</WindowsTargetPlatformVersion>
     <SccProjectName>Svn</SccProjectName>
@@ -25,13 +25,13 @@
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
-    <ConfigurationType>Application</ConfigurationType>
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
     <PlatformToolset>v141_xp</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
     <WholeProgramOptimization>true</WholeProgramOptimization>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
-    <ConfigurationType>Application</ConfigurationType>
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
     <PlatformToolset>v141_xp</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
@@ -50,32 +50,38 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <OutDir>U:\IL2\CLIENT\IL-2 4.15.1\</OutDir>
-    <IntDir>$(Configuration)\</IntDir>
-    <LinkIncremental>true</LinkIncremental>
-    <TargetName>IL-2 Selector</TargetName>
+    <IntDir>$(Configuration)_415\</IntDir>
+    <LinkIncremental>false</LinkIncremental>
+    <TargetName>wrapper</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <OutDir>$(SolutionDir)$(Configuration)\</OutDir>
-    <IntDir>$(Configuration)\</IntDir>
+    <IntDir>$(Configuration)_415\</IntDir>
     <LinkIncremental>false</LinkIncremental>
-    <TargetName>IL-2 Selector</TargetName>
+    <TargetName>wrapper_415</TargetName>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;_USRDLL;SASIL2WRAPPER_EXPORTS;%(PreprocessorDefinitions);USE_415_CODE</PreprocessorDefinitions>
       <MinimalRebuild>
       </MinimalRebuild>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
-      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
-      <PrecompiledHeader />
+      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+      <PrecompiledHeader>Use</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
     </ClCompile>
     <Link>
-      <OutputFile>U:\IL2\CLIENT\IL-2 4.15.1\IL-2 Selector.exe</OutputFile>
+      <OutputFile>U:\IL2\CLIENT\IL-2 4.15.1\wrapper.dll</OutputFile>
+      <ModuleDefinitionFile>SAS IL-2 Wrapper.def</ModuleDefinitionFile>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Windows</SubSystem>
+      <HeapReserveSize>0</HeapReserveSize>
+      <HeapCommitSize>0</HeapCommitSize>
+      <StackReserveSize>0</StackReserveSize>
+      <StackCommitSize>0</StackCommitSize>
+      <LargeAddressAware />
       <TargetMachine>MachineX86</TargetMachine>
     </Link>
   </ItemDefinitionGroup>
@@ -83,15 +89,17 @@
     <ClCompile>
       <Optimization>MaxSpeed</Optimization>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;_USRDLL;SASIL2WRAPPER_EXPORTS;%(PreprocessorDefinitions);USE_415_CODE</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <FunctionLevelLinking>true</FunctionLevelLinking>
-      <PrecompiledHeader />
+      <PrecompiledHeader>Use</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <MinimalRebuild />
     </ClCompile>
     <Link>
-      <OutputFile>$(OutDir)/IL-2 Selector.exe</OutputFile>
+      <OutputFile>$(OutDir)wrapper_415.dll</OutputFile>
+      <ModuleDefinitionFile>SAS IL-2 Wrapper.def</ModuleDefinitionFile>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Windows</SubSystem>
       <OptimizeReferences>true</OptimizeReferences>
@@ -100,25 +108,38 @@
     </Link>
     <PostBuildEvent>
       <Message>Copy to public release folder</Message>
-      <Command>copy /Y "$(OutDir)IL-2 Selector.exe" "$(SolutionDir)\public release\"</Command>
+      <Command>copy /Y "$(OutDir)wrapper_415.dll" "$(SolutionDir)\public release\bin\selector\basefiles\415\wrapper.dll" &amp;&amp; copy /Y "$(OutDir)wrapper_415.dll" "$(SolutionDir)\public release\bin\selector\basefiles\415_console\wrapper.dll"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="SAS_IL2SelectorLauncher.cpp" />
-    <ClCompile Include="StdAfx.cpp" />
+    <ClCompile Include="dllmain.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+      </PrecompiledHeader>
+      <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</CompileAsManaged>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+      </PrecompiledHeader>
+      <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</CompileAsManaged>
+    </ClCompile>
+    <ClCompile Include="SAS IL-2 Wrapper.cpp" />
+    <ClCompile Include="stdafx.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
+    </ClCompile>
     <ClCompile Include="trace.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="SAS IL-2 Wrapper.def" />
+  </ItemGroup>
+  <ItemGroup>
     <ClInclude Include="resource.h" />
-    <ClInclude Include="SAS_IL2SelectorLauncher.h" />
-    <ClInclude Include="StdAfx.h" />
+    <ClInclude Include="SAS IL-2 Wrapper.h" />
+    <ClInclude Include="sfs.h" />
+    <ClInclude Include="stdafx.h" />
+    <ClInclude Include="targetver.h" />
     <ClInclude Include="trace.h" />
   </ItemGroup>
   <ItemGroup>
-    <ResourceCompile Include="Il-2 Selector Launcher.rc" />
-  </ItemGroup>
-  <ItemGroup>
-    <Image Include="SAS.ico" />
+    <ResourceCompile Include="SAS IL-2 Wrapper.rc" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

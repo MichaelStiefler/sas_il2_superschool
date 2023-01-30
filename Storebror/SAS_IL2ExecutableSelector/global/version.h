@@ -1,6 +1,6 @@
-#define G_FILE_VERSION "4.0.1.1 Build 21053101"
-#define G_PRODUCT_VERSION "4.0.1"
-#define G_FILEVERSION 4,0,1,1
-#define G_PRODUCTVERSION 4,0,1,1
+#define G_FILE_VERSION "5.1.2.0 Build 23012801"
+#define G_PRODUCT_VERSION "5.1.2"
+#define G_FILEVERSION 5,1,2,0
+#define G_PRODUCTVERSION 5,1,2,0
 #define G_SPECIAL_BUILD "Public Release"
-#define G_COPYRIGHT "(C) SAS May 2021"
+#define G_COPYRIGHT "(C) SAS January 2023"

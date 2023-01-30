@@ -10,6 +10,9 @@
       <Platform>Win32</Platform>
     </ProjectConfiguration>
   </ItemGroup>
+  <PropertyGroup>
+    <XPDeprecationWarning>false</XPDeprecationWarning>
+  </PropertyGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{2A802654-0633-41D4-903F-0D4ED3E59981}</ProjectGuid>
     <RootNamespace>SAS_IL2ExecutableSelector</RootNamespace>
@@ -47,8 +50,7 @@
     <_ProjectFileVersion>15.0.26419.1</_ProjectFileVersion>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <OutDir>$(SolutionDir)$(Configuration)\</OutDir>
-    <IntDir>$(Configuration)\</IntDir>
+    <OutDir>U:\IL2\CLIENT\IL-2 4.15.1\bin\selector\</OutDir>
     <LinkIncremental>true</LinkIncremental>
     <TargetName>il2fb</TargetName>
   </PropertyGroup>
@@ -74,7 +76,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Windows</SubSystem>
       <TargetMachine>MachineX86</TargetMachine>
-      <OutputFile>$(OutDir)il2fb.exe</OutputFile>
+      <OutputFile>U:\IL2\CLIENT\IL-2 4.15.1\bin\selector\il2fb.exe</OutputFile>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -127,6 +129,7 @@
     <ResourceCompile Include="SAS_IL2ExecutableSelector.rc" />
   </ItemGroup>
   <ItemGroup>
+    <Image Include="SAS.ico" />
     <Image Include="SASUP.ico" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

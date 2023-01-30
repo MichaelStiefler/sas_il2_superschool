@@ -10,6 +10,9 @@
       <Platform>Win32</Platform>
     </ProjectConfiguration>
   </ItemGroup>
+  <PropertyGroup>
+    <XPDeprecationWarning>false</XPDeprecationWarning>
+  </PropertyGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{20B2D485-DCD9-4C59-9724-DFC4F8AF68BE}</ProjectGuid>
     <RootNamespace>SASIL2Wrapper</RootNamespace>
@@ -46,7 +49,7 @@
     <_ProjectFileVersion>15.0.26419.1</_ProjectFileVersion>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <OutDir>U:\IL2\CLIENT\IL-2 Ultrapack 3.3</OutDir>
+    <OutDir>U:\IL2\CLIENT\IL-2 4.15.1\</OutDir>
     <IntDir>$(Configuration)\</IntDir>
     <LinkIncremental>false</LinkIncremental>
     <TargetName>wrapper</TargetName>
@@ -70,7 +73,7 @@
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
     </ClCompile>
     <Link>
-      <OutputFile>U:\IL2\CLIENT\IL-2 Ultrapack 3.3\wrapper.dll</OutputFile>
+      <OutputFile>U:\IL2\CLIENT\IL-2 4.15.1\wrapper.dll</OutputFile>
       <ModuleDefinitionFile>SAS IL-2 Wrapper.def</ModuleDefinitionFile>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Windows</SubSystem>

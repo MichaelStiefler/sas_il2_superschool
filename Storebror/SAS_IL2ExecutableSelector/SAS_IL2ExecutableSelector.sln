@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.30907.101
+# Visual Studio Version 17
+VisualStudioVersion = 17.4.33213.308
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{6F2B3A9E-7767-442C-8EE5-96F44CF4708D}"
 	ProjectSection(SolutionItems) = preProject
@@ -23,6 +23,8 @@ EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "PipeLogger", "PipeLogger\PipeLogger.vcxproj", "{0170545E-BE45-44DD-A95A-F4F0B79C6200}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "FileCrypter", "FileCrypter\FileCrypter.vcxproj", "{BF473175-C955-4ADE-A823-E71C28496F05}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "SAS IL-2 Wrapper 415", "SAS IL-2 Wrapper\SAS IL-2 Wrapper 415.vcxproj", "{3FF18734-EAA8-4648-B5B2-2DC61E1897C9}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -84,13 +86,21 @@ Global
 		{BF473175-C955-4ADE-A823-E71C28496F05}.Release|Win32.Build.0 = Release|Win32
 		{BF473175-C955-4ADE-A823-E71C28496F05}.Release|x64.ActiveCfg = Release|x64
 		{BF473175-C955-4ADE-A823-E71C28496F05}.Release|x64.Build.0 = Release|x64
+		{3FF18734-EAA8-4648-B5B2-2DC61E1897C9}.Debug|Win32.ActiveCfg = Debug|Win32
+		{3FF18734-EAA8-4648-B5B2-2DC61E1897C9}.Debug|Win32.Build.0 = Debug|Win32
+		{3FF18734-EAA8-4648-B5B2-2DC61E1897C9}.Debug|x64.ActiveCfg = Debug|Win32
+		{3FF18734-EAA8-4648-B5B2-2DC61E1897C9}.Debug|x64.Build.0 = Debug|Win32
+		{3FF18734-EAA8-4648-B5B2-2DC61E1897C9}.Release|Win32.ActiveCfg = Release|Win32
+		{3FF18734-EAA8-4648-B5B2-2DC61E1897C9}.Release|Win32.Build.0 = Release|Win32
+		{3FF18734-EAA8-4648-B5B2-2DC61E1897C9}.Release|x64.ActiveCfg = Release|Win32
+		{3FF18734-EAA8-4648-B5B2-2DC61E1897C9}.Release|x64.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
-		SolutionGuid = {AFDEAC90-9116-4BEF-9A55-1FC2C4089967}
 		VisualSVNWorkingCopyRoot = .
+		SolutionGuid = {AFDEAC90-9116-4BEF-9A55-1FC2C4089967}
 	EndGlobalSection
 	GlobalSection(SubversionScc) = preSolution
 		Svn-Managed = True

@@ -24,8 +24,8 @@
 //*****************************************************************
 
 #include "stdafx.h"
-#include <vector>
-#include <algorithm>
+//#include <vector>
+//#include <algorithm>
 #include <Shellapi.h>
 
 #include "SAS IL-2 Wrapper.h"
@@ -33,6 +33,8 @@
 #include "trace.h"
 
 #include "resource.h"
+//#include <set>
+using namespace std;
 
 #define _CRT_SECURE_NO_WARNINGS
 #pragma warning( disable : 4996 )
@@ -54,14 +56,16 @@ int iProcessAttachCounter = 0,
 iThreadAttachCounter = 0;
 
 float g_SearchPikoseconds;
-ULONG g_SFSOpenfCalls, g_SearchIterations, ulFreq;
+ULONG g_SFSOpenfCalls = 0, g_SearchIterations = 0, ulFreq = 0, g_SFSOpenf_found_hash1 = 0, g_SFSOpenf_found_hash2 = 0, g_SFSOpenf_from_SFS = 0, g_SFSOpenf_not_found = 0;
 ULONGLONG First;
 
 HINSTANCE hExecutable = NULL;
 TSFS_open* SFS_open = NULL;
 TSFS_openf* SFS_openf = NULL;
-TSFS_read* SFS_read = NULL;
-TSFS_lseek* SFS_lseek = NULL;
+//TSFS_read* SFS_read = NULL;
+//TSFS_lseek* SFS_lseek = NULL;
+TSFS_open_cpp* SFS_open_cpp = NULL;
+TSFS_openf_cpp* SFS_openf_cpp = NULL;
 
 bool g_bUseCachedFileLists = FALSE;
 FILE *g_cachedListFile = NULL;
@@ -126,6 +130,7 @@ void StartWrapper(HINSTANCE hInstance)
 	if (hSplash != NULL) PostMessage(hSplash, WM_CLOSE, 0, 0);
 #endif
 	iProcessAttachCounter++;
+
 
 	if (iProcessAttachCounter == 1) {
 		GetModuleFileName(NULL, ExeName, MAX_PATH);
@@ -242,6 +247,11 @@ void StopWrapper()
 
 	FileList.clear();
 	TRACE("Total files opened = %d\r\n", g_SFSOpenfCalls);
+	TRACE("Files loaded from SFS archives = %d\r\n", g_SFSOpenf_from_SFS);
+	TRACE("Files loaded from mod folders  = %d\r\n", g_SFSOpenf_found_hash1 + g_SFSOpenf_found_hash2);
+	TRACE("  ~ using 1st level hash match = %d\r\n", g_SFSOpenf_found_hash1);
+	TRACE("  ~ using 2nd level hash match = %d\r\n", g_SFSOpenf_found_hash2);
+	TRACE("Files not found                = %d\r\n", g_SFSOpenf_not_found);
 	float fTotalSearchSeconds = g_SearchPikoseconds / DIVIDER_SECONDS;
 	TRACE("Total search time consumed = %.3f milliseconds (%.12f Seconds)\r\n", g_SearchPikoseconds / DIVIDER_MILLISECONDS, fTotalSearchSeconds);
 	LONG lSFSOpenfCalls = long(g_SFSOpenfCalls);
@@ -315,6 +325,8 @@ void CreateModsFolderList(float * pfPikoSeconds)
 	TCHAR listFilesPath1[MAX_PATH];
 	TCHAR listFilesPath2[MAX_PATH];
 
+	std::vector<wstring> FolderNames;
+
 	try {
 		if (_tcsicmp(ModsFolder, L"none") != 0) {
 			WIN32_FIND_DATA FindFileData;
@@ -329,14 +341,20 @@ void CreateModsFolderList(float * pfPikoSeconds)
 						continue;
 					}
 
-					if (FindFileData.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY) {
-						_stprintf(listFilesPath1, L"%s%s\\%s\\", ExePath, ModsFolder, FindFileData.cFileName);
-						_stprintf(listFilesPath2, L"%s\\%s\\", ModsFolder, FindFileData.cFileName);
-						ListFiles(listFilesPath1, listFilesPath1, listFilesPath2);
-					}
+					if (FindFileData.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY)
+						FolderNames.push_back(FindFileData.cFileName);
 				} while (FindNextFile(hFind, &FindFileData));
 
 				FindClose(hFind);
+
+				std::sort(FolderNames.begin(), FolderNames.end());
+
+				for (std::vector<wstring>::iterator Name = FolderNames.begin(); Name != FolderNames.end(); ++Name)
+				{
+					_stprintf(listFilesPath1, L"%s%s\\%s\\", ExePath, ModsFolder, Name->c_str());
+					_stprintf(listFilesPath2, L"%s\\%s\\", ModsFolder, Name->c_str());
+					ListFiles(listFilesPath1, listFilesPath1, listFilesPath2);
+				}
 			}
 		}
 	}
@@ -689,6 +707,11 @@ void LinkIl2fbExe()
 		}
 
 		if (SFS_open == NULL) {
+			HINSTANCE hinst = LoadLibrary(L"DT.dll");
+			SFS_open_cpp = (TSFS_open_cpp*)GetProcAddress(hinst, "SFS_open@8");
+		}
+
+		if (SFS_open == NULL && SFS_open_cpp == NULL) {
 			TRACE("SFS open function pointer missing.\r\n");
 			MessageBox(NULL, L"SFS open function pointer missing!", L"SAS wrapper", MB_OK | MB_ICONERROR | MB_TOPMOST);
 			ExitProcess(-1);
@@ -703,17 +726,22 @@ void LinkIl2fbExe()
 		}
 
 		if (SFS_openf == NULL) {
+			HINSTANCE hinst = LoadLibrary(L"DT.dll");
+			SFS_openf_cpp = (TSFS_openf_cpp*)GetProcAddress(hinst, "SFS_openf@12");
+		}
+			
+		if (SFS_openf == NULL && SFS_openf_cpp == NULL) {
 			TRACE("SFS openf function pointer missing.\r\n");
 			MessageBox(NULL, L"SFS openf function pointer missing!", L"SAS wrapper", MB_OK | MB_ICONERROR | MB_TOPMOST);
 			ExitProcess(-1);
 		}
 
-		if (SFS_read == NULL) {
-			SFS_read = (TSFS_read*)GetProcAddress(hExecutable, "SFS_read");
-		}
-		if (SFS_lseek == NULL) {
-			SFS_lseek = (TSFS_lseek*)GetProcAddress(hExecutable, "SFS_lseek");
-		}
+		//if (SFS_read == NULL) {
+		//	SFS_read = (TSFS_read*)GetProcAddress(hExecutable, "SFS_read");
+		//}
+		//if (SFS_lseek == NULL) {
+		//	SFS_lseek = (TSFS_lseek*)GetProcAddress(hExecutable, "SFS_lseek");
+		//}
 
 	}
 	catch (...) {
@@ -842,6 +870,8 @@ void ListFiles(LPCTSTR lpParent, LPCTSTR lpRoot, LPCTSTR lpAddFront)
 	TCHAR foundItem[MAX_PATH];
 	TCHAR foundItemUpperCase[MAX_PATH];
 	TCHAR searchPattern[MAX_PATH];
+	std::vector<wstring> FolderNames;
+	std::vector<wstring> FileNames;
 	_tcscpy(Dir, lpParent);
 
 	if (_tcschr(L"\\", Dir[_tcslen(Dir) - 1]) == NULL) {
@@ -858,48 +888,57 @@ void ListFiles(LPCTSTR lpParent, LPCTSTR lpRoot, LPCTSTR lpAddFront)
 				|| (_tcscmp(FindFileData.cFileName, L"..") == 0)) {
 				continue;
 			}
-
-			_stprintf(foundItem, L"%s%s", Dir, FindFileData.cFileName);
-
-			if (FindFileData.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY) {
-				ListFiles(foundItem, lpRoot, lpAddFront);
-			}
-			else {
-				MyFileListItem* MyStruct = new MyFileListItem();
-				LPTSTR foundItemFromRoot = foundItem + _tcslen(lpRoot);
-				int iFilePathLen = _tcslen(lpAddFront) + _tcslen(foundItemFromRoot);
-				TCHAR* szFilePath = (TCHAR*)calloc((iFilePathLen + 1), sizeof(TCHAR));
-				_stprintf(szFilePath, L"%s%s", lpAddFront, foundItemFromRoot);
-				MyStruct->filePath = new CHAR[iFilePathLen + 1];
-				wcstombs(MyStruct->filePath, szFilePath, iFilePathLen);
-				MyStruct->filePath[iFilePathLen] = '\0';
-				free(szFilePath);
-				_tcscpy(foundItemUpperCase, foundItemFromRoot);
-				_tcsupr(foundItemUpperCase);
-				int foundLen = _tcslen(FindFileData.cFileName);
-				if (isHashedClass(foundItem, FindFileData.cFileName)) // Fixed 2017-08-30, no need to double-hash files
-					MyStruct->hash = _tcstoull(FindFileData.cFileName, NULL, 16);
-				else if (foundLen > 6 && _tcsnicmp(&FindFileData.cFileName[foundLen - 6], L".class", 6) == 0) { // New 2017-08-30, read clearname class files
-					ZeroMemory(szBuf, sizeof(szBuf));
-					foundItemFromRoot[_tcslen(foundItemFromRoot) - 6] = '\0';
-					_tcsreplace(foundItemFromRoot, L'\\', L'.');
-					_tcsreplace(foundItemFromRoot, L'/', L'.');
-					_stprintf(szBuf, L"sdw%scwc2w9e", foundItemFromRoot);
-					_stprintf(szBuf, L"cod/%d", IntFN(0, szBuf));
-					MyStruct->hash = LongFN(0, szBuf);
-				}
-				else
-					MyStruct->hash = SFS_hashW(0, foundItemUpperCase, _tcslen(foundItemUpperCase));
-				MyStruct->dwIndex = g_dwIndex++;
-				FileList.push_back(MyStruct);
-
-				if (g_cachedListFile != NULL) {
-					fprintf(g_cachedListFile, "%016I64X?%s\n", MyStruct->hash, MyStruct->filePath);
-				}
-			}
+			if (FindFileData.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY)
+				FolderNames.push_back(FindFileData.cFileName);
+			else
+				FileNames.push_back(FindFileData.cFileName);
 		} while (FindNextFile(hFind, &FindFileData));
-
 		FindClose(hFind);
+
+		std::sort(FolderNames.begin(), FolderNames.end());
+		std::sort(FileNames.begin(), FileNames.end());
+
+		for (std::vector<wstring>::iterator Name = FolderNames.begin(); Name != FolderNames.end(); ++Name)
+		{
+			_stprintf(foundItem, L"%s%s", Dir, Name->c_str());
+			ListFiles(foundItem, lpRoot, lpAddFront);
+		}
+
+		for (std::vector<wstring>::iterator Name = FileNames.begin(); Name != FileNames.end(); ++Name)
+		{
+			_stprintf(foundItem, L"%s%s", Dir, Name->c_str());
+			MyFileListItem* MyStruct = new MyFileListItem();
+			LPTSTR foundItemFromRoot = foundItem + _tcslen(lpRoot);
+			int iFilePathLen = _tcslen(lpAddFront) + _tcslen(foundItemFromRoot);
+			TCHAR* szFilePath = (TCHAR*)calloc((iFilePathLen + 1), sizeof(TCHAR));
+			_stprintf(szFilePath, L"%s%s", lpAddFront, foundItemFromRoot);
+			MyStruct->filePath = new CHAR[iFilePathLen + 1];
+			wcstombs(MyStruct->filePath, szFilePath, iFilePathLen);
+			MyStruct->filePath[iFilePathLen] = '\0';
+			free(szFilePath);
+			_tcscpy(foundItemUpperCase, foundItemFromRoot);
+			_tcsupr(foundItemUpperCase);
+			int foundLen = _tcslen(Name->c_str());
+			if (isHashedClass(foundItem, Name->c_str())) // Fixed 2017-08-30, no need to double-hash files
+				MyStruct->hash = _tcstoull(Name->c_str(), NULL, 16);
+			else if (foundLen > 6 && _tcsnicmp(&(Name->c_str())[foundLen - 6], L".class", 6) == 0) { // New 2017-08-30, read clearname class files
+				ZeroMemory(szBuf, sizeof(szBuf));
+				foundItemFromRoot[_tcslen(foundItemFromRoot) - 6] = '\0';
+				_tcsreplace(foundItemFromRoot, L'\\', L'.');
+				_tcsreplace(foundItemFromRoot, L'/', L'.');
+				_stprintf(szBuf, L"sdw%scwc2w9e", foundItemFromRoot);
+				_stprintf(szBuf, L"cod/%d", IntFN(0, szBuf));
+				MyStruct->hash = LongFN(0, szBuf);
+			}
+			else
+				MyStruct->hash = SFS_hashW(0, foundItemUpperCase, _tcslen(foundItemUpperCase));
+			MyStruct->dwIndex = g_dwIndex++;
+			FileList.push_back(MyStruct);
+
+			if (g_cachedListFile != NULL) {
+				fprintf(g_cachedListFile, "%016I64X?%s\n", MyStruct->hash, MyStruct->filePath);
+			}
+		}
 	}
 }
 
@@ -995,8 +1034,18 @@ bool IsServerExe()
 
 			VirtualProtectEx(hCurProc, (LPVOID)iIl2ServerID, 9, dwOldProtect, NULL);
 		}
-		else {
-			TRACE("Error in IsServerExe: Couldn't get access to modded il2fb.exe server ID memory area!\r\n");
+		if (!bIsServer) {
+			int iIl2ServerID = 0x00408d8d; // il2server.exe 4.15
+			if (NULL != VirtualProtectEx(hCurProc, (LPVOID)iIl2ServerID, 15, PAGE_EXECUTE_READWRITE, &dwOldProtect)) {
+				if (memcmp((LPVOID)iIl2ServerID, cFilesServer, 15) == 0) {
+					bIsServer = TRUE;
+				}
+
+				VirtualProtectEx(hCurProc, (LPVOID)iIl2ServerID, 9, dwOldProtect, NULL);
+			}
+			else {
+				TRACE("Error in IsServerExe: Couldn't get access to modded il2fb.exe server ID memory area!\r\n");
+			}
 		}
 	}
 	catch (...) {
@@ -1039,39 +1088,79 @@ TCHAR * trim(TCHAR * c, TCHAR*space)
 
 	return c;
 }
-SASIL2WRAPPER_C_API void __cdecl ReadDump(void *buf, unsigned int len)
-{
-	return;
-}
 
+//SASIL2WRAPPER_C_API void __cdecl ReadDump(void *buf, unsigned int len)
+//{
+//	return;
+//}
+
+#ifdef USE_415_CODE
+SASIL2WRAPPER_C_API int __stdcall __SFS_openf(const unsigned __int64 hash, const int flags)
+#else
 SASIL2WRAPPER_C_API int __cdecl __SFS_openf(const unsigned __int64 hash, const int flags)
+#endif
 {
 	g_SFSOpenfCalls++;
 	int filePointer = -1;
 	int listPos;
 	unsigned __int64 hash2 = 0;
-	if (FileList.empty()) return SFS_openf(hash, flags);
-	listPos = binarySearchFileList(hash);
-	int isInSFS = -1;
+	int foundIn = -1;
+	if (!FileList.empty()) {
+		listPos = binarySearchFileList(hash);
 
-	if (listPos == -1) {
-		ZeroMemory(szHashString, sizeof(szHashString));
-		_stprintf(szHashString, L"%016I64X", hash);
-		hash2 = SFS_hashW(0, szHashString, _tcslen(szHashString));
-		listPos = binarySearchFileList(hash2);
-	}
+		if (listPos == -1) {
+			ZeroMemory(szHashString, sizeof(szHashString));
+			_stprintf(szHashString, L"%016I64X", hash);
+			hash2 = SFS_hashW(0, szHashString, _tcslen(szHashString));
+			listPos = binarySearchFileList(hash2);
+			if (listPos != -1) foundIn = 2;
+		}
+		else {
+			foundIn = 1;
+		}
 
-	if (listPos != -1) {
-		filePointer = SFS_open(FileList[listPos]->filePath, flags);
+		//TRACE("__SFS_openf(%016I64X, %d) - hash2=%016I64X, listPos=%d\r\n", hash, flags, hash2, listPos);
+
+		if (listPos != -1) {
+			if (SFS_open != NULL)
+				filePointer = SFS_open(FileList[listPos]->filePath, flags);
+			else
+				filePointer = SFS_open_cpp(FileList[listPos]->filePath, flags);
+		}
 	}
 
 	if (filePointer == -1) {
-		isInSFS = 1;
-		filePointer = SFS_openf(hash, flags);
+		foundIn = 0;
+		if (SFS_openf != NULL)
+			filePointer = SFS_openf(hash, flags);
+		else
+			filePointer = SFS_openf_cpp(hash, flags);
+	}
+
+	if (filePointer == -1) {
+		g_SFSOpenf_not_found++;
 	}
 	else {
-		isInSFS = 0;
+		switch (foundIn) {
+			case 0:
+				g_SFSOpenf_from_SFS++;
+				break;
+			case 1:
+				g_SFSOpenf_found_hash1++;
+				break;
+			case 2:
+				g_SFSOpenf_found_hash2++;
+				break;
+			default:
+				break;
+		}
 	}
 
 	return filePointer;
+}
+
+SASIL2WRAPPER_C_API int __stdcall _SAS_openf(const unsigned __int64 hash, const int flags)
+{
+	//TRACE("__SAS_openf(%016I64X, %d)\r\n", hash, flags);
+	return __SFS_openf(hash, flags);
 }

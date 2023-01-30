@@ -10,6 +10,9 @@
       <Platform>Win32</Platform>
     </ProjectConfiguration>
   </ItemGroup>
+  <PropertyGroup>
+    <XPDeprecationWarning>false</XPDeprecationWarning>
+  </PropertyGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{6B04FBC3-9F0D-49DC-BAB3-0BD0445709CC}</ProjectGuid>
     <RootNamespace>SASIL2Watchdog</RootNamespace>

@@ -151,7 +151,7 @@ DWORD WINAPI LogWriterThread(LPVOID lpvParam)
 		}
 	}
 	catch (...) { }
-	long size = ftell(logFile);
+	unsigned long size = ftell(logFile);
 	if (totalBytesWritten < size) totalBytesWritten = size;
 	CloseLogFile(logFile);
 	g_aiLogWriters--;

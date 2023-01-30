@@ -167,6 +167,7 @@ BOOL SASES_OnInitDialog(HWND hwnd, HWND /*hwndFocus*/, LPARAM /*lParam*/)
     }
 
     FillDropdown();
+    g_bAdjustWindowPos = TRUE;
     SettingsToControls();
     SetRAMStatus();
 
@@ -174,13 +175,11 @@ BOOL SASES_OnInitDialog(HWND hwnd, HWND /*hwndFocus*/, LPARAM /*lParam*/)
         SetStatusBar(2, TRUE, GetSysColor(COLOR_BTNTEXT), RGB(0, 255, 0), TRANSPARENT, L"Settings Saved");
     }
 
-	ResetExpertKey();
-	ResetCachedWrapperKey();
-
     SetWindowText(hwnd, szWindowTitle);
 	wpOrigEditProcExpert = (WNDPROC) SetWindowLong(GetDlgItem(hwnd, IDC_EDIT_EXPERT), GWL_WNDPROC, (LONG) EditSubclassProcExpert); 
 	wpOrigEditProcCachedWrapper = (WNDPROC) SetWindowLong(GetDlgItem(hwnd, IDC_EDIT_CACHED_WRAPPER), GWL_WNDPROC, (LONG) EditSubclassProcCachedWrapper); 
     BringToFront(hwnd);
+
     return FALSE;
 }
 
@@ -247,6 +246,14 @@ void ShowCurrentSettings()
 
     if(g_bMultipleInstancesEnabled) {
         SendDlgItemMessage(g_hWnd, IDC_LIST_SETTINGS, LB_ADDSTRING, (WPARAM)0, (LPARAM)L"Multiple IL-2 Instances enabled");
+    }
+
+    if (g_iDumpMode & DUMP_MODE_DUMP_FILES) {
+        SendDlgItemMessage(g_hWnd, IDC_LIST_SETTINGS, LB_ADDSTRING, (WPARAM)0, (LPARAM)L"File Dump enabled");
+    }
+
+    if (g_iDumpMode & DUMP_MODE_SFS_ACCESS) {
+        SendDlgItemMessage(g_hWnd, IDC_LIST_SETTINGS, LB_ADDSTRING, (WPARAM)0, (LPARAM)L"Log SFS File access");
     }
 
     if(_tcslen(g_lpCmdLine) > 0) {
@@ -323,28 +330,13 @@ void SASES_OnCommand(HWND hwnd, int id, HWND hwndCtl, UINT codeNotify)
 
     case IDC_CHECK_EXPERT:
         g_bExpertModeEnabled = IsDlgButtonChecked(g_hWnd, IDC_CHECK_EXPERT);
-		if (g_bExpertModeEnabled) {
-			if (!CheckExpertKey()) {
-				ShowRandomErrorMessage();
-				CheckDlgButton(g_hWnd, IDC_CHECK_EXPERT, BST_UNCHECKED);
-				ResetExpertKey();
-				break;
-			}
-		}
+        g_bAdjustWindowPos = TRUE;
         SettingsToControls();
         SetStatusBar(2, TRUE, GetSysColor(COLOR_BTNTEXT), RGB(255, 255, 0), TRANSPARENT, L"Settings Changed");
         break;
 
     case IDC_CHECK_CACHED_WRAPPER:
         g_bEnableModFilesCache = IsDlgButtonChecked(g_hWnd, IDC_CHECK_CACHED_WRAPPER);
-		if (g_bEnableModFilesCache) {
-			if (!CheckCachedWrapperKey()) {
-				ShowRandomErrorMessage();
-				CheckDlgButton(g_hWnd, IDC_CHECK_CACHED_WRAPPER, BST_UNCHECKED);
-				ResetCachedWrapperKey();
-				break;
-			}
-		}
         SettingsToControls();
         SetStatusBar(2, TRUE, GetSysColor(COLOR_BTNTEXT), RGB(255, 255, 0), TRANSPARENT, L"Settings Changed");
         break;
@@ -390,6 +382,7 @@ void SASES_OnCommand(HWND hwnd, int id, HWND hwndCtl, UINT codeNotify)
     }
 
     case IDC_CHECK_SET_HYPERLOBBY:
+        g_bOverrideHLSet = TRUE;
         SettingsToControls();
         break;
 
@@ -428,6 +421,22 @@ void SASES_OnCommand(HWND hwnd, int id, HWND hwndCtl, UINT codeNotify)
 			g_iSplashScreenMode &= ~SPLASH_SCREEN_TOPMOST;
 		SettingsToControls();
 		break;
+
+    case IDC_CHECK_DUMP_FILES:
+        if (IsDlgButtonChecked(g_hWnd, IDC_CHECK_DUMP_FILES))
+            g_iDumpMode |= DUMP_MODE_DUMP_FILES;
+        else
+            g_iDumpMode &= ~DUMP_MODE_DUMP_FILES;
+        SettingsToControls();
+        break;
+
+    case IDC_CHECK_LOG_SFS_ACCESS:
+        if (IsDlgButtonChecked(g_hWnd, IDC_CHECK_LOG_SFS_ACCESS))
+            g_iDumpMode |= DUMP_MODE_SFS_ACCESS;
+        else
+            g_iDumpMode &= ~DUMP_MODE_SFS_ACCESS;
+        SettingsToControls();
+        break;
 
     default:
         break;

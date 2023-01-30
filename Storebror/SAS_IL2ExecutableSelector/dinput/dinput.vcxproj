@@ -10,6 +10,9 @@
       <Platform>Win32</Platform>
     </ProjectConfiguration>
   </ItemGroup>
+  <PropertyGroup>
+    <XPDeprecationWarning>false</XPDeprecationWarning>
+  </PropertyGroup>
   <PropertyGroup Label="Globals">
     <ProjectName>DINPUT</ProjectName>
     <ProjectGuid>{F41599A1-FD0D-4670-A97B-FDB97BFCFA5C}</ProjectGuid>
@@ -47,7 +50,7 @@
     <_ProjectFileVersion>15.0.26419.1</_ProjectFileVersion>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <OutDir>U:\IL2\CLIENT\IL-2 Modact 2\</OutDir>
+    <OutDir>U:\IL2\CLIENT\IL-2 4.15.1\</OutDir>
     <IntDir>$(Configuration)\</IntDir>
     <LinkIncremental>false</LinkIncremental>
   </PropertyGroup>
@@ -71,7 +74,7 @@
       <LanguageStandard>stdcpplatest</LanguageStandard>
     </ClCompile>
     <Link>
-      <OutputFile>U:\IL2\CLIENT\IL-2 Modact 2\DINPUT.dll</OutputFile>
+      <OutputFile>U:\IL2\CLIENT\IL-2 4.15.1\DINPUT.dll</OutputFile>
       <ModuleDefinitionFile>dinput.def</ModuleDefinitionFile>
       <SubSystem>Windows</SubSystem>
       <TargetMachine>MachineX86</TargetMachine>

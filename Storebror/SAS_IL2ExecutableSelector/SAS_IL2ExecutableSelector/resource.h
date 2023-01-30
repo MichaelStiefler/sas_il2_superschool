@@ -1,31 +1,6 @@
-//*****************************************************************
-// il2fb.exe - SAS IL-2 Executable Selector
-// Copyright (C) 2021 SAS~Storebror
-//
-// This file is part of il2fb.exe.
-//
-// il2fb.exe is free software.
-// It is distributed under the DWTFYWTWIPL license:
-//
-// DO WHAT THE FUCK YOU WANT TO WITH IT PUBLIC LICENSE
-// Version 1, March 2012
-//
-// Copyright (C) 2013 SAS~Storebror <mike@sas1946.com>
-//
-// Everyone is permitted to copy and distribute verbatim or modified
-// copies of this license document, and changing it is allowed as long
-// as the name is changed.
-//
-// DO WHAT THE FUCK YOU WANT TO WITH IT PUBLIC LICENSE
-// TERMS AND CONDITIONS FOR COPYING, DISTRIBUTION AND MODIFICATION
-//
-// 0. You just DO WHAT THE FUCK YOU WANT TO WITH IT.
-//
-//*****************************************************************
-
 //{{NO_DEPENDENCIES}}
-// Microsoft Visual C++ generated include file.
-// Used by SAS_IL2ExecutableSelector.rc
+// Von Microsoft Visual C++ generierte Includedatei.
+// Verwendet durch SAS_IL2ExecutableSelector.rc
 //
 #define IDD_IL2EXESELECTOR              101
 #define IDD_IL2EXESELECTOR_START        102
@@ -69,6 +44,10 @@
 #define IDC_CHECK_EXIT_WITH_IL4         1035
 #define IDC_CHECK_SPLASH_SHOW           1036
 #define IDC_CHECK_SPLASH_TOPMOST        1037
+#define IDC_CHECK_LOG_SFS_ACCESS        1038
+#define IDC_CHECK_LOG_SFS_ACCESS2       1039
+#define IDC_CHECK_DUMP_FILES            1039
+#define IDC_GB_EXPERT_MODE              1040
 
 // Next default values for new objects
 // 
@@ -77,7 +56,7 @@
 #define _APS_NO_MFC                     1
 #define _APS_NEXT_RESOURCE_VALUE        105
 #define _APS_NEXT_COMMAND_VALUE         40001
-#define _APS_NEXT_CONTROL_VALUE         1038
+#define _APS_NEXT_CONTROL_VALUE         1041
 #define _APS_NEXT_SYMED_VALUE           101
 #endif
 #endif
