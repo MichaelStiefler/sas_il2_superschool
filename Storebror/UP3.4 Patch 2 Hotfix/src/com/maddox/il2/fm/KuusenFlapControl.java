@@ -1,10 +1,6 @@
 package com.maddox.il2.fm;
 
-import java.io.BufferedWriter;
-import java.io.FileWriter;
-import java.io.PrintWriter;
-
-public class KuusenFlapControl extends com.maddox.il2.fm.Polares {
+public class KuusenFlapControl extends Polares {
     public class InclusiveLine {
 
         public float Aoa;
@@ -76,7 +72,7 @@ public class KuusenFlapControl extends com.maddox.il2.fm.Polares {
 
         this.maxWeight = fm.M.maxWeight * 9.8F;
         this.AirSpeedOffset = airSpeedOffset * -1;
-//        this.CreateInclusiveLine();
+        this.CreateInclusiveLine();
     }
 
     public void CreateInclusiveLine() {
@@ -85,7 +81,7 @@ public class KuusenFlapControl extends com.maddox.il2.fm.Polares {
         float Cx = 0.0F;
         this.InclusiveLineArray = new InclusiveLine[180];
         try {
-            java.io.PrintWriter printwriter = new PrintWriter(new BufferedWriter(new FileWriter(com.maddox.rts.HomePath.toFileSystemName("InclusiveLine.txt", 0))));
+/*            PrintWriter printwriter = new PrintWriter(new BufferedWriter(new FileWriter(HomePath.toFileSystemName("InclusiveLine.txt", 0))));
             for (int i = -90; i < 90; i++)
                 printwriter.print(i + "\t");
 
@@ -106,7 +102,7 @@ public class KuusenFlapControl extends com.maddox.il2.fm.Polares {
 
                 printwriter.println();
                 printwriter.flush();
-            }
+            } */
 
             for (int iFlap = 0; iFlap <= 100; iFlap++) {
                 Flap = iFlap * 0.01F;
@@ -116,7 +112,7 @@ public class KuusenFlapControl extends com.maddox.il2.fm.Polares {
                     Cx = this.new_Cxa(i);
                     this.InclusiveLineArray[i + 90] = new InclusiveLine();
                     this.InclusiveLineArray[i + 90].Aoa = i;
-                    this.InclusiveLineArray[i + 90].Cy2 = Cy * (float) java.lang.Math.cos(com.maddox.il2.fm.FMMath.DEG2RAD(i));
+                    this.InclusiveLineArray[i + 90].Cy2 = Cy * (float) Math.cos(FMMath.DEG2RAD(i));
                     this.InclusiveLineArray[i + 90].Cy = Cy;
                     this.InclusiveLineArray[i + 90].Cx = Cx;
                     this.InclusiveLineArray[i + 90].Flap = Flap;
@@ -142,7 +138,7 @@ public class KuusenFlapControl extends com.maddox.il2.fm.Polares {
                         Cx = this.new_Cxa(Aoa);
                         if (IsStall || Cy / Cx > this.InclusiveLineArray[i + 90].Cy / this.InclusiveLineArray[i + 90].Cx) {
                             this.InclusiveLineArray[i + 90].Aoa = Aoa;
-                            this.InclusiveLineArray[i + 90].Cy2 = Cy * (float) java.lang.Math.cos(com.maddox.il2.fm.FMMath.DEG2RAD(Aoa));
+                            this.InclusiveLineArray[i + 90].Cy2 = Cy * (float) Math.cos(FMMath.DEG2RAD(Aoa));
                             this.InclusiveLineArray[i + 90].Cy = Cy;
                             this.InclusiveLineArray[i + 90].Cx = Cx;
                             this.InclusiveLineArray[i + 90].Flap = Flap;
@@ -152,11 +148,11 @@ public class KuusenFlapControl extends com.maddox.il2.fm.Polares {
                 }
             }
 
-        } catch (java.io.IOException ioexception) {
-            java.lang.System.out.println("File save failed: " + ioexception.getMessage());
-            ioexception.printStackTrace();
-        } catch (java.lang.Exception exception) {
-            java.lang.System.out.println("Exception: " + exception.getMessage());
+//        } catch (IOException ioexception) {
+//            System.out.println("File save failed: " + ioexception.getMessage());
+//            ioexception.printStackTrace();
+        } catch (Exception exception) {
+            System.out.println("Exception: " + exception.getMessage());
             exception.printStackTrace();
         }
         this.setFlaps(0.0F);
@@ -178,10 +174,10 @@ public class KuusenFlapControl extends com.maddox.il2.fm.Polares {
         return FlapValue;
     }
 
-    public void drawPolareData(java.lang.String s) {
+/*    public void drawPolareData(String s) {
         float f = -10000F;
         try {
-            java.io.PrintWriter printwriter = new PrintWriter(new BufferedWriter(new FileWriter(com.maddox.rts.HomePath.toFileSystemName(s, 0))));
+            PrintWriter printwriter = new PrintWriter(new BufferedWriter(new FileWriter(HomePath.toFileSystemName(s, 0))));
             for (int i = -90; i < 90; i++)
                 printwriter.print(i + "\t");
 
@@ -216,11 +212,11 @@ public class KuusenFlapControl extends com.maddox.il2.fm.Polares {
             }
 
             printwriter.close();
-        } catch (java.io.IOException ioexception) {
-            java.lang.System.out.println("File save failed: " + ioexception.getMessage());
+        } catch (IOException ioexception) {
+            System.out.println("File save failed: " + ioexception.getMessage());
             ioexception.printStackTrace();
         }
-    }
+    }*/
 
     public InclusiveLine InclusiveLineArray[];
     public int           AirSpeedOffset;

@@ -186,7 +186,7 @@ public class Zuti_WAircraftProperties extends GWindowFramed {
                 if (i < 0 || i >= Zuti_WAircraftProperties.this.lstAvailableLoadouts.lst.size()) return true;
 
                 if (!Zuti_WAircraftProperties.this.lstSelectedLoadouts.lst.contains(Zuti_WAircraftProperties.this.lstAvailableLoadouts.lst.get(i)) && Zuti_WAircraftProperties.this.lstSelectedLoadouts.lst.size() < MAX_LOADOUTS) {
-                    System.out.println("adding selected loadout " + Zuti_WAircraftProperties.this.lstAvailableLoadouts.lst.get(i));
+//                    System.out.println("adding selected loadout " + Zuti_WAircraftProperties.this.lstAvailableLoadouts.lst.get(i));
                     Zuti_WAircraftProperties.this.lstSelectedLoadouts.lst.add(Zuti_WAircraftProperties.this.lstAvailableLoadouts.lst.get(i));
                     Zuti_WAircraftProperties.this.lstAvailableLoadouts.lst.remove(i);
                 }
@@ -270,7 +270,7 @@ public class Zuti_WAircraftProperties extends GWindowFramed {
     public void setAircraft(ZutiAircraft zac) {
         if (zac == null) return;
 
-        System.out.println("EDITING ZAC NAME=" + zac.getAcName() + ", NR=" + zac.getNumberOfAIrcraft() + ", LDT=" + zac.getSelectedWeaponI18NNames());
+//        System.out.println("EDITING ZAC NAME=" + zac.getAcName() + ", NR=" + zac.getNumberOfAIrcraft() + ", LDT=" + zac.getSelectedWeaponI18NNames());
 
         this.lstAvailableLoadouts.lst.clear();
         this.lstSelectedLoadouts.lst.clear();
@@ -290,7 +290,7 @@ public class Zuti_WAircraftProperties extends GWindowFramed {
         ArrayList list = this.zutiAircraft.getWeaponI18NNames();
         if (list != null) for (int i = 0; i < list.size(); i++) {
             if (!this.lstSelectedLoadouts.lst.contains(list.get(i))) {
-                System.out.println("adding available loadout " + list.get(i));
+//                System.out.println("adding available loadout " + list.get(i));
                 this.lstAvailableLoadouts.lst.add(list.get(i));
             }
         }
@@ -318,7 +318,7 @@ public class Zuti_WAircraftProperties extends GWindowFramed {
         List remove = new ArrayList();
         for (int i = 0; i < this.lstAvailableLoadouts.lst.size(); i++) {
             if (!this.lstSelectedLoadouts.lst.contains(this.lstAvailableLoadouts.lst.get(i))) {
-                System.out.println("adding loadout to selected loadouts: " + this.lstAvailableLoadouts.lst.get(i));
+//                System.out.println("adding loadout to selected loadouts: " + this.lstAvailableLoadouts.lst.get(i));
                 this.lstSelectedLoadouts.lst.add(this.lstAvailableLoadouts.lst.get(i));
                 remove.add(this.lstAvailableLoadouts.lst.get(i));
             }
@@ -327,7 +327,7 @@ public class Zuti_WAircraftProperties extends GWindowFramed {
         }
 
         for (int i = 0; i < remove.size(); i++) {
-            System.out.println("removing loadout from available loadouts: " + remove.get(i));
+//            System.out.println("removing loadout from available loadouts: " + remove.get(i));
             this.lstAvailableLoadouts.lst.remove(remove.get(i));
         }
     }

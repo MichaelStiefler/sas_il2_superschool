@@ -18,8 +18,8 @@ public class P_61A_10 extends P_61X {
     }
 
     public static void prepareWeapons(Class aircraftClass, HierMesh hierMesh, String thisWeaponsName) {
-        hierMesh.chunkVisible("Turret1A_D0", thisWeaponsName.endsWith("gunpod"));
-        hierMesh.chunkVisible("Turret1B_D0", thisWeaponsName.endsWith("gunpod"));
+        hierMesh.chunkVisible("Turret1A_D0", thisWeaponsName.endsWith("turret") || thisWeaponsName.endsWith("turret_as_gunpod"));
+        hierMesh.chunkVisible("Turret1B_D0", thisWeaponsName.endsWith("turret") || thisWeaponsName.endsWith("turret_as_gunpod"));
         hierMesh.chunkVisible("PylonDTK_L2", thisWeaponsName.startsWith("2x"));
         hierMesh.chunkVisible("PylonDTK_R2", thisWeaponsName.startsWith("2x"));
     }

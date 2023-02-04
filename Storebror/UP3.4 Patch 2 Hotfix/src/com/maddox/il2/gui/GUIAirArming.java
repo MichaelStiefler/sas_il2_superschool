@@ -1575,7 +1575,8 @@ public class GUIAirArming extends GameState {
         }
         // ---
         
-        for (int j = 0; j < as1.length; j++)
+        for (int j = 0; j < as1.length; j++) {
+            if (j >= as1.length || j >= a_lweaponslot.length) continue; // skip mismatching slot lenghts
             if (as1[j] != null && a_lweaponslot[j] != null) {
                 Class class2 = a_lweaponslot[j].clazz;
                 if (!BombGun.class.isAssignableFrom(class2) || Property.containsValue(class2, "external")) {
@@ -1611,6 +1612,7 @@ public class GUIAirArming extends GameState {
                     }
                 }
             }
+        }
 
     }
 

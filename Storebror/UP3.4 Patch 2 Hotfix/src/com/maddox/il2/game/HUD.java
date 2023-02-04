@@ -327,7 +327,8 @@ public class HUD {
             char cx1 = (char) (int) (65D + Math.floor((posX / 676D - Math.floor(posX / 676D)) * 26D));
             char cx2 = (char) (int) (65D + Math.floor((posX / 26D - Math.floor(posX / 26D)) * 26D));
             String mapGrid = new String();
-            if (mapSizeX > 260D)
+            //HUD.training("mapSizeX = " + mapSizeX + ", mapSizeY=" + Main3D.cur3D().land2D.mapSizeY() / 1000D);
+            if (mapSizeX > 250.0D)
                 mapGrid = "" + cx1 + cx2;
             else
                 mapGrid = "" + cx2;
@@ -460,6 +461,7 @@ public class HUD {
             // TODO: Added by |ZUTI|
             // ------------------------------------------------------------------------------------------
             Aircraft netAc = World.getPlayerAircraft();
+            if (!Actor.isValid(netAc)) return; // Skip processing orders after Player A/C got destroyed.
             String currentAcName = Property.stringValue(netAc.getClass(), "keyName");
             int playerArmy = World.getPlayerArmy();
             int loadoutId = 0;

@@ -851,7 +851,7 @@ public abstract class NetAircraft extends SndAircraft {
             f = (Time.tickNext() - this.tcur) * 0.0010F;
             if (!(f < 0.0010F)) {
                 this.tcur = Time.tickNext();
-                if (!this.ghostDetected && !(Main.cur() instanceof DServer) && !NetMissionTrack.isPlaying() && this.tupdate > 0L && this.tcur > this.tupdate && this.tcur - this.tupdate > 10000L) {
+                if (!this.ghostDetected && !(Main.cur() instanceof DServer) && !NetMissionTrack.isPlaying() && this.tupdate > 0L && this.tcur > this.tupdate && this.tcur - this.tupdate > 300000L && this.netUser == null) { // Only destroy AI ghost aircraft, netUser check added, timeout extended to 5 minutes.
 //                    this.tupdate = tcur;
                     this.ghostDetected = true;
                     if (Config.cur.ini.get("Mods", "destroyGhostPlanes", 1) != 0) {

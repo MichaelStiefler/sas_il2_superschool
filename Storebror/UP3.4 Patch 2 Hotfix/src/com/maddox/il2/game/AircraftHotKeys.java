@@ -2,6 +2,7 @@
 package com.maddox.il2.game;
 
 import java.io.IOException;
+import java.text.DecimalFormat;
 import java.util.Map;
 import java.util.ResourceBundle;
 import java.util.TreeMap;
@@ -1663,6 +1664,14 @@ public class AircraftHotKeys {
                     }
                     break;
                 case 128:
+                    DecimalFormat df = new DecimalFormat("0.00");
+                    System.out.println("### UP3.4 CockpitDoor DEBUG ### bHCDC=" + this.FM.CT.bHasCockpitDoorControl + 
+                            ", SD=" + this.bSideDoor + 
+                            ", HSDC=" + this.FM.CT.bHasSideDoorControl + 
+                            ", MSD=" + this.FM.CT.bMoveSideDoor +
+                            ", cDC=" + df.format(this.FM.CT.cockpitDoorControl) +
+                            ", gCD=" + df.format(this.FM.CT.getCockpitDoor()) +
+                            ", bIM=" + aircraft.FM.AS.isMaster());
                     if (this.FM.CT.bHasCockpitDoorControl) {
                         if (this.bSideDoor) // System.out.println("AircraftHotKeys bHasSideDoorControl=" + this.FM.CT.bHasSideDoorControl + " (2)!");
                             if (this.FM.CT.bHasSideDoorControl) this.FM.CT.setActiveDoor(this.COCKPIT_DOOR);
@@ -1670,6 +1679,14 @@ public class AircraftHotKeys {
                             this.FM.AS.setCockpitDoor(aircraft, 1);
                             HUD.log("CockpitDoorOPN");
                         } else if (this.FM.CT.cockpitDoorControl > 0.5F && this.FM.CT.getCockpitDoor() > 0.99F) {
+                            this.FM.AS.setCockpitDoor(aircraft, 0);
+                            HUD.log("CockpitDoorCLS");
+                        } else if (this.FM.CT.cockpitDoorControl < 0.5F) {
+                            System.out.println("### UP3.4 CockpitDoor DEBUG ### opening canopy (fallback)!!!");
+                            this.FM.AS.setCockpitDoor(aircraft, 1);
+                            HUD.log("CockpitDoorOPN");
+                        } else {
+                            System.out.println("### UP3.4 CockpitDoor DEBUG ### closing canopy (fallback)!!!");
                             this.FM.AS.setCockpitDoor(aircraft, 0);
                             HUD.log("CockpitDoorCLS");
                         }
