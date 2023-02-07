@@ -5,9 +5,9 @@ import com.maddox.il2.game.Main3D;
 import com.maddox.rts.Property;
 
 public class P_61B_15 extends P_61X {
-    
+
     public void onAircraftLoaded() {
-        if (this == World.getPlayerAircraft() && this.thisWeaponsName.toLowerCase().endsWith("turret_as_gunpod")) {
+        if ((this == World.getPlayerAircraft()) && this.thisWeaponsName.toLowerCase().endsWith("turret_as_gunpod")) {
             Cockpit[] newCockpits = new Cockpit[Main3D.cur3D().cockpits.length - 1];
             System.arraycopy(Main3D.cur3D().cockpits, 0, newCockpits, 0, Main3D.cur3D().cockpits.length - 1);
             Main3D.cur3D().cockpits = newCockpits;

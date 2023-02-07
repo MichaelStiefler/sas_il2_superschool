@@ -66,6 +66,10 @@ public class CockpitP_61B extends CockpitPilot {
 
     public CockpitP_61B() {
         super("3DO/Cockpit/P-61B/hier.him", "bf109");
+//        radarPlane = new ArrayList();
+//        rRange = 4000F;
+//        rClose = 50F;
+//        nTgts = 5;
         this.setOld = new Variables();
         this.setNew = new Variables();
         this.w = new Vector3f();
@@ -81,6 +85,24 @@ public class CockpitP_61B extends CockpitPilot {
         if (this.bNeedSetUp) {
             this.reflectPlaneMats();
             this.bNeedSetUp = false;
+        }
+        TypeRadarAPSCarrier apsc = (TypeRadarAPSCarrier)aircraft();
+        if(apsc.getRadarAPS().hasMessages())
+            this.mesh.chunkSetAngles("RadarSWGun", 0.0F, 0.0F, 60F);
+        else
+            this.mesh.chunkSetAngles("RadarSWGun", 0.0F, 0.0F, 0.0F);
+        if(apsc.getRadarAPS().hasPower())
+        {
+            this.mesh.chunkVisible("RadarScreen", true);
+            this.mesh.chunkVisible("RadarScreenOFF", false);
+            this.mesh.chunkSetAngles("RadarSWOn", 0.0F, 30F, 0.0F);
+            apsc.getRadarAPS().radarScanCockpit(this.mesh, 10, 4);
+        } else
+        {
+            this.mesh.chunkVisible("RadarScreen", false);
+            this.mesh.chunkVisible("RadarScreenOFF", true);
+            this.mesh.chunkSetAngles("RadarSWOn", 0.0F, 0.0F, 0.0F);
+            apsc.getRadarAPS().clearRadarMarks(this.mesh, 10, 4);
         }
         this.resetYPRmodifier();
         this.mesh.chunkSetAngles("Canopy", 0.0F, this.cvt(this.fm.CT.getCockpitDoor(), 0.01F, 0.99F, 0.0F, -120F), 0.0F);
@@ -151,6 +173,112 @@ public class CockpitP_61B extends CockpitPilot {
         Cockpit.xyz[2] = this.cvt(this.fm.Or.getTangage(), -45F, 45F, -0.025F, 0.025F);
         this.mesh.chunkSetLocate("Z_AH2", Cockpit.xyz, Cockpit.ypr);
     }
+
+//    public void radarscan()
+//    {
+//        try
+//        {
+//            Aircraft aircraft = World.getPlayerAircraft();
+//            if(Time.current() + 50L > to)
+//                radarPlane.clear();
+//            if(Actor.isValid(aircraft) && Actor.isAlive(aircraft))
+//            {
+//                if(Time.current() > to)
+//                {
+//                    to = Time.current() + 500L;
+//                    Point3d point3d = aircraft.pos.getAbsPoint();
+//                    Orient orient = aircraft.pos.getAbsOrient();
+//                    List list = Engine.targets();
+//                    int i1 = list.size();
+//                    for(int k1 = 0; k1 < i1; k1++)
+//                    {
+//                        Actor actor = (Actor)list.get(k1);
+//                        if((actor instanceof Aircraft) && actor != World.getPlayerAircraft() && actor.getArmy() != World.getPlayerArmy())
+//                        {
+//                            Vector3d vector3d = new Vector3d();
+//                            vector3d.set(point3d);
+//                            Point3d point3d1 = new Point3d();
+//                            point3d1.set(actor.pos.getAbsPoint());
+//                            point3d1.sub(point3d);
+//                            orient.transformInv(point3d1);
+//                            if(point3d1.x > (double)rClose && point3d1.x < (double)rRange && point3d1.y < point3d1.x * 0.46630765815D && point3d1.y > -point3d1.x * 0.46630765815D && point3d1.z < point3d1.x * 0.1763269807D && point3d1.z > -point3d1.x * 0.1763269807D)
+//                                radarPlane.add(point3d1);
+//                        }
+//                    }
+//
+//                }
+//                int i = radarPlane.size();
+//                if(i == 0)
+//                {
+//                    for(int i1 = 0; i1 <= 9; i1++)
+//                    {
+//                        String s1 = "Radarmark10" + i1;
+//                        String s2 = "Radarmark20" + i1;
+//                        String s3 = "Radarmark30" + i1;
+//                        String s4 = "Radarmark40" + i1;
+//                        if(this.mesh.isChunkVisible(s1))
+//                            this.mesh.chunkVisible(s1, false);
+//                        if(this.mesh.isChunkVisible(s2))
+//                            this.mesh.chunkVisible(s2, false);
+//                        if(this.mesh.isChunkVisible(s3))
+//                            this.mesh.chunkVisible(s3, false);
+//                        if(this.mesh.isChunkVisible(s4))
+//                            this.mesh.chunkVisible(s4, false);
+//                    }
+//
+//                }
+//                int j = 0;
+//                for(int k = 0; k < i; k++)
+//                {
+//                    double d = ((Point3d)radarPlane.get(k)).x;
+//                    if(d > (double)rClose && j <= nTgts)
+//                    {
+//                        double d1 = ((Point3d)radarPlane.get(k)).y * 60D / d;
+//                        double d2 = ((Point3d)radarPlane.get(k)).z * 60D / d;
+//                        float f1 = cvt((float)d1, -10F, 10F, -0.04F, 0.04F);
+//                        float f2 = cvt((float)d2, -10F, 10F, -0.04F, 0.04F);
+//                        j++;
+//                        String s1 = "Radarmark10" + j;
+//                        String s2 = "Radarmark20" + j;
+//                        String s3 = "Radarmark30" + j;
+//                        String s4 = "Radarmark40" + j;
+//                        if(this.mesh.isChunkVisible(s1))
+//                            this.mesh.chunkVisible(s1, false);
+//                        if(this.mesh.isChunkVisible(s2))
+//                            this.mesh.chunkVisible(s2, false);
+//                        if(this.mesh.isChunkVisible(s3))
+//                            this.mesh.chunkVisible(s3, false);
+//                        if(this.mesh.isChunkVisible(s4))
+//                            this.mesh.chunkVisible(s4, false);
+//                        String mark = "";
+//                        int range = 0;
+//                        if(d <= 300D)
+//                            range = 4;
+//                        if(d < 450D && d >= 300D)
+//                            range = 3;
+//                        if(d < 600D && d >= 450D)
+//                            range = 2;
+//                        if(d >= 600D)
+//                            range = 1;
+//                        mark = "Radarmark" + range + "0" + j;
+//                        this.mesh.setCurChunk(mark);
+//                        resetYPRmodifier();
+//                        Cockpit.xyz[0] = f1;
+//                        Cockpit.xyz[2] = f2;
+//                        this.mesh.chunkSetLocate(Cockpit.xyz, Cockpit.ypr);
+//                        this.mesh.render();
+//                        if(!this.mesh.isChunkVisible(mark))
+//                            this.mesh.chunkVisible(mark, true);
+//                    }
+//                }
+//
+//            }
+//        }
+//        catch(Exception e)
+//        {
+//            e.printStackTrace();
+//        }
+//    }
 
     public void reflectCockpitState() {
         if ((this.fm.AS.astateCockpitState & 2) != 0) {
@@ -231,6 +359,12 @@ public class CockpitP_61B extends CockpitPilot {
         this.mesh.chunkVisible("WingRIn_D1", localHierMesh.isChunkVisible("WingRIn_D1"));
         this.mesh.chunkVisible("WingRIn_D2", localHierMesh.isChunkVisible("WingRIn_D2"));
     }
+
+//    private long to;
+//    private ArrayList radarPlane;
+//    private float rRange;
+//    private float rClose;
+//    private int nTgts;
 
     private Variables          setOld;
     private Variables          setNew;

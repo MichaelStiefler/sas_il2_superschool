@@ -330,6 +330,10 @@ public class AircraftHotKeys {
         long time;
 
         public void begin() {
+            if (RTSConf.cur.console.getEnv().existAtom("DEBUG_CANOPY", true)) {
+                System.out.println("### UP3.4 CockpitDoor DEBUG ### AircraftHotKeys.HotKeyCmdFire.begin() cmd=" + this.cmd + 
+                        ", time=" + Time.tick());
+            }
             AircraftHotKeys.this.doCmdPilot(this.cmd, true);
             this.time = Time.tick();
         }
@@ -1663,15 +1667,17 @@ public class AircraftHotKeys {
                         HUD.log("WingExpand");
                     }
                     break;
-                case 128:
-                    DecimalFormat df = new DecimalFormat("0.00");
-                    System.out.println("### UP3.4 CockpitDoor DEBUG ### bHCDC=" + this.FM.CT.bHasCockpitDoorControl + 
-                            ", SD=" + this.bSideDoor + 
-                            ", HSDC=" + this.FM.CT.bHasSideDoorControl + 
-                            ", MSD=" + this.FM.CT.bMoveSideDoor +
-                            ", cDC=" + df.format(this.FM.CT.cockpitDoorControl) +
-                            ", gCD=" + df.format(this.FM.CT.getCockpitDoor()) +
-                            ", bIM=" + aircraft.FM.AS.isMaster());
+                case COCKPITDOOR:
+                    if (RTSConf.cur.console.getEnv().existAtom("DEBUG_CANOPY", true)) {
+                        DecimalFormat df = new DecimalFormat("0.00");
+                        System.out.println("### UP3.4 CockpitDoor DEBUG ### AircraftHotKeys.doCmdPilot bHCDC=" + this.FM.CT.bHasCockpitDoorControl + 
+                                ", SD=" + this.bSideDoor + 
+                                ", HSDC=" + this.FM.CT.bHasSideDoorControl + 
+                                ", MSD=" + this.FM.CT.bMoveSideDoor +
+                                ", cDC=" + df.format(this.FM.CT.cockpitDoorControl) +
+                                ", gCD=" + df.format(this.FM.CT.getCockpitDoor()) +
+                                ", bIM=" + aircraft.FM.AS.isMaster());
+                    }
                     if (this.FM.CT.bHasCockpitDoorControl) {
                         if (this.bSideDoor) // System.out.println("AircraftHotKeys bHasSideDoorControl=" + this.FM.CT.bHasSideDoorControl + " (2)!");
                             if (this.FM.CT.bHasSideDoorControl) this.FM.CT.setActiveDoor(this.COCKPIT_DOOR);
@@ -2369,7 +2375,7 @@ public class AircraftHotKeys {
         HotKeyCmdEnv.addCmd(new HotKeyCmdFire("3advanced13", "WINGFOLD", 127, 347));
         HotKeyCmdEnv.addCmd(new HotKeyCmdFire("3advanced14", "AIRCRAFT_CARRIERHOOK", 129, 349));
         HotKeyCmdEnv.addCmd(new HotKeyCmdFire("3advanced15", "AIRCRAFT_BRAKESHOE", 130, 350));
-        HotKeyCmdEnv.addCmd(new HotKeyCmdFire("3advanced16", "COCKPITDOOR", 128, 348));
+        HotKeyCmdEnv.addCmd(new HotKeyCmdFire("3advanced16", "COCKPITDOOR", COCKPITDOOR, 348));
 
         // TODO: Added by |ZUTI|: Bomb Bay Door mod keys
         // -----------------------------------------------------------------------------

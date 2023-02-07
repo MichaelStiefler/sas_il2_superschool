@@ -8,12 +8,14 @@ import com.maddox.rts.Property;
 public class P_61A_10 extends P_61X {
     public void onAircraftLoaded() {
         super.onAircraftLoaded();
-        prepareWeapons(this.getClass(), this.hierMesh(), this.thisWeaponsName);
-        if (this == World.getPlayerAircraft() && this.thisWeaponsName.toLowerCase().endsWith("turret_as_gunpod") || !this.thisWeaponsName.toLowerCase().endsWith("turret")) {
+        P_61A_10.prepareWeapons(this.getClass(), this.hierMesh(), this.thisWeaponsName);
+        if (((this == World.getPlayerAircraft()) && this.thisWeaponsName.toLowerCase().endsWith("turret_as_gunpod")) || !this.thisWeaponsName.toLowerCase().endsWith("turret")) {
             Cockpit[] newCockpits = new Cockpit[Main3D.cur3D().cockpits.length - 1];
             System.arraycopy(Main3D.cur3D().cockpits, 0, newCockpits, 0, Main3D.cur3D().cockpits.length - 1);
             Main3D.cur3D().cockpits = newCockpits;
-            if (this.FM.turret.length > 0) this.FM.turret[0].bIsAIControlled = false;
+            if (this.FM.turret.length > 0) {
+                this.FM.turret[0].bIsAIControlled = false;
+            }
         }
     }
 
@@ -23,7 +25,7 @@ public class P_61A_10 extends P_61X {
         hierMesh.chunkVisible("PylonDTK_L2", thisWeaponsName.startsWith("2x"));
         hierMesh.chunkVisible("PylonDTK_R2", thisWeaponsName.startsWith("2x"));
     }
-    
+
     static {
         Class class1 = P_61A_10.class;
         new NetAircraft.SPAWN(class1);
