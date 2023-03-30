@@ -6,6 +6,7 @@ import java.util.List;
 import com.maddox.JGP.Point3d;
 import com.maddox.il2.ai.World;
 import com.maddox.il2.engine.Actor;
+import com.maddox.il2.engine.Config;
 import com.maddox.il2.fm.RealFlightModel;
 import com.maddox.il2.fm.ZutiSupportMethods_FM;
 import com.maddox.il2.game.Main;
@@ -620,8 +621,18 @@ public class ZutiSupportMethods_NetSend_ToClients {
      * @param user
      */
     public static void spawnResources_ToClient(long bullets, int[] bombs, long rockets, float fuel, long cargo, String user) {
+        if (curDebugLevel() != 0) {
+            StringBuffer sb = new StringBuffer();
+            sb.append("{");
+            for (int i=0; i<bombs.length; i++) {
+                if (sb.length() > 1) sb.append(", ");
+                sb.append(bombs[i]);
+            }
+            sb.append("}");
+            printDebugMessage("spawnResources_ToClient(" + bullets + ", " + sb.toString() + ", " + rockets + ", " + fuel + ", " + cargo + ", " + user + ")");
+        }
         try {
-            int[] tmpBombs = ZutiSupportMethods.cloneIntegerArray(bombs);
+//            int[] tmpBombs = ZutiSupportMethods.cloneIntegerArray(bombs);
 
             if (user == null || Mission.isSingle()) {
                 // +++ TODO: Storebror: null Checks added +++
@@ -632,18 +643,19 @@ public class ZutiSupportMethods_NetSend_ToClients {
                 // --- TODO: Storebror: null Checks added ---
                 Point3d pos = World.getPlayerAircraft().pos.getAbsPoint();
                 long availableBullets = ZutiSupportMethods_ResourcesManagement.getBulletsForPlayer(bullets, pos.x, pos.y);
-                int[] availableBombs = ZutiSupportMethods_ResourcesManagement.getBombsForPlayer(tmpBombs, pos.x, pos.y);
+                int[] availableBombs = ZutiSupportMethods_ResourcesManagement.getBombsForPlayer(bombs, pos.x, pos.y);
                 long availableRockets = ZutiSupportMethods_ResourcesManagement.getRocketsForPlayer(rockets, pos.x, pos.y);
                 long availableFuel = ZutiSupportMethods_ResourcesManagement.getFuelForPlayer(fuel, pos.x, pos.y);
                 long availableCargo = ZutiSupportMethods_ResourcesManagement.getCargoForPlayer(cargo, pos.x, pos.y);
 
                 bullets -= availableBullets;
-                bombs[0] -= availableBombs[0];
-                bombs[1] -= availableBombs[1];
-                bombs[2] -= availableBombs[2];
-                bombs[3] -= availableBombs[3];
-                bombs[4] -= availableBombs[4];
-                bombs[5] -= availableBombs[5];
+                for (int i=0; i<availableBombs.length; i++) bombs[i] -= availableBombs[i];
+//                bombs[0] -= availableBombs[0];
+//                bombs[1] -= availableBombs[1];
+//                bombs[2] -= availableBombs[2];
+//                bombs[3] -= availableBombs[3];
+//                bombs[4] -= availableBombs[4];
+//                bombs[5] -= availableBombs[5];
                 rockets -= availableRockets;
                 fuel -= availableFuel;
                 cargo -= availableCargo;
@@ -661,18 +673,31 @@ public class ZutiSupportMethods_NetSend_ToClients {
 
             Point3d pos = userAircraft.pos.getAbsPoint();
             long availableBullets = ZutiSupportMethods_ResourcesManagement.getBulletsForPlayer(bullets, pos.x, pos.y);
-            int[] availableBombs = ZutiSupportMethods_ResourcesManagement.getBombsForPlayer(tmpBombs, pos.x, pos.y);
+            int[] availableBombs = ZutiSupportMethods_ResourcesManagement.getBombsForPlayer(bombs, pos.x, pos.y);
             long availableRockets = ZutiSupportMethods_ResourcesManagement.getRocketsForPlayer(rockets, pos.x, pos.y);
             long availableFuel = ZutiSupportMethods_ResourcesManagement.getFuelForPlayer(fuel, pos.x, pos.y);
             long availableCargo = ZutiSupportMethods_ResourcesManagement.getCargoForPlayer(cargo, pos.x, pos.y);
+            
+            if (curDebugLevel() != 0) {
+                StringBuffer sb = new StringBuffer();
+                sb.append("{");
+                for (int i=0; i<availableBombs.length; i++) {
+                    if (sb.length() > 1) sb.append(", ");
+                    sb.append(availableBombs[i]);
+                }
+                sb.append("}");
+                printDebugMessage("availableBombs=" + sb.toString());
+            }
+
 
             bullets -= availableBullets;
-            bombs[0] -= availableBombs[0];
-            bombs[1] -= availableBombs[1];
-            bombs[2] -= availableBombs[2];
-            bombs[3] -= availableBombs[3];
-            bombs[4] -= availableBombs[4];
-            bombs[5] -= availableBombs[5];
+            for (int i=0; i<availableBombs.length; i++) bombs[i] -= availableBombs[i];
+//            bombs[0] -= availableBombs[0];
+//            bombs[1] -= availableBombs[1];
+//            bombs[2] -= availableBombs[2];
+//            bombs[3] -= availableBombs[3];
+//            bombs[4] -= availableBombs[4];
+//            bombs[5] -= availableBombs[5];
             rockets -= availableRockets;
             fuel -= availableFuel;
             cargo -= availableCargo;
@@ -680,11 +705,23 @@ public class ZutiSupportMethods_NetSend_ToClients {
             if (((NetUser) NetEnv.host()).uniqueName().equals(user)) // We are server and target user. Start updating process
                 ZutiSupportMethods_FM.updateSpawnResources(bullets, bombs, rockets, fuel, cargo);
             else if (Main.cur().netServerParams.isMaster()) {
+                ZutiSupportMethods_FM.updateSpawnResources(bullets, bombs, rockets, fuel, cargo, userAircraft); // TODO: By SAS~Storebror: Update Aircraft Resources on Server side as well!
                 NetUser netuser = ZutiSupportMethods.getNetUser(user);
                 if (netuser == null) {
                     System.out.println("ZSM_NS - NetUser >" + user + "< not found!");
                     return;
                 }
+                if (curDebugLevel() != 0) {
+                    StringBuffer sb = new StringBuffer();
+                    sb.append("{");
+                    for (int i=0; i<bombs.length; i++) {
+                        if (sb.length() > 1) sb.append(", ");
+                        sb.append(bombs[i]);
+                    }
+                    sb.append("}");
+                    printDebugMessage("bombs=" + sb.toString());
+                }
+
                 // Notify user to start refueling process
                 NetMsgGuaranted netmsgguaranted = new NetMsgGuaranted();
                 netmsgguaranted.writeByte(ZutiSupportMethods_NetSend.RRR_SPAWN_RESOURCES);
@@ -696,12 +733,13 @@ public class ZutiSupportMethods_NetSend_ToClients {
                 netmsgguaranted.writeLong(rockets);
 
                 // Add bomb information to the stream
-                netmsgguaranted.writeInt(bombs[0]);
-                netmsgguaranted.writeInt(bombs[1]);
-                netmsgguaranted.writeInt(bombs[2]);
-                netmsgguaranted.writeInt(bombs[3]);
-                netmsgguaranted.writeInt(bombs[4]);
-                netmsgguaranted.writeInt(bombs[5]);
+                for (int i=0; i<availableBombs.length; i++) netmsgguaranted.writeInt(bombs[i]);
+//                netmsgguaranted.writeInt(bombs[0]);
+//                netmsgguaranted.writeInt(bombs[1]);
+//                netmsgguaranted.writeInt(bombs[2]);
+//                netmsgguaranted.writeInt(bombs[3]);
+//                netmsgguaranted.writeInt(bombs[4]);
+//                netmsgguaranted.writeInt(bombs[5]);
 
                 // Add fuel information to the stream
                 netmsgguaranted.writeFloat(fuel);
@@ -798,5 +836,17 @@ public class ZutiSupportMethods_NetSend_ToClients {
             ex.printStackTrace();
         }
     }
+    
+    private static int       debugLevel    = Integer.MIN_VALUE;
+    private static final int DEBUG_DEFAULT = 0;
 
+    private static int curDebugLevel() {
+        if (debugLevel == Integer.MIN_VALUE) debugLevel = Config.cur.ini.get("Mods", "DEBUG_ZSM_NETSEND_TOCLIENTS", DEBUG_DEFAULT);
+        return debugLevel;
+    }
+
+    public static void printDebugMessage(String theMessage) {
+        if (curDebugLevel() == 0) return;
+        System.out.println("ZutiSupportMethods_NetSend_ToClients - " + theMessage);
+    }
 }

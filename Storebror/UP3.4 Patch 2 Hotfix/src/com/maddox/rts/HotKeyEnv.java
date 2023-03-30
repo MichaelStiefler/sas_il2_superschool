@@ -47,6 +47,9 @@ public class HotKeyEnv {
     }
 
     public void add(int hiWord, int loWord, String hotKeyName) {
+        if (RTSConf.cur.console.getEnv().existAtom("DEBUG_CANOPY", true) && this.name().equalsIgnoreCase("pilot")) {
+            System.out.println("### UP3.4 CockpitDoor DEBUG ### HotKeyEnv.add(" + hiWord + ", " + loWord + ", " + hotKeyName + ")");
+        }
         this.keys.put(this.hotKeys(hiWord, loWord), hotKeyName);
     }
 
@@ -61,10 +64,16 @@ public class HotKeyEnv {
     }
 
     public void remove(int hiWord, int loWord) {
+        if (RTSConf.cur.console.getEnv().existAtom("DEBUG_CANOPY", true) && this.name().equalsIgnoreCase("pilot")) {
+            System.out.println("### UP3.4 CockpitDoor DEBUG ### HotKeyEnv.remove(" + hiWord + ", " + loWord + ")");
+        }
         this.keys.remove(this.hotKeys(hiWord, loWord));
     }
 
     public void remove(String hotKeyName) {
+        if (RTSConf.cur.console.getEnv().existAtom("DEBUG_CANOPY", true) && this.name().equalsIgnoreCase("pilot")) {
+            System.out.println("### UP3.4 CockpitDoor DEBUG ### HotKeyEnv.remove(" + hotKeyName + ")");
+        }
         if (hotKeyName == null) return;
         boolean hotKeyFound = true;
         while (hotKeyFound) {
@@ -180,17 +189,53 @@ public class HotKeyEnv {
         }
 
     }
+    
+    private static int canopyInt1 = -1;
+    private static int canopyInt2 = -1;
+    private static int lastStartCmdInt1 = -1;
+    private static int lastStartCmdInt2 = -1;
+    public static void setCanopyInts() {
+        if (canopyInt1 != -1 && canopyInt2 != -1) return;
+        canopyInt1 = lastStartCmdInt1;
+        canopyInt2 = lastStartCmdInt2;
+    }
+    private static void setLastStartCmdInts(int i, int j) {
+        if (canopyInt1 != -1 && canopyInt2 != -1) return;
+        lastStartCmdInt1 = i;
+        lastStartCmdInt2 = j;
+    }
 
     private final boolean startCmd(boolean flag, int i, int j) {
-        if (RTSConf.cur.console.getEnv().existAtom("DEBUG_CANOPY", true)) {
-            System.out.println("### UP3.4 CockpitDoor DEBUG ### HotKeyEnv.startCmd(" + flag + ", " + i + ", " + j + ")");
+        setLastStartCmdInts(i, j);
+        if (RTSConf.cur.console.getEnv().existAtom("DEBUG_CANOPY", true) && this.name().equalsIgnoreCase("pilot")) {
+            System.out.println("### UP3.4 CockpitDoor DEBUG ### HotKeyEnv.startCmd(" + flag + ", " + i + ", " + j + ") - Canopy Int Values: " + canopyInt1 + ", " + canopyInt2);
         }
         HashMapExt hashmapext = RTSConf.cur.hotKeyEnvs.active;
         int k = this.hotKeys(i, j);
         String s = (String) this.keys.get(k);
-        if (s == null) return false;
+        if (s == null) {
+            if (RTSConf.cur.console.getEnv().existAtom("DEBUG_CANOPY", true) && this.name().equalsIgnoreCase("pilot")) {
+                if ((i == canopyInt1 && j == canopyInt2) || (-1 == canopyInt1 && -1 == canopyInt2)) {
+                    System.out.println("### UP3.4 CockpitDoor DEBUG ### HotKeyEnv.startCmd(" + flag + ", " + i + ", " + j + ") - k=" + k);
+                }
+            }
+            return false;
+        }
         HotKeyCmd hotkeycmd = this.hotKeyCmdEnv.get(s);
-        if (hotkeycmd == null || hotkeycmd.isActive() || !hotkeycmd.isEnabled() || hotkeycmd.isRealTime() != flag || Time.isPaused() && hotkeycmd.isDisableIfTimePaused()) return false;
+        if (RTSConf.cur.console.getEnv().existAtom("DEBUG_CANOPY", true) && this.name().equalsIgnoreCase("pilot")) {
+            if ((i == canopyInt1 && j == canopyInt2) || (-1 == canopyInt1 && -1 == canopyInt2)) {
+                System.out.println("### UP3.4 CockpitDoor DEBUG ### HotKeyEnv.startCmd(" + flag + ", " + i + ", " + j + ") - k=" + k + ", s=" + s + ", hotkeycmd.isRealTime()=" + hotkeycmd.isRealTime());
+            }
+        }
+        if (hotkeycmd == null || hotkeycmd.isActive() || !hotkeycmd.isEnabled() || hotkeycmd.isRealTime() != flag || Time.isPaused() && hotkeycmd.isDisableIfTimePaused()) {
+            if (RTSConf.cur.console.getEnv().existAtom("DEBUG_CANOPY", true) && this.name().equalsIgnoreCase("pilot")) {
+                if ((i == canopyInt1 && j == canopyInt2) || (-1 == canopyInt1 && -1 == canopyInt2)) {
+                    if (hotkeycmd == null) System.out.println("### UP3.4 CockpitDoor DEBUG ### HotKeyEnv.startCmd(" + flag + ", " + i + ", " + j + ") - hotkeycmd == null");
+                    else System.out.println("### UP3.4 CockpitDoor DEBUG ### HotKeyEnv.startCmd(" + flag + ", " + i + ", " + j + ") - hotkeycmd.isActive()=" + hotkeycmd.isActive() + ", hotkeycmd.isEnabled()=" + hotkeycmd.isEnabled() + ", hotkeycmd.isRealTime()=" + hotkeycmd.isRealTime() + ", Time.isPaused()=" + Time.isPaused() + ", hotkeycmd.isDisableIfTimePaused()=" + hotkeycmd.isDisableIfTimePaused());
+                }
+            }
+            return false;
+        }
         hashmapext.put(hotkeycmd, null);
         RTSConf.cur.hotKeyCmdEnvs.post(hotkeycmd, true, true);
         hotkeycmd.start(i, j);

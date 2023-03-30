@@ -655,27 +655,27 @@ public class Motor extends FMMath {
     }
 
     public float getATA(float f) {
-        int i = 0;
-        int i_22_ = 1;
-        float f_23_ = 1.0F;
+        int compressorAtaIndex = 0;
+        int compressorRpmIndex = 1;
+        float ata = 1.0F;
         if (this.nOfCompPoints < 2) return 1.0F;
-        if (f < 0.1) f_23_ = Atmosphere.pressure((float) this.reference.Loc.z) * this._1_P0;
-        else if (f >= this.compressorRPM[this.nOfCompPoints - 1]) f_23_ = this.compressorATA[this.nOfCompPoints - 1];
+        if (f < 0.1) ata = Atmosphere.pressure((float) this.reference.Loc.z) * this._1_P0;
+        else if (f >= this.compressorRPM[this.nOfCompPoints - 1]) ata = this.compressorATA[this.nOfCompPoints - 1];
         else {
             if (f < this.compressorRPM[0]) {
-                i = 0;
-                i_22_ = 1;
-            } else for (int i_24_ = 0; i_24_ < this.nOfCompPoints - 1; i_24_++)
-                if (this.compressorRPM[i_24_] <= f && f < this.compressorRPM[i_24_ + 1]) {
-                    i = i_24_;
-                    i_22_ = i_24_ + 1;
+                compressorAtaIndex = 0;
+                compressorRpmIndex = 1;
+            } else for (int compressorRpmCheckIndex = 0; compressorRpmCheckIndex < this.nOfCompPoints - 1; compressorRpmCheckIndex++)
+                if (this.compressorRPM[compressorRpmCheckIndex] <= f && f < this.compressorRPM[compressorRpmCheckIndex + 1]) {
+                    compressorAtaIndex = compressorRpmCheckIndex;
+                    compressorRpmIndex = compressorRpmCheckIndex + 1;
                     break;
                 }
-            float f_25_ = this.compressorRPM[i_22_] - this.compressorRPM[i];
-            if (f_25_ < 0.0010F) f_25_ = 0.0010F;
-            f_23_ = this.compressorATA[i] + (f - this.compressorRPM[i]) * (this.compressorATA[i_22_] - this.compressorATA[i]) / f_25_;
+            float compressorDiff = this.compressorRPM[compressorRpmIndex] - this.compressorRPM[compressorAtaIndex];
+            if (compressorDiff < 0.0010F) compressorDiff = 0.0010F;
+            ata = this.compressorATA[compressorAtaIndex] + (f - this.compressorRPM[compressorAtaIndex]) * (this.compressorATA[compressorRpmIndex] - this.compressorATA[compressorAtaIndex]) / compressorDiff;
         }
-        return f_23_;
+        return ata;
     }
 
     public void update(float f) {
@@ -2552,7 +2552,7 @@ public class Motor extends FMMath {
                         f_170_ *= this.afterburnerCompressorFactor;
                         this.compressorManifoldThreshold *= this.afterburnerCompressorFactor;
                     }
-//                    if (this.fastATA) this.compressor2ndThrottle = f_170_;
+                    if (this.fastATA) this.compressor2ndThrottle = f_170_; // TODO: Reactivated by SAS~Storebror
                     else this.compressor2ndThrottle -= 3.0F * f * (this.compressor2ndThrottle - f_170_);
                     if (this.compressor2ndThrottle > 1.0F) this.compressor2ndThrottle = 1.0F;
                     this.compressorManifoldPressure *= this.compressor2ndThrottle;

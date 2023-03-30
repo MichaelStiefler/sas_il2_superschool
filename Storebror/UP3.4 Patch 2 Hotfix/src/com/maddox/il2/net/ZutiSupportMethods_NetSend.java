@@ -1057,6 +1057,7 @@ public class ZutiSupportMethods_NetSend {
      */
     public static void returnRRRResources_Fuel(float unusedFuel, Point3d pos) {
         try {
+            if (unusedFuel < 0 || unusedFuel > Integer.MAX_VALUE / 2) unusedFuel = 0;
             NetUser netuser = (NetUser) NetEnv.host();
             int bornPlayerId = -1;
             int army = -1;
@@ -1138,6 +1139,7 @@ public class ZutiSupportMethods_NetSend {
      */
     public static void returnRRRResources_Bullets(long unusedBullets, Point3d pos) {
         try {
+            if (unusedBullets < 0 || unusedBullets > Integer.MAX_VALUE / 2) unusedBullets = 0;
             NetUser netuser = (NetUser) NetEnv.host();
             int bornPlaceId = -1;
             int army = -1;
@@ -1224,6 +1226,7 @@ public class ZutiSupportMethods_NetSend {
      */
     public static void returnRRRResources_Bombs(int[] unusedBombs, Point3d pos) {
         try {
+            for (int bombsIndex = 0; bombsIndex < unusedBombs.length; bombsIndex++) if (unusedBombs[bombsIndex] < 0 || unusedBombs[bombsIndex] > Integer.MAX_VALUE / 2) unusedBombs[bombsIndex] = 0;
             NetUser netuser = (NetUser) NetEnv.host();
             int bornPlaceId = -1;
             int army = -1;
@@ -1325,6 +1328,7 @@ public class ZutiSupportMethods_NetSend {
      */
     public static void returnRRRResources_Rockets(long unusedRockets, Point3d pos) {
         try {
+            if (unusedRockets < 0 || unusedRockets > Integer.MAX_VALUE / 2) unusedRockets = 0;
             NetUser netuser = (NetUser) NetEnv.host();
             int bornPlaceId = -1;
             int army = -1;
@@ -1408,6 +1412,7 @@ public class ZutiSupportMethods_NetSend {
      */
     public static void returnRRRResources_Engine(long unusedEngines, Point3d pos) {
         try {
+            if (unusedEngines < 0 || unusedEngines > Integer.MAX_VALUE / 2) unusedEngines = 0;
             NetUser netuser = (NetUser) NetEnv.host();
             int bornPlaceId = -1;
             int army = -1;
@@ -1488,6 +1493,7 @@ public class ZutiSupportMethods_NetSend {
      */
     public static void returnRRRResources_RepairKit(long unusedRepairKits, Point3d pos) {
         try {
+            if (unusedRepairKits < 0 || unusedRepairKits > Integer.MAX_VALUE / 2) unusedRepairKits = 0;
             NetUser netuser = (NetUser) NetEnv.host();
             int bornPlaceId = -1;
             int army = -1;

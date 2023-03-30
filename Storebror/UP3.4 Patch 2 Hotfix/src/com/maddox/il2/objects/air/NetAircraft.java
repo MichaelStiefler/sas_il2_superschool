@@ -1618,14 +1618,18 @@ public abstract class NetAircraft extends SndAircraft {
         if (this.getWeaponsAmount() == 0) return false;
         if (is == null) return true;
         int i = 0;
-        int i_104_ = this.FM.CT.Weapons.length;
-        for (int i_105_ = 0; i_105_ < i_104_; i_105_++) {
-            BulletEmitter[] bulletemitters = this.FM.CT.Weapons[i_105_];
-            if (bulletemitters != null) for (int i_106_ = 0; i_106_ < bulletemitters.length; i_106_++)
-                if (bulletemitters[i_106_] != null) {
-                    if ((is[i / 8] & 1 << i % 8) == 0 != (bulletemitters[i_106_].countBullets() == 0)) return true;
-                    i++;
+        int weaponsLength = this.FM.CT.Weapons.length;
+        for (int weaponsIndex = 0; weaponsIndex < weaponsLength; weaponsIndex++) {
+            BulletEmitter[] bulletemitters = this.FM.CT.Weapons[weaponsIndex];
+            if (bulletemitters != null) {
+                for (int bulletEmitterIndex = 0; bulletEmitterIndex < bulletemitters.length; bulletEmitterIndex++) {
+                    if (bulletemitters[bulletEmitterIndex] != null) {
+                        if ((is[i / 8] & 1 << i % 8) == 0 != (bulletemitters[bulletEmitterIndex].countBullets() == 0)) return true;
+                        i++;
+                        if (i/8 >= is.length) return false; // TODO: Needs testing!
+                    }
                 }
+            }
         }
         return false;
     }
@@ -2430,7 +2434,7 @@ public abstract class NetAircraft extends SndAircraft {
         netmsgguaranted.writeFloat(this.FM.M.fuel / this.FM.M.maxFuel);
         netmsgguaranted.writeBoolean(this.bPaintShemeNumberOn);
         netmsgguaranted.write255(((AircraftNet) this.net).netName);
-        netmsgguaranted.write255(this.thisWeaponsName);
+        netmsgguaranted.write255(this.thisWeaponsName == null?"default":this.thisWeaponsName);
         netmsgguaranted.writeNetObj(((AircraftNet) this.net).netUser);
     }
 

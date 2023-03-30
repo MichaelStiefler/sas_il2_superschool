@@ -779,7 +779,7 @@ public class Hunter extends Scheme1 implements TypeSupersonic, TypeFighter, Type
                     localVector3d.x += localAircraft.FM.Vwld.x;
                     localVector3d.y += localAircraft.FM.Vwld.y;
                     localVector3d.z += localAircraft.FM.Vwld.z;
-                    new EjectionSeat(1, localLoc1, localVector3d, localAircraft);
+                    new EjectionSeat(EjectionSeat.ESEAT_MB, localLoc1, localVector3d, localAircraft);
                 }
             }
         };

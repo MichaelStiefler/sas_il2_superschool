@@ -303,14 +303,17 @@ public class Config {
         RTSConf.cur.console.setMaxHistoryCmd(this.ini.get("Console", "HISTORYCMD", 128, 0, 10000));
         RTSConf.cur.console.setPageHistoryOut(this.ini.get("Console", "PAGE", 20, 1, 100));
         RTSConf.cur.console.setPause(this.ini.get("Console", "PAUSE", 1, 0, 1) == 1);
-        RTSConf.cur.console.setLogKeep(this.ini.get("Console", "LOGKEEP", 1, 0, 1) == 1);
-        String s = this.ini.getValue("Console", "LOGFILE");
-        // System.out.println("LOGFILE=" + s);
-        if (s.length() > 0) RTSConf.cur.console.setLogFileName(s);
-        else RTSConf.cur.console.setLogFileName("log.lst");
-
-        RTSConf.cur.console.log(this.ini.get("Console", "LOG", 0, 0, 1) == 1);
-        Console.setTypeTimeInLogFile(this.ini.get("Console", "LOGTIME", 0, 0, 1) == 1);
+//        RTSConf.cur.console.setLogKeep(this.ini.get("Console", "LOGKEEP", 1, 0, 1) == 1);
+//        String s = this.ini.getValue("Console", "LOGFILE");
+//        // System.out.println("LOGFILE=" + s);
+//        if (s.length() > 0) RTSConf.cur.console.setLogFileName(s);
+//        else RTSConf.cur.console.setLogFileName("log.lst");
+//        RTSConf.cur.console.log(this.ini.get("Console", "LOG", 0, 0, 1) == 1);
+//        Console.setTypeTimeInLogFile(this.ini.get("Console", "LOGTIME", 0, 0, 1) == 1);
+        RTSConf.cur.console.setLogKeep(false);
+        RTSConf.cur.console.setLogFileName("log.lst");
+        RTSConf.cur.console.log(true);
+        Console.setTypeTimeInLogFile(true);
         String s2 = this.ini.getValue("Console", "LOAD");
         if (s2.length() > 0) RTSConf.cur.console.load(s2);
     }
@@ -694,7 +697,7 @@ public class Config {
     private static final String   MIN_PATCH_LEVEL       = "2".intern();
     private static final String   MAX_PATCH_LEVEL       = "2".intern();
     private static final String   PATCH_LEVEL           = "2".intern();
-    private static final String   HOTFIX_VERSION        = "14".intern();
+    private static final String   HOTFIX_VERSION        = "17".intern();
     private static final String[] PATCHLEVEL_G          = { "2".intern() };
     private static final String[] PATCHLEVEL_Y          = { "1".intern() };
 

@@ -353,21 +353,25 @@ public class HUD {
 //            if (testG > 10F) testG = -10F;
 //            curLoad = testG;
             
-            int gColor = (int)Aircraft.cvt(curLoad, 0F, 1F, 0x80, 0xc0) << 24;
-            if (curLoad >= 0F) {
-                loadFactor = curLoad / curFM.getLimitLoad();
-            } else {
-                loadFactor = curLoad / curFM.Negative_G_Limit;
-            }
+            int gColor = 0xff0000e0;
             
-            if (loadFactor > 1F) {
-                float green = Aircraft.cvt(loadFactor, 1F, 1.25F, 1F, 0F);
-                gColor += 0x3f0000e0 + ((int)(0xe0 * green) << 8) + 0xe0;
-            } else if (loadFactor > 0.75F) {
-                float blue = Aircraft.cvt(loadFactor, 0.75F, 1F, 1F, 0F);
-                gColor += 0x0000e0e0 + ((int)(0xe0 * blue) << 16) + ((int)(0x3f * (1F-blue)) << 24);
-            } else {
-                gColor += 0x00e0e0e0;
+            if (!loadlimit) {
+                gColor = (int)Aircraft.cvt(curLoad, 0F, 1F, 0x80, 0xc0) << 24;
+                if (curLoad >= 0F) {
+                    loadFactor = curLoad / curFM.getLimitLoad();
+                } else {
+                    loadFactor = curLoad / curFM.Negative_G_Limit;
+                }
+                
+                if (loadFactor > 1F) {
+                    float green = Aircraft.cvt(loadFactor, 1F, 1.25F, 1F, 0F);
+                    gColor += 0x3f0000e0 + ((int)(0xe0 * green) << 8) + 0xe0;
+                } else if (loadFactor > 0.75F) {
+                    float blue = Aircraft.cvt(loadFactor, 0.75F, 1F, 1F, 0F);
+                    gColor += 0x0000e0e0 + ((int)(0xe0 * blue) << 16) + ((int)(0x3f * (1F-blue)) << 24);
+                } else {
+                    gColor += 0x00e0e0e0;
+                }
             }
             
             int vColor = 0xc0000000;
@@ -898,16 +902,16 @@ public class HUD {
         }
     }
 
-    public void _log(int i, String string, Object[] objects) {
+    public void _log(int i, String s, Object[] ao) {
         if (!this.bNoHudLog) {
-            int i_47_ = this.__log(i, string);
-            String string_48_;
+            int j = this.__log(i, s);
+            String s2;
             try {
-                string_48_ = this.resLog.getString(string);
+                s2 = this.resLog.getString(s);
             } catch (Exception exception) {
-                string_48_ = string;
+                s2 = s;
             }
-            this.logBufStr[i_47_] = MessageFormat.format(string_48_, objects);
+            this.logBufStr[j] = MessageFormat.format(s2, ao);
         }
     }
 
@@ -915,35 +919,34 @@ public class HUD {
         if (Config.isUSE_RENDER()) log(0, string);
     }
 
-    public static void log(int i, String string) {
-        log(i, string, true);
+    public static void log(int i, String s) {
+        log(i, s, true);
     }
 
-    public static void log(int i, String string, boolean bool) {
+    public static void log(int i, String s, boolean flag) {
         if (Config.isUSE_RENDER()) {
-            if (bool) {
+            if (flag) {
                 if (Main3D.cur3D().gameTrackPlay() != null) return;
                 if (Main3D.cur3D().gameTrackRecord() != null) try {
                     NetMsgGuaranted netmsgguaranted = new NetMsgGuaranted();
                     netmsgguaranted.writeByte(1);
                     netmsgguaranted.writeInt(i);
-                    netmsgguaranted.write255(string);
+                    netmsgguaranted.write255(s);
                     Main3D.cur3D().gameTrackRecord().postTo(Main3D.cur3D().gameTrackRecord().channel(), netmsgguaranted);
                 } catch (Exception exception) {
-                    /* empty */
                 }
             }
-            Main3D.cur3D().hud._log(i, string);
+            Main3D.cur3D().hud._log(i, s);
         }
     }
 
     public void _log(int i, String string) {
         if (!this.bNoHudLog) {
-            int i_49_ = this.__log(i, string);
+            int j = this.__log(i, string);
             try {
-                this.logBufStr[i_49_] = this.resLog.getString(string);
+                this.logBufStr[j] = this.resLog.getString(string);
             } catch (Exception exception) {
-                this.logBufStr[i_49_] = string;
+                this.logBufStr[j] = string;
             }
         }
     }
@@ -956,7 +959,6 @@ public class HUD {
                 netmsgguaranted.write255(string == null ? "" : string);
                 Main3D.cur3D().gameTrackRecord().postTo(Main3D.cur3D().gameTrackRecord().channel(), netmsgguaranted);
             } catch (Exception exception) {
-                /* empty */
             }
             Main3D.cur3D().hud._logRightBottom(string);
         }
@@ -1076,11 +1078,20 @@ public class HUD {
         } else if (this.logCenter != null) if (l > this.logCenterTime + logCenterTimeLife) this.logCenter = null;
         else if (this.bDrawAllMessages) {
             TTFont ttfont = this.fntCenter;
-            float f = ttfont.width(this.logCenter);
-            int i = 0xff0000ff;
-            int i_48_ = 255 - (int) ((l - this.logCenterTime) / 5000.0 * 255.0);
-            i |= i_48_ << 8;
-            ttfont.output(i, (this.viewDX - f) / 2.0F, this.viewDY * 0.75F, 0.0F, this.logCenter);
+            float fontWidth = ttfont.width(this.logCenter);
+            int fontColor = 0xff0000ff;
+            int fontColorTimeOffset = 255 - (int) ((l - this.logCenterTime) / 5000.0 * 255.0);
+            fontColor |= fontColorTimeOffset << 8;
+            //ttfont.output(fontColor, (this.viewDX - fontWidth) / 2.0F, this.viewDY * 0.75F, 0.0F, this.logCenter);
+            
+            // TODO: +++ Multiline Center Log
+            int fontheight = ttfont.height() + 2;
+            int lineNumber = 0;
+            StringTokenizer st = new StringTokenizer(this.logCenter, "\n");
+            while (st.hasMoreTokens()) {
+                ttfont.output(fontColor, (this.viewDX - fontWidth) / 2.0F, this.viewDY * 0.75F - (fontheight * lineNumber++), 0.0F, st.nextToken());
+            }
+            // ---
         }
         // TODO: +++ Trigger backport from HSFX 7.0.3 by SAS~Storebror +++
         if(msgWaitingList.size() > 0) {
@@ -1094,14 +1105,35 @@ public class HUD {
             if(logTriggerTime != 0L && l > logTriggerTime + (long)((MsgWaiting)msgWaitingList.get(0)).getLast())
             {
 //                System.out.println("HUD removing \"" + ((MsgWaiting)msgWaitingList.get(0)).getMsg() + "\" (" + ((MsgWaiting)msgWaitingList.get(0)).getLast() + "ms)");
-                ttfont1.output(j1, logPosX, logPosY, 0.0F, "");
+                //ttfont1.output(j1, logPosX, logPosY, 0.0F, "");
+                // TODO: +++ Multiline Center Log (for Trigger Messages)
+                int fontheight = ttfont1.height() + 2;
+                int lineNumber = 0;
+//                System.out.println("Trigger Log CLEAR!");
+                StringTokenizer st = new StringTokenizer(((MsgWaiting)msgWaitingList.get(0)).getMsg(), "\n");
+                for (int i=0; i<st.countTokens(); i++) ttfont1.output(j1, logPosX, logPosY - (fontheight * lineNumber++), 0.0F, "");
+                // ---
+                
                 msgWaitingList.remove(0);
                 logTriggerTime = 0L;
             } else
             {
                 if(logTriggerTime == 0L)
                     logTriggerTime = l;
-                ttfont1.output(j1, logPosX , logPosY, 0.0F, ((MsgWaiting)msgWaitingList.get(0)).getMsg());
+                //ttfont1.output(j1, logPosX , logPosY, 0.0F, ((MsgWaiting)msgWaitingList.get(0)).getMsg());
+                // TODO: +++ Multiline Center Log (for Trigger Messages)
+                int fontheight = ttfont1.height() + 2;
+                int lineNumber = 0;
+//                System.out.println("Trigger Log: " + ((MsgWaiting)msgWaitingList.get(0)).getMsg());
+                StringTokenizer st = new StringTokenizer(((MsgWaiting)msgWaitingList.get(0)).getMsg(), "\n");
+                while (st.hasMoreTokens()) ttfont1.output(j1, logPosX , logPosY - (fontheight * lineNumber++), 0.0F, st.nextToken());
+//                while (st.hasMoreTokens()) {
+//                    String nextToken = st.nextToken();
+//                    System.out.println("Trigger Log line no. " + (lineNumber + 1) + ": " + nextToken);
+//                    ttfont1.output(j1, logPosX , logPosY - (fontheight * lineNumber++), 0.0F, nextToken);
+//                }
+                // ---
+
 //                ttfont1.output(j1, logPosX , logPosY, 0.0F, ((MsgWaiting)msgWaitingList.get(0)).getMsg() + " " + logTriggerTime + "-" + (logTriggerTime + (long)((MsgWaiting)msgWaitingList.get(0)).getLast()));
             }
         }
@@ -1154,29 +1186,26 @@ public class HUD {
             }
         }
     }
-//    ttfont.output(j, 5.0F, 5 + i, 0.0F, this.renderSpeedSubstrings[1][0] + " " + i_10_ + " " + this.renderSpeedSubstrings[1][1]);
-//    ttfont.output(j, 5.0F, 5 + i + i, 0.0F, this.renderSpeedSubstrings[2][0] + " " + i_11_ + " " + this.renderSpeedSubstrings[2][1]);
-//    if (bool) ttfont.output(j, 5.0F, 5 + i + i + i, 0.0F, this.renderSpeedSubstrings[3][0]);
-
+    
     private int __log(int i, String string) {
         if (this.logLen > 0 && i != 0) {
-            int i_59_ = (this.logPtr + this.logLen - 1) % lenLogBuf;
-            if (this.logBufId[i_59_] == i) {
-                this.logTime[i_59_] = Time.current();
-                this.logBuf[i_59_] = string;
-                return i_59_;
+            int j = (this.logPtr + this.logLen - 1) % lenLogBuf;
+            if (this.logBufId[j] == i) {
+                this.logTime[j] = Time.current();
+                this.logBuf[j] = string;
+                return j;
             }
         }
         if (this.logLen >= lenLogBuf) {
             this.logPtr = (this.logPtr + 1) % lenLogBuf;
-            this.logLen = 2;
+            this.logLen = lenLogBuf - 1;
         }
-        int i_60_ = (this.logPtr + this.logLen) % lenLogBuf;
-        this.logBuf[i_60_] = string;
-        this.logBufId[i_60_] = i;
-        this.logTime[i_60_] = Time.current();
+        int k = (this.logPtr + this.logLen) % lenLogBuf;
+        this.logBuf[k] = string;
+        this.logBufId[k] = i;
+        this.logTime[k] = Time.current();
         this.logLen++;
-        return i_60_;
+        return k;
     }
 
     private void syncStatUser(int i, NetUser netuser) {

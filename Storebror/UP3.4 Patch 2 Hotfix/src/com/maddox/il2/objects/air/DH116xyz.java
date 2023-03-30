@@ -12,6 +12,7 @@ import com.maddox.il2.engine.HierMesh;
 import com.maddox.il2.engine.HookNamed;
 import com.maddox.il2.engine.Loc;
 import com.maddox.il2.fm.AircraftState;
+import com.maddox.il2.fm.RealFlightModel;
 import com.maddox.il2.game.Main3D;
 import com.maddox.il2.objects.Wreckage;
 import com.maddox.il2.objects.weapons.GuidedMissileUtils;
@@ -545,11 +546,13 @@ public class DH116xyz extends Scheme1
 
     public void update(float f)
     {
-        if(!this.FM.isPlayers() && this.FM.Gears.onGround())
-            if(this.FM.EI.engines[0].getRPM() < 100F)
-                this.FM.CT.cockpitDoorControl = 1.0F;
-            else
-                this.FM.CT.cockpitDoorControl = 0.0F;
+        if (this.FM.AS.isMaster() && (!this.FM.isPlayers() || !(this.FM instanceof RealFlightModel) || !((RealFlightModel)this.FM).isRealMode()) && this.FM.Gears.onGround()) {
+            if (this.FM.getSpeedKMH() < 20.0F) {
+              this.FM.CT.cockpitDoorControl = 1.0F;
+            } else {
+              this.FM.CT.cockpitDoorControl = 0.0F;
+            }
+        }
         if((this.FM.AS.bIsAboutToBailout || overrideBailout) && !ejectComplete && this.FM.getSpeedKMH() > 15F)
         {
             overrideBailout = true;
@@ -646,7 +649,7 @@ public class DH116xyz extends Scheme1
                     localVector3d.x += localAircraft.FM.Vwld.x;
                     localVector3d.y += localAircraft.FM.Vwld.y;
                     localVector3d.z += localAircraft.FM.Vwld.z;
-                    new EjectionSeat(1, localLoc1, localVector3d, localAircraft);
+                    new EjectionSeat(EjectionSeat.ESEAT_MB, localLoc1, localVector3d, localAircraft);
                     return;
                 }
             }

@@ -333,6 +333,17 @@ public class ZutiSupportMethods_NetReceive {
 
                     // Read user data
                     String user = netmsginput.read255();
+                    
+                    if (curDebugLevel() != 0) {
+                        StringBuffer sb = new StringBuffer();
+                        sb.append("{");
+                        for (int i=0; i<bombs.length; i++) {
+                            if (sb.length() > 1) sb.append(", ");
+                            sb.append(bombs[i]);
+                        }
+                        sb.append("}");
+                        printDebugMessage("ZutiSupportMethods_NetSend.RRR_SPAWN_RESOURCES: bullets=" + bullets + ", bombs=" + sb.toString() + ", rockets=" + rockets + ", fuel=" + fuel + ", cargo=" + cargo + ", user=" + user);
+                    }
 
                     if (Main.cur().netServerParams.isMaster()) ZutiSupportMethods_NetSend_ToClients.spawnResources_ToClient(bullets, bombs, rockets, fuel, cargo, user);
                     else {
@@ -1079,34 +1090,38 @@ public class ZutiSupportMethods_NetReceive {
         }
     }
 
-    private static void returnResources_Bombs(int bornPlaceId, int army, int[] unusedBombs) {
+    private static void returnResources_Bombs(int bornPlaceId, int army, int[] unusedBombsIn) {
+        int[] unusedBombs = ZutiSupportMethods.cloneIntegerArray(unusedBombsIn);
         if (bornPlaceId > 0) {
             BornPlace bp = (BornPlace) World.cur().bornPlaces.get(bornPlaceId);
-            bp.zutiBombsSupply[0] += unusedBombs[0];
-            bp.zutiBombsSupply[1] += unusedBombs[1];
-            bp.zutiBombsSupply[2] += unusedBombs[2];
-            bp.zutiBombsSupply[3] += unusedBombs[3];
-            bp.zutiBombsSupply[4] += unusedBombs[4];
-            bp.zutiBombsSupply[5] += unusedBombs[5];
+            for (int i=0; i<unusedBombs.length; i++) bp.zutiBombsSupply[i] += unusedBombs[i];
+//            bp.zutiBombsSupply[0] += unusedBombs[0];
+//            bp.zutiBombsSupply[1] += unusedBombs[1];
+//            bp.zutiBombsSupply[2] += unusedBombs[2];
+//            bp.zutiBombsSupply[3] += unusedBombs[3];
+//            bp.zutiBombsSupply[4] += unusedBombs[4];
+//            bp.zutiBombsSupply[5] += unusedBombs[5];
 
             ZutiSupportMethods_ResourcesManagement.printOutResourcesForHomeBase(bp);
         } else if (army > 0) {
             switch (army) {
                 case 1:
-                    Mission.MDS_VARIABLES().zutiBombsSupply_Red[0] += unusedBombs[0];
-                    Mission.MDS_VARIABLES().zutiBombsSupply_Red[1] += unusedBombs[1];
-                    Mission.MDS_VARIABLES().zutiBombsSupply_Red[2] += unusedBombs[2];
-                    Mission.MDS_VARIABLES().zutiBombsSupply_Red[3] += unusedBombs[3];
-                    Mission.MDS_VARIABLES().zutiBombsSupply_Red[4] += unusedBombs[4];
-                    Mission.MDS_VARIABLES().zutiBombsSupply_Red[5] += unusedBombs[5];
+                    for (int i=0; i<unusedBombs.length; i++) Mission.MDS_VARIABLES().zutiBombsSupply_Red[i] += unusedBombs[i];
+//                    Mission.MDS_VARIABLES().zutiBombsSupply_Red[0] += unusedBombs[0];
+//                    Mission.MDS_VARIABLES().zutiBombsSupply_Red[1] += unusedBombs[1];
+//                    Mission.MDS_VARIABLES().zutiBombsSupply_Red[2] += unusedBombs[2];
+//                    Mission.MDS_VARIABLES().zutiBombsSupply_Red[3] += unusedBombs[3];
+//                    Mission.MDS_VARIABLES().zutiBombsSupply_Red[4] += unusedBombs[4];
+//                    Mission.MDS_VARIABLES().zutiBombsSupply_Red[5] += unusedBombs[5];
                     break;
                 case 2:
-                    Mission.MDS_VARIABLES().zutiBombsSupply_Blue[0] += unusedBombs[0];
-                    Mission.MDS_VARIABLES().zutiBombsSupply_Blue[1] += unusedBombs[1];
-                    Mission.MDS_VARIABLES().zutiBombsSupply_Blue[2] += unusedBombs[2];
-                    Mission.MDS_VARIABLES().zutiBombsSupply_Blue[3] += unusedBombs[3];
-                    Mission.MDS_VARIABLES().zutiBombsSupply_Blue[4] += unusedBombs[4];
-                    Mission.MDS_VARIABLES().zutiBombsSupply_Blue[5] += unusedBombs[5];
+                    for (int i=0; i<unusedBombs.length; i++) Mission.MDS_VARIABLES().zutiBombsSupply_Blue[i] += unusedBombs[i];
+//                    Mission.MDS_VARIABLES().zutiBombsSupply_Blue[0] += unusedBombs[0];
+//                    Mission.MDS_VARIABLES().zutiBombsSupply_Blue[1] += unusedBombs[1];
+//                    Mission.MDS_VARIABLES().zutiBombsSupply_Blue[2] += unusedBombs[2];
+//                    Mission.MDS_VARIABLES().zutiBombsSupply_Blue[3] += unusedBombs[3];
+//                    Mission.MDS_VARIABLES().zutiBombsSupply_Blue[4] += unusedBombs[4];
+//                    Mission.MDS_VARIABLES().zutiBombsSupply_Blue[5] += unusedBombs[5];
                     break;
             }
 

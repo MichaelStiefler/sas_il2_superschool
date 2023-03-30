@@ -12,7 +12,6 @@ import com.maddox.il2.engine.Actor;
 import com.maddox.il2.engine.ActorHMesh;
 import com.maddox.il2.engine.Config;
 import com.maddox.il2.engine.HierMesh;
-import com.maddox.il2.engine.Orient;
 import com.maddox.il2.fm.FlightModelMain;
 import com.maddox.il2.fm.Motor;
 import com.maddox.il2.fm.RealFlightModel;
@@ -42,10 +41,6 @@ public abstract class TA_152NEW extends Scheme1 implements TypeFighter, TypeBNZF
         this.doorSound = null;
         this.doorPrev = 0.0F;
         this.doorSndPos = null;
-//        this.bSmokeEffect = false;
-//        if (Config.cur.ini.get("Mods", "SmokeEffect", 0) > 0) {
-//            this.bSmokeEffect = true;
-//        }
         this.kangle = 0.0F;
         this.k14Mode = 0;
         this.k14WingspanType = 0;
@@ -57,21 +52,19 @@ public abstract class TA_152NEW extends Scheme1 implements TypeFighter, TypeBNZF
     }
 
     public static void prepareWeapons(Class aircraftClass, HierMesh hierMesh, String thisWeaponsName) {
-      boolean winter = Config.isUSE_RENDER() && (World.cur().camouflage == 1);
-      hierMesh.chunkVisible("GearL5_D0", !winter);
-      hierMesh.chunkVisible("GearR5_D0", !winter);
-      _WeaponSlot[] weaponSlotsRegistered = Aircraft.getWeaponSlotsRegistered(aircraftClass, thisWeaponsName);
-//      System.out.println("TA_152NEW prepareWeapons");
-      if (hierMesh.chunkFindCheck("20mmL1_D0") > 0) {
-          hierMesh.chunkVisible("20mmL1_D0", weaponSlotsRegistered[1] != null);
-      }
-      if (hierMesh.chunkFindCheck("20mmR1_D0") > 0) {
-          hierMesh.chunkVisible("20mmR1_D0", weaponSlotsRegistered[2] != null);
-      }
+        boolean winter = Config.isUSE_RENDER() && (World.cur().camouflage == 1);
+        hierMesh.chunkVisible("GearL5_D0", !winter);
+        hierMesh.chunkVisible("GearR5_D0", !winter);
+        _WeaponSlot[] weaponSlotsRegistered = Aircraft.getWeaponSlotsRegistered(aircraftClass, thisWeaponsName);
+        if (hierMesh.chunkFindCheck("20mmL1_D0") > 0) {
+            hierMesh.chunkVisible("20mmL1_D0", weaponSlotsRegistered[1] != null);
+        }
+        if (hierMesh.chunkFindCheck("20mmR1_D0") > 0) {
+            hierMesh.chunkVisible("20mmR1_D0", weaponSlotsRegistered[2] != null);
+        }
     }
 
     public void doMurderPilot(int i) {
-        // System.out.println("doMurderPilot(" + i + ")");
         super.doMurderPilot(i);
         switch (i) {
             case 0:
@@ -86,7 +79,6 @@ public abstract class TA_152NEW extends Scheme1 implements TypeFighter, TypeBNZF
     }
 
     public void doRemoveBodyFromPlane(int i) {
-        // System.out.println("doRemoveBodyFromPlane(" + i + ")");
         super.doRemoveBodyFromPlane(i);
         this.hierMesh().chunkVisible("pilotarm2_d0", false);
         this.hierMesh().chunkVisible("pilotarm1_d0", false);
@@ -105,7 +97,6 @@ public abstract class TA_152NEW extends Scheme1 implements TypeFighter, TypeBNZF
     }
 
     public void rareAction(float f, boolean flag) {
-        // System.out.println("rareAction(" + f + "," + flag + ")");
         super.rareAction(f, flag);
         if (this.FM.getAltitude() < 3000F) {
             this.hierMesh().chunkVisible("HMask1_D0", false);
@@ -116,7 +107,7 @@ public abstract class TA_152NEW extends Scheme1 implements TypeFighter, TypeBNZF
             return;
         }
         Pilot pilot = (Pilot) this.FM;
-        if ((pilot.get_maneuver() == Maneuver.ATTACK_BOMBER || (pilot.get_maneuver() == Maneuver.ATTACK && pilot.isMissileValidForFighterAttack())) && pilot.target != null) {
+        if (((pilot.get_maneuver() == Maneuver.ATTACK_BOMBER) || ((pilot.get_maneuver() == Maneuver.ATTACK) && pilot.isMissileValidForFighterAttack())) && (pilot.target != null)) {
             Point3d point3d = new Point3d(((FlightModelMain) (((Maneuver) (pilot)).target)).Loc);
             point3d.sub(this.FM.Loc);
             this.FM.Or.transformInv(point3d);
@@ -128,7 +119,6 @@ public abstract class TA_152NEW extends Scheme1 implements TypeFighter, TypeBNZF
     }
 
     public void moveCockpitDoor(float f) {
-        // System.out.println("moveCockpitDoor(" + f + ")");
         this.resetYPRmodifier();
         Aircraft.xyz[0] = Aircraft.cvt(f, 0.01F, 0.99F, 0.0F, -0.5F);
         this.hierMesh().chunkSetLocate("Blister1_D0", Aircraft.xyz, Aircraft.ypr);
@@ -150,44 +140,46 @@ public abstract class TA_152NEW extends Scheme1 implements TypeFighter, TypeBNZF
     }
 
     public void setDoorSndFW(float f) {
-        // System.out.println("setDoorSndFW(" + f + ")");
-        if (this.FM != null) {
-            this.doorSndControl = f;
-            if ((this.doorSound == null) && (this.FM.CT.dvCockpitDoor > 0.0F)) {
-                byte byte0 = 1;
-                float f1 = 1.0F / this.FM.CT.dvCockpitDoor;
-                this.doorSndPos = new Point3d(-1D, 0.0D, 0.0D);
-                this.doorSound = this.newSound("cockpit.fw", false);
-                if (this.doorSound != null) {
-                    this.doorSound.setParent(this.getRootFX());
-                    if (f1 <= 1.1F) {
-                        byte0 = 0;
-                    } else if (f1 >= 1.8F) {
-                        byte0 = 2;
-                    }
-                    this.doorSound.setUsrFlag(byte0);
-                }
+        if (this.FM == null || bSkipDoorSound)
+            return;
+        this.doorSndControl = f;
+        if (this.doorSound == null) {
+            this.doorSound = this.newSound("cockpit.fw", false);
+            if (this.doorSound == null) {
+                bSkipDoorSound = true;
+                return;
             }
-            float f2 = this.FM.EI.engines[0].getRPM();
-            if ((((f != 0.0F) && (this.doorPrev == 0.0F)) || ((f != 1.0F) && (this.doorPrev == 1.0F))) && (this.doorSound != null) && (this.FM.CT.dvCockpitDoor < 10F)) {
-                this.doorSound.play(this.doorSndPos);
-            }
-            if ((f != 0.0F) && (this.doorPrev == 0.0F) && (this.doorSound != null) && !this.hierMesh().isChunkVisible("Prop1_D1")) {
-                this.windExtFw.start();
-            } else if ((f != 1.0F) && (this.doorPrev == 1.0F) && (this.doorSound != null)) {
-                this.windExtFw.cancel();
-            }
-            if (f2 > 100F) {
-                this.doorSound.setVolume(1.5F);
-            } else {
-                this.doorSound.setVolume(0.7F);
-            }
-            this.doorPrev = f;
+            this.doorSound.setParent(this.getRootFX());
+            this.doorSndPos = new Point3d(-1D, 0.0D, 0.0D);
         }
+        if (this.FM.CT.dvCockpitDoor > 0.0F) {
+            byte byte0 = 1;
+            float f1 = 1.0F / this.FM.CT.dvCockpitDoor;
+            if (f1 <= 1.1F) {
+                byte0 = 0;
+            } else if (f1 >= 1.8F) {
+                byte0 = 2;
+            }
+            this.doorSound.setUsrFlag(byte0);
+        }
+        float f2 = this.FM.EI.engines[0].getRPM();
+        if ((((f != 0.0F) && (this.doorPrev == 0.0F)) || ((f != 1.0F) && (this.doorPrev == 1.0F))) && (this.FM.CT.dvCockpitDoor < 10F)) {
+            this.doorSound.play(this.doorSndPos);
+        }
+        if ((f != 0.0F) && (this.doorPrev == 0.0F) && !this.hierMesh().isChunkVisible("Prop1_D1")) {
+            this.windExtFw.start();
+        } else if ((f != 1.0F) && (this.doorPrev == 1.0F)) {
+            this.windExtFw.cancel();
+        }
+        if (f2 > 100F) {
+            this.doorSound.setVolume(1.5F);
+        } else {
+            this.doorSound.setVolume(0.7F);
+        }
+        this.doorPrev = f;
     }
 
     public void EjectCanopy() {
-        // System.out.println("EjectCanopy()");
         Main3D.cur3D().cockpitCur.mesh.chunkVisible("CanopyTop", false);
         Main3D.cur3D().cockpitCur.mesh.chunkVisible("Glass", false);
         Main3D.cur3D().cockpitCur.mesh.chunkVisible("RearArmorPlate", false);
@@ -200,25 +192,23 @@ public abstract class TA_152NEW extends Scheme1 implements TypeFighter, TypeBNZF
 
     public void onAircraftLoaded() {
         super.onAircraftLoaded();
-//        this.curAfterBurnerType = this.FM.EI.engines[0].getAfterburnerType();
         this.FM.AS.wantBeaconsNet(true);
         if (this.FM.isPlayers()) {
             this.FM.EI.engines[0].setControlPropAuto(false);
             this.FM.CT.bHasCockpitDoorControl = true;
-//            this.FM.CT.dvCockpitDoor = 0.2564102F;
             this.hierMesh().chunkVisible("Wire_D0", true);
         }
-//        TA_152NEW.prepareWeapons(this.getClass(), this.hierMesh(), this.thisWeaponsName);
-        if (this.hierMesh().chunkFindCheck("Flap04_D0") >= 0) this.fourFlaps = true;
+        if (this.hierMesh().chunkFindCheck("Flap04_D0") >= 0) {
+            this.fourFlaps = true;
+        }
     }
 
     public void update(float f) {
-        // System.out.println("update(" + f + ")");
         for (int i = 1; i < 15; i++) {
             this.hierMesh().chunkSetAngles("Water" + i + "_D0", 0.0F, -20F * this.kangle, 0.0F);
         }
         this.kangle = (0.95F * this.kangle) + (0.05F * this.FM.EI.engines[0].getControlRadiator());
-        
+
         if ((this.FM.CT.cockpitDoorControl > 0.9F) && (this.FM.getSpeedKMH() > 240F) && !this.FM.Gears.onGround() && (this.FM == World.getPlayerFM()) && (this.hierMesh().chunkFindCheck("Blister1_D0") != -1) && (this.FM.AS.getPilotHealth(0) > 0.0F)) {
             this.arrach.setPlay(true);
             this.EjectCanopy();
@@ -247,23 +237,18 @@ public abstract class TA_152NEW extends Scheme1 implements TypeFighter, TypeBNZF
         if (this.FM.AS.bIsAboutToBailout && !this.FM.isPlayers()) {
             this.hierMesh().chunkVisible("Wire_D0", false);
         }
-//        if (this.bSmokeEffect) {
-            if (((this.FM == World.getPlayerFM()) && (this.FM.CT.PowerControl >= 1.0F) && (this.FM.EI.engines[0].getRPM() > 100F)) || ((this.FM == World.getPlayerFM()) && this.FM.CT.getAfterburnerControl() && (this.FM.EI.engines[0].getRPM() > 100F))) {
-                this.FM.AS.setSootState(this, 0, 1);
-            } else {
-                this.FM.AS.setSootState(this, 0, 0);
-            }
-//        }
-        if ((!this.FM.isPlayers() || !(this.FM instanceof RealFlightModel) || !((RealFlightModel)this.FM).isRealMode()) && this.FM.Gears.onGround()) {
-            if (this.FM.getSpeedKMH() < 50F) {
+        if (((this.FM == World.getPlayerFM()) && (this.FM.CT.PowerControl >= 1.0F) && (this.FM.EI.engines[0].getRPM() > 100F)) || ((this.FM == World.getPlayerFM()) && this.FM.CT.getAfterburnerControl() && (this.FM.EI.engines[0].getRPM() > 100F))) {
+            this.FM.AS.setSootState(this, 0, 1);
+        } else {
+            this.FM.AS.setSootState(this, 0, 0);
+        }
+        if (this.FM.AS.isMaster() && (!this.FM.isPlayers() || !(this.FM instanceof RealFlightModel) || !((RealFlightModel) this.FM).isRealMode()) && this.FM.Gears.onGround()) {
+            if (this.FM.getSpeedKMH() < 20.0F) {
                 this.FM.CT.cockpitDoorControl = 1.0F;
             } else {
                 this.FM.CT.cockpitDoorControl = 0.0F;
             }
         }
-//        if (!this.getOp(31) || !this.getOp(32)) {
-//            this.FM.CT.trimAileron = (((this.FM.CT.ElevatorControl * (this.s32 - this.s31)) + (this.FM.CT.trimElevator * (this.s18 - this.s17))) * this.FM.SensPitch) / 3F;
-//        }
         if (!this.bHasElevatorControl) {
             this.FM.CT.ElevatorControl = 0.0F;
         }
@@ -277,9 +262,11 @@ public abstract class TA_152NEW extends Scheme1 implements TypeFighter, TypeBNZF
         } else if (this.FM.Gears.onGround() && (this.FM.CT.ElevatorControl <= 0.06F)) {
             this.FM.Gears.bTailwheelLocked = false;
         }
-        
-        if (!this.FM.AS.isMaster() || !Config.isUSE_RENDER()) return;
-        
+
+        if (!this.FM.AS.isMaster() || !Config.isUSE_RENDER()) {
+            return;
+        }
+
         if ((Main3D.cur3D().cockpits != null) && (Main3D.cur3D().cockpits[0] != null) && this.FM.isPlayers()) {
             if (Main3D.cur3D().cockpits[0].isFocused() || ((this.FM.CT.cockpitDoorControl == 0.9F) && !this.FM.Gears.onGround()) || ((this.FM.CT.cockpitDoorControl == 0.9F) && !this.FM.Gears.getWheelsOnGround())) {
                 this.hierMesh().chunkVisible("Blister1_D0", false);
@@ -374,22 +361,15 @@ public abstract class TA_152NEW extends Scheme1 implements TypeFighter, TypeBNZF
     protected void moveFlap(float f) {
         float f1 = -50F * f;
         this.hierMesh().chunkSetAngles("Flap01_D0", 0.0F, f1, 0.0F);
-        this.hierMesh().chunkSetAngles("Flap02_D0", 0.0F, f1 * (this.fourFlaps?1F:-1F), 0.0F);
-        if (!this.fourFlaps) return;
+        this.hierMesh().chunkSetAngles("Flap02_D0", 0.0F, f1 * (this.fourFlaps ? 1F : -1F), 0.0F);
+        if (!this.fourFlaps) {
+            return;
+        }
         this.hierMesh().chunkSetAngles("Flap03_D0", 0.0F, f1, 0.0F);
         this.hierMesh().chunkSetAngles("Flap04_D0", 0.0F, f1, 0.0F);
     }
 
-    public void setOnGround(Point3d point3d, Orient orient, Vector3d vector3d) {
-        super.setOnGround(point3d, orient, vector3d);
-//        if (this.FM.isPlayers()) {
-//            this.FM.CT.dvCockpitDoor = 80F;
-//        }
-        this.FM.CT.cockpitDoorControl = 1.0F;
-    }
-
     public boolean cut(String s) {
-        // System.out.println("cut(" + s + ")");
         if (s.startsWith("Tail1")) {
             this.FM.AS.hitTank(this, 2, 4);
         }
@@ -397,7 +377,6 @@ public abstract class TA_152NEW extends Scheme1 implements TypeFighter, TypeBNZF
     }
 
     protected boolean cutFM(int i, int j, Actor actor) {
-        // System.out.println("cutFM(" + i + ", " + j + ", actor)");
         switch (i) {
             case 33:
                 return super.cutFM(34, j, actor);
@@ -411,7 +390,6 @@ public abstract class TA_152NEW extends Scheme1 implements TypeFighter, TypeBNZF
     }
 
     protected void hitBone(String s, Shot shot, Point3d point3d) {
-        // System.out.println("hitBone(" + s + ", " + shot.chunkName + ", p3d");
         if (s.startsWith("xx")) {
             if (s.startsWith("xxarmor")) {
                 Aircraft.debugprintln(this, "*** Armor: Hit..");
@@ -818,157 +796,6 @@ public abstract class TA_152NEW extends Scheme1 implements TypeFighter, TypeBNZF
         }
     }
 
-//    private void cutOp(int i) {
-//        System.out.println("cutOp(" + i + ")");
-//        this.FM.Operate &= ~(1L << i);
-//    }
-//
-//    protected boolean getOp(int i) {
-//        System.out.println("getOp(" + i + ")");
-//        return (this.FM.Operate & (1L << i)) != 0L;
-//    }
-//
-//    private float Op(int i) {
-//        System.out.println("Op(" + i + ")");
-//        return this.getOp(i) ? 1.0F : 0.0F;
-//    }
-//
-//    protected boolean cutFM(int i, int j, Actor actor) {
-//        System.out.println("cutFM(" + i + ", " + j + ", actor)");
-//        if (!this.getOp(i)) {
-//            return false;
-//        }
-//        switch (i) {
-//            case 17:
-//                this.cut("StabL");
-//                this.cutOp(17);
-//                this.FM.setCapableOfACM(false);
-//                if (World.Rnd().nextInt(-1, 8) < this.FM.Skill) {
-//                    this.FM.setReadyToReturn(true);
-//                }
-//                if (World.Rnd().nextInt(-1, 16) < this.FM.Skill) {
-//                    this.FM.setReadyToDie(true);
-//                }
-//                this.FM.Sq.liftStab *= (0.5F * this.Op(18)) + 0.1F;
-//                this.FM.Sq.liftWingLIn *= 1.1F;
-//                this.FM.Sq.liftWingRIn *= 0.9F;
-//                this.FM.Sq.dragProducedCx -= 0.06F;
-//                if (this.Op(18) == 0.0F) {
-//                    this.FM.SensPitch = 0.0F;
-//                    this.FM.setGCenter(0.2F);
-//                } else {
-//                    this.FM.setGCenter(0.1F);
-//                    this.s17 = 0.0F;
-//                    this.FM.SensPitch *= this.s17 + this.s18 + this.s31 + this.s32;
-//                    this.X = 1.0F / (this.s17 + this.s18 + this.s31 + this.s32);
-//                    this.s18 *= this.X;
-//                    this.s31 *= this.X;
-//                    this.s32 *= this.X;
-//                }
-//                // fall through
-//
-//            case 31:
-//                if (this.Op(31) == 0.0F) {
-//                    return false;
-//                }
-//                this.cut("VatorL");
-//                this.cutOp(31);
-//                if (this.Op(32) == 0.0F) {
-//                    this.bHasElevatorControl = false;
-//                    this.FM.setCapableOfACM(false);
-//                    if (this.Op(18) == 0.0F) {
-//                        this.FM.setReadyToDie(true);
-//                    }
-//                }
-//                this.FM.Sq.squareElevators *= 0.5F * this.Op(32);
-//                this.FM.Sq.dragProducedCx += 0.06F;
-//                this.s31 = 0.0F;
-//                this.FM.SensPitch *= this.s17 + this.s18 + this.s31 + this.s32;
-//                this.X = 1.0F / (this.s17 + this.s18 + this.s31 + this.s32);
-//                this.s17 *= this.X;
-//                this.s18 *= this.X;
-//                this.s32 *= this.X;
-//                return false;
-//
-//            case 18:
-//                this.cut("StabR");
-//                this.cutOp(18);
-//                this.FM.setCapableOfACM(false);
-//                if (World.Rnd().nextInt(-1, 8) < this.FM.Skill) {
-//                    this.FM.setReadyToReturn(true);
-//                }
-//                if (World.Rnd().nextInt(-1, 16) < this.FM.Skill) {
-//                    this.FM.setReadyToDie(true);
-//                }
-//                this.FM.Sq.liftStab *= (0.5F * this.Op(17)) + 0.1F;
-//                this.FM.Sq.liftWingLIn *= 0.9F;
-//                this.FM.Sq.liftWingRIn *= 1.1F;
-//                this.FM.Sq.dragProducedCx -= 0.06F;
-//                if (this.Op(17) == 0.0F) {
-//                    this.FM.SensPitch = 0.0F;
-//                    this.FM.setGCenter(0.2F);
-//                } else {
-//                    this.FM.setGCenter(0.1F);
-//                    this.s18 = 0.0F;
-//                    this.FM.SensPitch *= this.s17 + this.s18 + this.s31 + this.s32;
-//                    this.X = 1.0F / (this.s17 + this.s18 + this.s31 + this.s32);
-//                    this.s17 *= this.X;
-//                    this.s31 *= this.X;
-//                    this.s32 *= this.X;
-//                }
-//                // fall through
-//
-//            case 32:
-//                if (this.Op(32) == 0.0F) {
-//                    return false;
-//                }
-//                this.cut("VatorR");
-//                this.cutOp(32);
-//                if (this.Op(31) == 0.0F) {
-//                    this.bHasElevatorControl = false;
-//                    this.FM.setCapableOfACM(false);
-//                    if (this.Op(17) == 0.0F) {
-//                        this.FM.setReadyToDie(true);
-//                    }
-//                }
-//                this.FM.Sq.squareElevators *= 0.5F * this.Op(31);
-//                this.FM.Sq.dragProducedCx += 0.06F;
-//                this.s32 = 0.0F;
-//                this.FM.SensPitch *= this.s17 + this.s18 + this.s31 + this.s32;
-//                this.X = 1.0F / (this.s17 + this.s18 + this.s31 + this.s32);
-//                this.s17 *= this.X;
-//                this.s18 *= this.X;
-//                this.s31 *= this.X;
-//                return false;
-//
-//            default:
-//                return super.cutFM(i, j, actor);
-//        }
-//    }
-
-//    private void cutGearCovers(String s) {
-//        Vector3d vector3d = new Vector3d();
-//        if (World.Rnd().nextFloat() < 0.3F) {
-//            Wreckage wreckage = new Wreckage(this, this.hierMesh().chunkFind("Gear" + s + 5 + "_D0"));
-//            wreckage.collide(true);
-//            vector3d.set(this.FM.Vwld);
-//            wreckage.setSpeed(vector3d);
-//            this.hierMesh().chunkVisible("Gear" + s + 5 + "_D0", false);
-//            Wreckage wreckage1 = new Wreckage(this, this.hierMesh().chunkFind("Gear" + s + 6 + "_D0"));
-//            wreckage1.collide(true);
-//            vector3d.set(this.FM.Vwld);
-//            wreckage1.setSpeed(vector3d);
-//            this.hierMesh().chunkVisible("Gear" + s + 6 + "_D0", false);
-//        } else if (World.Rnd().nextFloat() < 0.3F) {
-//            int i = World.Rnd().nextInt(2) + 5;
-//            Wreckage wreckage2 = new Wreckage(this, this.hierMesh().chunkFind("Gear" + s + i + "_D0"));
-//            wreckage2.collide(true);
-//            vector3d.set(this.FM.Vwld);
-//            wreckage2.setSpeed(vector3d);
-//            this.hierMesh().chunkVisible("Gear" + s + i + "_D0", false);
-//        }
-//    }
-
     public boolean typeFighterAceMakerToggleAutomation() {
         this.k14Mode++;
         if (this.k14Mode > 2) {
@@ -1027,7 +854,7 @@ public abstract class TA_152NEW extends Scheme1 implements TypeFighter, TypeBNZF
         this.k14WingspanType = netmsginput.readByte();
         this.k14Distance = netmsginput.readFloat();
     }
-    
+
     public void typeX4CAdjSidePlus() {
         this.deltaAzimuth = 1.0F;
     }
@@ -1055,21 +882,11 @@ public abstract class TA_152NEW extends Scheme1 implements TypeFighter, TypeBNZF
     public float typeX4CgetdeltaTangage() {
         return this.deltaTangage;
     }
-    
-//    void updateAfterburner() {
-//        if (this.FM.Loc.z > 9000D) {
-//            if (!this.FM.EI.engines[0].getControlAfterburner()) {
-//                this.FM.EI.engines[0].bHasAfterburnerControl = true;
-//            }
-//            this.FM.EI.engines[0].setAfterburnerType(2);
-//        } else if (!this.FM.EI.engines[0].getControlAfterburner()) {
-//            this.FM.EI.engines[0].bHasAfterburnerControl = false;
-//        }
-//    }
-    
+
     void updateAfterburner() {
-        if (!this.FM.EI.engines[0].bHasAfterburnerControl) return;
-        if (this.FM.EI.engines[0].getControlAfterburner()) return;
+        if (!this.FM.EI.engines[0].bHasAfterburnerControl || this.FM.EI.engines[0].getControlAfterburner()) {
+            return;
+        }
         switch (this.FM.EI.engines[0].getAfterburnerType()) {
             case Motor._E_AFTERBURNER_MW50:
                 if (this.FM.getAltitude() > 9000F) {
@@ -1086,14 +903,8 @@ public abstract class TA_152NEW extends Scheme1 implements TypeFighter, TypeBNZF
         }
     }
 
-//    private boolean       bSmokeEffect;
     private float         trimElevator;
     private boolean       bHasElevatorControl;
-//    private float         X;
-//    private float         s17;
-//    private float         s18;
-//    private float         s31;
-//    private float         s32;
     double                sinkAngle[];
     static float          LengthA_B   = 0.543601F;
     static float          LengthA_D   = 0.4612681F;
@@ -1106,9 +917,6 @@ public abstract class TA_152NEW extends Scheme1 implements TypeFighter, TypeBNZF
     static int            axisD       = 3;
     static int            idX         = 0;
     static int            idY         = 1;
-//    private static float  kl          = 1.0F;
-//    private static float  kr          = 1.0F;
-//    private static float  kc          = 1.0F;
     private Point3d       doorSndPos;
     private float         doorPrev;
     protected float       doorSndControl;
@@ -1117,16 +925,16 @@ public abstract class TA_152NEW extends Scheme1 implements TypeFighter, TypeBNZF
     protected AudioStream bouton;
     protected AudioStream arrach;
     private AudioStream   windExtFw;
-    private float kangle;
-    public boolean bToFire;
-    private long   tX4Prev;
-    public int     k14Mode;
-    public int     k14WingspanType;
-    public float   k14Distance;
-    private float  deltaAzimuth;
-    private float  deltaTangage;
-    private boolean fourFlaps = false;
-//    private int curAfterBurnerType = 0;
+    private float         kangle;
+    public boolean        bToFire;
+    private long          tX4Prev;
+    public int            k14Mode;
+    public int            k14WingspanType;
+    public float          k14Distance;
+    private float         deltaAzimuth;
+    private float         deltaTangage;
+    private boolean       fourFlaps   = false;
+    public static boolean bSkipDoorSound = false;
 
     static {
         Class class1 = TA_152NEW.class;

@@ -58,6 +58,9 @@ public abstract class HotKeyCmd {
     }
 
     public void enable(boolean flag) {
+        if (RTSConf.cur.console.getEnv().existAtom("DEBUG_CANOPY", true)) {
+            System.out.println("### UP3.4 CockpitDoor DEBUG ### HotKeyCmd.enable(" + flag + "), name=" + this.name());
+        }
         this.bEnabled = flag;
     }
 
@@ -71,8 +74,8 @@ public abstract class HotKeyCmd {
     }
 
     public final void start(int i, int j) {
-        if (i != 538 && i != 539 && j != 716 && RTSConf.cur.console.getEnv().existAtom("DEBUG_CANOPY", true)) {
-            System.out.println("### UP3.4 CockpitDoor DEBUG ### HotKeyCmd.start(" + i + ", " + j + ")");
+        if (i != 538 && i != 539 && j != 716 && RTSConf.cur.console.getEnv().existAtom("DEBUG_CANOPY", true) && !this.name().startsWith("trim")) {
+            System.out.println("### UP3.4 CockpitDoor DEBUG ### HotKeyCmd.start(" + i + ", " + j + "), name=" + this.name());
         }
         this.modifierKey = i;
         this.key = j;
@@ -95,6 +98,9 @@ public abstract class HotKeyCmd {
     }
 
     public final void stop() {
+        if (RTSConf.cur.console.getEnv().existAtom("DEBUG_CANOPY", true) && !this.name().startsWith("trim")) {
+            System.out.println("### UP3.4 CockpitDoor DEBUG ### HotKeyCmd.stop(), name=" + this.name());
+        }
         this.bActive = false;
         try {
             this.end();
@@ -104,6 +110,9 @@ public abstract class HotKeyCmd {
     }
 
     protected final void _cancel() {
+        if (RTSConf.cur.console.getEnv().existAtom("DEBUG_CANOPY", true)) {
+            System.out.println("### UP3.4 CockpitDoor DEBUG ### HotKeyCmd._cancel(), name=" + this.name());
+        }
         this.bActive = false;
     }
 

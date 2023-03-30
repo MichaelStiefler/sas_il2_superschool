@@ -1679,6 +1679,7 @@ public class AircraftHotKeys {
                                 ", bIM=" + aircraft.FM.AS.isMaster());
                     }
                     if (this.FM.CT.bHasCockpitDoorControl) {
+                        HotKeyEnv.setCanopyInts();
                         if (this.bSideDoor) // System.out.println("AircraftHotKeys bHasSideDoorControl=" + this.FM.CT.bHasSideDoorControl + " (2)!");
                             if (this.FM.CT.bHasSideDoorControl) this.FM.CT.setActiveDoor(this.COCKPIT_DOOR);
                         if (this.FM.CT.cockpitDoorControl < 0.5F && this.FM.CT.getCockpitDoor() < 0.01F) {
@@ -2024,6 +2025,7 @@ public class AircraftHotKeys {
     // TODO: Changed by |ZUTI|: changed from private to public
     public void doCmdPilotMove(int i, float f) {
         if (this.setPilot()) {
+//            DecimalFormat df = new DecimalFormat("0.00");
             switch (i) {
                 case 1: {
                     float f_22_ = f * 0.55F + 0.55F;
@@ -2074,10 +2076,12 @@ public class AircraftHotKeys {
                 case 11: // BrakeRight
                     this.FM.CT.BrakeRightControl = f * 0.5F + 0.5F;
                     this.FM.CT.BrakeControl = (this.FM.CT.BrakeRightControl + this.FM.CT.BrakeLeftControl) / 2.0F;
+//                    HUD.training("BL:" + df.format(this.FM.CT.BrakeLeftControl) + " BR:" + df.format(this.FM.CT.BrakeRightControl));
                     break;
                 case 12: // BrakeLeft
                     this.FM.CT.BrakeLeftControl = f * 0.5F + 0.5F;
                     this.FM.CT.BrakeControl = (this.FM.CT.BrakeRightControl + this.FM.CT.BrakeLeftControl) / 2.0F;
+//                    HUD.training("BL:" + df.format(this.FM.CT.BrakeLeftControl) + " BR:" + df.format(this.FM.CT.BrakeRightControl));
                     break;
                 // TAK--
                 case 100: // 'd'
@@ -2185,10 +2189,14 @@ public class AircraftHotKeys {
         HotKeyCmdEnv.addCmd(new HotKeyCmdFireMove(null, "-trimrudder", 10, 20));
 
         // TAK++
-        HotKeyCmdEnv.addCmd(new HotKeyCmdFireMove("11", "BrakeRight", 11, 21));
-        HotKeyCmdEnv.addCmd(new HotKeyCmdFireMove("12", "BrakeLeft", 12, 22));
-        HotKeyCmdEnv.addCmd(new HotKeyCmdFireMove(null, "-BrakeRight", 11, 23));
-        HotKeyCmdEnv.addCmd(new HotKeyCmdFireMove(null, "-BrakeLeft", 12, 24));
+//        HotKeyCmdEnv.addCmd(new HotKeyCmdFireMove("11", "BrakeRight", 11, 21));
+//        HotKeyCmdEnv.addCmd(new HotKeyCmdFireMove("12", "BrakeLeft", 12, 22));
+//        HotKeyCmdEnv.addCmd(new HotKeyCmdFireMove(null, "-BrakeRight", 11, 23));
+//        HotKeyCmdEnv.addCmd(new HotKeyCmdFireMove(null, "-BrakeLeft", 12, 24));
+        HotKeyCmdEnv.addCmd(new HotKeyCmdFireMove("11", "brakes_right", 11, 21));
+        HotKeyCmdEnv.addCmd(new HotKeyCmdFireMove("12", "brakes_left", 12, 22));
+        HotKeyCmdEnv.addCmd(new HotKeyCmdFireMove(null, "-brakes_right", 11, 23));
+        HotKeyCmdEnv.addCmd(new HotKeyCmdFireMove(null, "-brakes_left", 12, 24));
         // TAK--
 
         // TODO: +++ Hotkey Fix by SAS~Storebror
