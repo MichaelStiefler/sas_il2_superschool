@@ -1,6 +1,0 @@
-[ClassInfo]
-  ClassName TMaterial
-  BasedOn Kloss1D0o.mat
-[Layer0]
-  TextureName ./summer/skin2q.tga
-  tfMipMap 1

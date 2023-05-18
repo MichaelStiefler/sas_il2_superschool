@@ -1,9 +1,0 @@
-[ClassInfo]
-  ClassName TMaterial
-  BasedOn Gloss1D2oB.mat
-[Layer0]
-  TextureName skin1pB.tga
-  tfMipMap 1
-[Layer1]
-  TextureName damage2pB.tga
-  tfMipMap 1
