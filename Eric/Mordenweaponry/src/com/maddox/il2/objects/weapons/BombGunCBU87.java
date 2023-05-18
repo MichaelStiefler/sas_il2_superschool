@@ -1,0 +1,29 @@
+// Decompiled by DJ v3.10.10.93 Copyright 2007 Atanas Neshkov  Date: 11/12/2014 11:19:36 AM
+// Home Page: http://members.fortunecity.com/neshkov/dj.html  http://www.neshkov.com/dj.html - Check often for new version!
+// Decompiler options: packimports(3) 
+// Source File Name:   BombGunCBU87.java
+
+package com.maddox.il2.objects.weapons;
+
+import com.maddox.rts.Property;
+
+// Referenced classes of package com.maddox.il2.objects.weapons:
+//            BombGun
+
+public class BombGunCBU87 extends BombGun
+{
+
+    public BombGunCBU87()
+    {
+    }
+
+    static 
+    {
+        Class class1 = com.maddox.il2.objects.weapons.BombGunCBU87.class;
+        Property.set(class1, "bulletClass", (Object)com.maddox.il2.objects.weapons.BombCBU87.class);
+        Property.set(class1, "bullets", 1);
+        Property.set(class1, "shotFreq", 0.25F);
+        Property.set(class1, "external", 1);
+        Property.set(class1, "sound", "weapon.bombgun");
+    }
+}

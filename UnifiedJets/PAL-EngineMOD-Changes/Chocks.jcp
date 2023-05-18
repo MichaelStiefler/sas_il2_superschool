@@ -1,0 +1,667 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<project>
+	<settings>
+		<label>Chocks</label>
+		<root_path>\</root_path>
+		<output_path>\</output_path>
+		<source_path>src\</source_path>
+		<jdkprofile_ref>JDK version 1.3.1_28</jdkprofile_ref>
+		<compiler_ref>Il-2 (Java3)</compiler_ref>
+		<ant_ref/>
+	</settings>
+	<ant_events/>
+	<run_items/>
+	<runtimes>
+		<runtime>
+			<label>&lt;Default&gt;</label>
+			<application_ref/>
+			<applet_ref/>
+			<debugger_ref/>
+			<param/>
+			<run/>
+			<verify>true</verify>
+		</runtime>
+	</runtimes>
+	<libraries>
+		<library_ref>SAS_Engine_Mod_412</library_ref>
+		<library_ref>Classes(4.122)</library_ref>
+	</libraries>
+	<files>
+		<include>
+			<folderitem>
+				<path>MODded</path>
+			</folderitem>
+			<fileitem>
+				<path>MODded\AircraftHotKeys.java</path>
+				<folder>MODded</folder>
+			</fileitem>
+			<fileitem>
+				<path>MODded\Controls.java</path>
+				<folder>MODded</folder>
+			</fileitem>
+			<fileitem>
+				<path>MODded\EnginesInterface.java</path>
+				<folder>MODded</folder>
+			</fileitem>
+			<fileitem>
+				<path>MODded\FlightModelMain.java</path>
+				<folder>MODded</folder>
+			</fileitem>
+			<fileitem>
+				<path>MODded\Gear.java</path>
+				<folder>MODded</folder>
+			</fileitem>
+			<fileitem>
+				<path>MODded\LandAux.java</path>
+				<folder>MODded</folder>
+			</fileitem>
+			<fileitem>
+				<path>MODded\TypeBlastDeflector.java</path>
+				<folder>MODded</folder>
+			</fileitem>
+		</include>
+	</files>
+	<tasks>
+		<todotaskitem>
+			<description>TODO: New parameters</description>
+			<filepath>MODded\Gear.java</filepath>
+			<line>176</line>
+			<timestamp>1474937648</timestamp>
+		</todotaskitem>
+		<todotaskitem>
+			<description>TODO: +++ CTO Mod 4.12 +++</description>
+			<filepath>MODded\Gear.java</filepath>
+			<line>756</line>
+			<timestamp>1474937648</timestamp>
+		</todotaskitem>
+		<todotaskitem>
+			<description>TODO: --- CTO Mod 4.12 ---</description>
+			<filepath>MODded\Gear.java</filepath>
+			<line>759</line>
+			<timestamp>1474937648</timestamp>
+		</todotaskitem>
+		<todotaskitem>
+			<description>TODO: +++ CTO Mod 4.12 +++</description>
+			<filepath>MODded\Gear.java</filepath>
+			<line>879</line>
+			<timestamp>1474937648</timestamp>
+		</todotaskitem>
+		<todotaskitem>
+			<description>TODO: +++ CTO Mod 4.12 +++</description>
+			<filepath>MODded\Gear.java</filepath>
+			<line>931</line>
+			<timestamp>1474937648</timestamp>
+		</todotaskitem>
+		<todotaskitem>
+			<description>TODO: This method has been extensively edited for the differential braking and steering mod. Please follow comments for changes</description>
+			<filepath>MODded\Gear.java</filepath>
+			<line>1147</line>
+			<timestamp>1474937648</timestamp>
+		</todotaskitem>
+		<todotaskitem>
+			<description>TODO: PAS++</description>
+			<filepath>MODded\Gear.java</filepath>
+			<line>1212</line>
+			<timestamp>1474937648</timestamp>
+		</todotaskitem>
+		<todotaskitem>
+			<description>TODO: PAS++ after TAK</description>
+			<filepath>MODded\Gear.java</filepath>
+			<line>1233</line>
+			<timestamp>1474937648</timestamp>
+		</todotaskitem>
+		<todotaskitem>
+			<description>TODO: PAS++</description>
+			<filepath>MODded\Gear.java</filepath>
+			<line>1342</line>
+			<timestamp>1474937648</timestamp>
+		</todotaskitem>
+		<todotaskitem>
+			<description>TODO: PAS++</description>
+			<filepath>MODded\Gear.java</filepath>
+			<line>1421</line>
+			<timestamp>1474937648</timestamp>
+		</todotaskitem>
+		<todotaskitem>
+			<description>TODO: This edit sets limits on degree of rotation for passively steering front wheels</description>
+			<filepath>MODded\Gear.java</filepath>
+			<line>1491</line>
+			<timestamp>1474937648</timestamp>
+		</todotaskitem>
+		<todotaskitem>
+			<description>TODO: --- CTO Mod 4.12 ---</description>
+			<filepath>MODded\Gear.java</filepath>
+			<line>1854</line>
+			<timestamp>1474937648</timestamp>
+		</todotaskitem>
+		<todotaskitem>
+			<description>TODO: +++ CTO Mod 4.12 +++</description>
+			<filepath>MODded\Gear.java</filepath>
+			<line>1950</line>
+			<timestamp>1474937648</timestamp>
+		</todotaskitem>
+		<todotaskitem>
+			<description>TODO: --- CTO Mod 4.12 ---</description>
+			<filepath>MODded\Gear.java</filepath>
+			<line>1956</line>
+			<timestamp>1474937648</timestamp>
+		</todotaskitem>
+		<todotaskitem>
+			<description>TODO: +++ CTO Mod 4.12 +++</description>
+			<filepath>MODded\Gear.java</filepath>
+			<line>2122</line>
+			<timestamp>1474937648</timestamp>
+		</todotaskitem>
+		<todotaskitem>
+			<description>TODO: This method controls carrier catapult offest and positioning. To be edited in future versions so this info is read from an external .ini file</description>
+			<filepath>MODded\Gear.java</filepath>
+			<line>2123</line>
+			<timestamp>1474937648</timestamp>
+		</todotaskitem>
+		<todotaskitem>
+			<description>TODO: Default Parameters</description>
+			<filepath>MODded\FlightModelMain.java</filepath>
+			<line>50</line>
+			<timestamp>1474939075</timestamp>
+		</todotaskitem>
+		<todotaskitem>
+			<description>TODO: New Parameters</description>
+			<filepath>MODded\FlightModelMain.java</filepath>
+			<line>193</line>
+			<timestamp>1474939075</timestamp>
+		</todotaskitem>
+		<todotaskitem>
+			<description>TODO: New folded wingspan parameter</description>
+			<filepath>MODded\FlightModelMain.java</filepath>
+			<line>324</line>
+			<timestamp>1474939075</timestamp>
+		</todotaskitem>
+		<todotaskitem>
+			<description>TODO: Modified flap parameters in flight model. Allows up to 5 stages of flaps.</description>
+			<filepath>MODded\FlightModelMain.java</filepath>
+			<line>382</line>
+			<timestamp>1474939075</timestamp>
+		</todotaskitem>
+		<todotaskitem>
+			<description>TODO: Variable geometry/incidence.</description>
+			<filepath>MODded\FlightModelMain.java</filepath>
+			<line>437</line>
+			<timestamp>1474939075</timestamp>
+		</todotaskitem>
+		<todotaskitem>
+			<description>TODO: New entries for animated refuelling gear, drag chutes and bay doors</description>
+			<filepath>MODded\FlightModelMain.java</filepath>
+			<line>467</line>
+			<timestamp>1474939075</timestamp>
+		</todotaskitem>
+		<todotaskitem>
+			<description>TODO: Altered door control - allows setting to prevent canopy opening on carriers</description>
+			<filepath>MODded\FlightModelMain.java</filepath>
+			<line>497</line>
+			<timestamp>1474939075</timestamp>
+		</todotaskitem>
+		<todotaskitem>
+			<description>TODO: Differential braking/steering settings + Level Stabilizer</description>
+			<filepath>MODded\FlightModelMain.java</filepath>
+			<line>510</line>
+			<timestamp>1474939075</timestamp>
+		</todotaskitem>
+		<todotaskitem>
+			<description>TODO: Deleted float prefix</description>
+			<filepath>MODded\FlightModelMain.java</filepath>
+			<line>551</line>
+			<timestamp>1474939075</timestamp>
+		</todotaskitem>
+		<todotaskitem>
+			<description>TODO: New FM parameter - AirBrakePeriod</description>
+			<filepath>MODded\FlightModelMain.java</filepath>
+			<line>561</line>
+			<timestamp>1474939075</timestamp>
+		</todotaskitem>
+		<todotaskitem>
+			<description>TODO: +++ Online Compatibility / Smoke Bug Fix +++</description>
+			<filepath>MODded\FlightModelMain.java</filepath>
+			<line>567</line>
+			<timestamp>1474939075</timestamp>
+		</todotaskitem>
+		<todotaskitem>
+			<description>TODO: --- Online Compatibility / Smoke Bug Fix ---</description>
+			<filepath>MODded\FlightModelMain.java</filepath>
+			<line>592</line>
+			<timestamp>1474939075</timestamp>
+		</todotaskitem>
+		<todotaskitem>
+			<description>TODO: Blown flaps</description>
+			<filepath>MODded\FlightModelMain.java</filepath>
+			<line>788</line>
+			<timestamp>1474939075</timestamp>
+		</todotaskitem>
+		<todotaskitem>
+			<description>TODO: +++ Check Mach Drag availability prior to loading Mach Params +++</description>
+			<filepath>MODded\FlightModelMain.java</filepath>
+			<line>805</line>
+			<timestamp>1474939075</timestamp>
+		</todotaskitem>
+		<todotaskitem>
+			<description>TODO: --- Check Mach Drag availability prior to loading Mach Params code ---</description>
+			<filepath>MODded\FlightModelMain.java</filepath>
+			<line>814</line>
+			<timestamp>1474939075</timestamp>
+		</todotaskitem>
+		<todotaskitem>
+			<description>TODO: New parameter</description>
+			<filepath>MODded\FlightModelMain.java</filepath>
+			<line>1051</line>
+			<timestamp>1474939075</timestamp>
+		</todotaskitem>
+		<todotaskitem>
+			<description>TODO: Adds extra lift generated by blown flaps</description>
+			<filepath>MODded\FlightModelMain.java</filepath>
+			<line>1108</line>
+			<timestamp>1474939075</timestamp>
+		</todotaskitem>
+		<todotaskitem>
+			<description>TODO: Following three methods are part of Auto DiffFM mod by Benitomuso</description>
+			<filepath>MODded\FlightModelMain.java</filepath>
+			<line>2183</line>
+			<timestamp>1474939075</timestamp>
+		</todotaskitem>
+		<todotaskitem>
+			<description>TODO: Default Parameters</description>
+			<filepath>MODded\Controls.java</filepath>
+			<line>20</line>
+			<timestamp>1474939100</timestamp>
+		</todotaskitem>
+		<todotaskitem>
+			<description>TODO: New parameters</description>
+			<filepath>MODded\Controls.java</filepath>
+			<line>118</line>
+			<timestamp>1474939100</timestamp>
+		</todotaskitem>
+		<todotaskitem>
+			<description>TODO: Expanded to allow for 8 engines</description>
+			<filepath>MODded\Controls.java</filepath>
+			<line>242</line>
+			<timestamp>1474939100</timestamp>
+		</todotaskitem>
+		<todotaskitem>
+			<description>TODO: New parameters</description>
+			<filepath>MODded\Controls.java</filepath>
+			<line>253</line>
+			<timestamp>1474939100</timestamp>
+		</todotaskitem>
+		<todotaskitem>
+			<description>TODO: New parameters</description>
+			<filepath>MODded\Controls.java</filepath>
+			<line>302</line>
+			<timestamp>1474939100</timestamp>
+		</todotaskitem>
+		<todotaskitem>
+			<description>TODO: New parameter</description>
+			<filepath>MODded\Controls.java</filepath>
+			<line>329</line>
+			<timestamp>1474939100</timestamp>
+		</todotaskitem>
+		<todotaskitem>
+			<description>TODO</description>
+			<filepath>MODded\Controls.java</filepath>
+			<line>368</line>
+			<timestamp>1474939100</timestamp>
+		</todotaskitem>
+		<todotaskitem>
+			<description>TODO: Increased to 8 to allow aircraft with up to 8 engines to work</description>
+			<filepath>MODded\Controls.java</filepath>
+			<line>402</line>
+			<timestamp>1474939100</timestamp>
+		</todotaskitem>
+		<todotaskitem>
+			<description>TODO: Expanded to allow for 8 engines</description>
+			<filepath>MODded\Controls.java</filepath>
+			<line>441</line>
+			<timestamp>1474939100</timestamp>
+		</todotaskitem>
+		<todotaskitem>
+			<description>TODO: TAK++</description>
+			<filepath>MODded\Controls.java</filepath>
+			<line>636</line>
+			<timestamp>1474939100</timestamp>
+		</todotaskitem>
+		<todotaskitem>
+			<description>TODO: New method for drag chute and refuelling equipment control</description>
+			<filepath>MODded\Controls.java</filepath>
+			<line>737</line>
+			<timestamp>1474939100</timestamp>
+		</todotaskitem>
+		<todotaskitem>
+			<description>TODO: Method for selecting side door</description>
+			<filepath>MODded\Controls.java</filepath>
+			<line>820</line>
+			<timestamp>1474939100</timestamp>
+		</todotaskitem>
+		<todotaskitem>
+			<description>TODO: For drag chute, refuelling, variable geometry wings and blown flaps</description>
+			<filepath>MODded\Controls.java</filepath>
+			<line>1034</line>
+			<timestamp>1474939100</timestamp>
+		</todotaskitem>
+		<todotaskitem>
+			<description>TODO: Edits for differential braking</description>
+			<filepath>MODded\Controls.java</filepath>
+			<line>1118</line>
+			<timestamp>1474939100</timestamp>
+		</todotaskitem>
+		<todotaskitem>
+			<description>TODO: Start of weapon control &amp; release mod</description>
+			<filepath>MODded\Controls.java</filepath>
+			<line>1162</line>
+			<timestamp>1474939100</timestamp>
+		</todotaskitem>
+		<todotaskitem>
+			<description>TODO: ++ Added/changed Code Multiple Missile Type Selection ++</description>
+			<filepath>MODded\Controls.java</filepath>
+			<line>1182</line>
+			<timestamp>1474939100</timestamp>
+		</todotaskitem>
+		<todotaskitem>
+			<description>TODO: -- Added/changed Code Multiple Missile Type Selection --</description>
+			<filepath>MODded\Controls.java</filepath>
+			<line>1186</line>
+			<timestamp>1474939100</timestamp>
+		</todotaskitem>
+		<todotaskitem>
+			<description>TODO: Differential breaking methods</description>
+			<filepath>MODded\Controls.java</filepath>
+			<line>1496</line>
+			<timestamp>1474939100</timestamp>
+		</todotaskitem>
+		<todotaskitem>
+			<description>TODO: ++ Added Code for Net Replication ++</description>
+			<filepath>MODded\Controls.java</filepath>
+			<line>1509</line>
+			<timestamp>1474939100</timestamp>
+		</todotaskitem>
+		<todotaskitem>
+			<description>TODO: ++ Added/changed Code Multiple Missile Type Selection ++</description>
+			<filepath>MODded\Controls.java</filepath>
+			<line>1515</line>
+			<timestamp>1474939100</timestamp>
+		</todotaskitem>
+		<todotaskitem>
+			<description>TODO: -- Added/changed Code Multiple Missile Type Selection --</description>
+			<filepath>MODded\Controls.java</filepath>
+			<line>1522</line>
+			<timestamp>1474939100</timestamp>
+		</todotaskitem>
+		<todotaskitem>
+			<description>TODO: -- Added Code for Net Replication --</description>
+			<filepath>MODded\Controls.java</filepath>
+			<line>1612</line>
+			<timestamp>1474939100</timestamp>
+		</todotaskitem>
+		<todotaskitem>
+			<description>TODO: +++ CTO Mod 4.12 +++</description>
+			<filepath>MODded\EnginesInterface.java</filepath>
+			<line>29</line>
+			<timestamp>1474939225</timestamp>
+		</todotaskitem>
+		<todotaskitem>
+			<description>TODO: --- CTO Mod 4.12 ---</description>
+			<filepath>MODded\EnginesInterface.java</filepath>
+			<line>33</line>
+			<timestamp>1474939225</timestamp>
+		</todotaskitem>
+		<todotaskitem>
+			<description>TODO: +++ CTO Mod 4.12 +++</description>
+			<filepath>MODded\EnginesInterface.java</filepath>
+			<line>274</line>
+			<timestamp>1474939225</timestamp>
+		</todotaskitem>
+		<todotaskitem>
+			<description>TODO: --- CTO Mod 4.12 ---</description>
+			<filepath>MODded\EnginesInterface.java</filepath>
+			<line>282</line>
+			<timestamp>1474939225</timestamp>
+		</todotaskitem>
+		<todotaskitem>
+			<description>TODO: +++ CTO Mod 4.12 +++</description>
+			<filepath>MODded\EnginesInterface.java</filepath>
+			<line>287</line>
+			<timestamp>1474939225</timestamp>
+		</todotaskitem>
+		<todotaskitem>
+			<description>TODO: --- CTO Mod 4.12 ---</description>
+			<filepath>MODded\EnginesInterface.java</filepath>
+			<line>304</line>
+			<timestamp>1474939225</timestamp>
+		</todotaskitem>
+		<todotaskitem>
+			<description>TODO: +++ CTO Mod 4.12 +++</description>
+			<filepath>MODded\EnginesInterface.java</filepath>
+			<line>713</line>
+			<timestamp>1474939225</timestamp>
+		</todotaskitem>
+		<todotaskitem>
+			<description>TODO: --- CTO Mod 4.12 ---</description>
+			<filepath>MODded\EnginesInterface.java</filepath>
+			<line>740</line>
+			<timestamp>1474939225</timestamp>
+		</todotaskitem>
+		<todotaskitem>
+			<description>TODO: Default Parameters</description>
+			<filepath>MODded\AircraftHotKeys.java</filepath>
+			<line>30</line>
+			<timestamp>1474939271</timestamp>
+		</todotaskitem>
+		<todotaskitem>
+			<description>TODO: New Parameters</description>
+			<filepath>MODded\AircraftHotKeys.java</filepath>
+			<line>63</line>
+			<timestamp>1474939271</timestamp>
+		</todotaskitem>
+		<todotaskitem>
+			<description>TODO:------------------------------------</description>
+			<filepath>MODded\AircraftHotKeys.java</filepath>
+			<line>114</line>
+			<timestamp>1474939271</timestamp>
+		</todotaskitem>
+		<todotaskitem>
+			<description>TODO: Addition of new Aux Keys</description>
+			<filepath>MODded\AircraftHotKeys.java</filepath>
+			<line>518</line>
+			<timestamp>1474939271</timestamp>
+		</todotaskitem>
+		<todotaskitem>
+			<description>TODO: -------------------------------</description>
+			<filepath>MODded\AircraftHotKeys.java</filepath>
+			<line>549</line>
+			<timestamp>1474939271</timestamp>
+		</todotaskitem>
+		<todotaskitem>
+			<description>TODO: Rocket hotkey modified</description>
+			<filepath>MODded\AircraftHotKeys.java</filepath>
+			<line>567</line>
+			<timestamp>1474939271</timestamp>
+		</todotaskitem>
+		<todotaskitem>
+			<description>TODO: Flare Hotkey</description>
+			<filepath>MODded\AircraftHotKeys.java</filepath>
+			<line>590</line>
+			<timestamp>1474939271</timestamp>
+		</todotaskitem>
+		<todotaskitem>
+			<description>TODO: Chaff Hotkey</description>
+			<filepath>MODded\AircraftHotKeys.java</filepath>
+			<line>595</line>
+			<timestamp>1474939271</timestamp>
+		</todotaskitem>
+		<todotaskitem>
+			<description>TODO: PAS++</description>
+			<filepath>MODded\AircraftHotKeys.java</filepath>
+			<line>647</line>
+			<timestamp>1474939271</timestamp>
+		</todotaskitem>
+		<todotaskitem>
+			<description>TODO:Drag chute control</description>
+			<filepath>MODded\AircraftHotKeys.java</filepath>
+			<line>699</line>
+			<timestamp>1474939271</timestamp>
+		</todotaskitem>
+		<todotaskitem>
+			<description>TODO:Placeholder for &apos;Deploy Refuelling Device&apos;</description>
+			<filepath>MODded\AircraftHotKeys.java</filepath>
+			<line>708</line>
+			<timestamp>1474939271</timestamp>
+		</todotaskitem>
+		<todotaskitem>
+			<description>TODO:</description>
+			<filepath>MODded\AircraftHotKeys.java</filepath>
+			<line>765</line>
+			<timestamp>1474939271</timestamp>
+		</todotaskitem>
+		<todotaskitem>
+			<description>TODO: PAS++</description>
+			<filepath>MODded\AircraftHotKeys.java</filepath>
+			<line>856</line>
+			<timestamp>1474939271</timestamp>
+		</todotaskitem>
+		<todotaskitem>
+			<description>TODO:</description>
+			<filepath>MODded\AircraftHotKeys.java</filepath>
+			<line>933</line>
+			<timestamp>1474939271</timestamp>
+		</todotaskitem>
+		<todotaskitem>
+			<description>TODO: Disabled for ModAct compatibility</description>
+			<filepath>MODded\AircraftHotKeys.java</filepath>
+			<line>998</line>
+			<timestamp>1474939271</timestamp>
+		</todotaskitem>
+		<todotaskitem>
+			<description>TODO: Disabled for ModAct compatibility</description>
+			<filepath>MODded\AircraftHotKeys.java</filepath>
+			<line>1031</line>
+			<timestamp>1474939271</timestamp>
+		</todotaskitem>
+		<todotaskitem>
+			<description>TODO: ++ Added Code for Net Replication ++</description>
+			<filepath>MODded\AircraftHotKeys.java</filepath>
+			<line>1055</line>
+			<timestamp>1474939271</timestamp>
+		</todotaskitem>
+		<todotaskitem>
+			<description>TODO: -- Added Code for Net Replication --</description>
+			<filepath>MODded\AircraftHotKeys.java</filepath>
+			<line>1060</line>
+			<timestamp>1474939271</timestamp>
+		</todotaskitem>
+		<todotaskitem>
+			<description>TODO: ++ Added Code for Net Replication ++</description>
+			<filepath>MODded\AircraftHotKeys.java</filepath>
+			<line>1064</line>
+			<timestamp>1474939271</timestamp>
+		</todotaskitem>
+		<todotaskitem>
+			<description>TODO: -- Added Code for Net Replication --</description>
+			<filepath>MODded\AircraftHotKeys.java</filepath>
+			<line>1069</line>
+			<timestamp>1474939271</timestamp>
+		</todotaskitem>
+		<todotaskitem>
+			<description>TODO: ++ Added Code for Net Replication ++</description>
+			<filepath>MODded\AircraftHotKeys.java</filepath>
+			<line>1073</line>
+			<timestamp>1474939271</timestamp>
+		</todotaskitem>
+		<todotaskitem>
+			<description>TODO: -- Added Code for Net Replication --</description>
+			<filepath>MODded\AircraftHotKeys.java</filepath>
+			<line>1078</line>
+			<timestamp>1474939271</timestamp>
+		</todotaskitem>
+		<todotaskitem>
+			<description>TODO:Placeholder for &apos;Toggle Radar Mode&apos;</description>
+			<filepath>MODded\AircraftHotKeys.java</filepath>
+			<line>1081</line>
+			<timestamp>1474939271</timestamp>
+		</todotaskitem>
+		<todotaskitem>
+			<description>TODO:Placeholder for &apos;Radar Setting #1&apos;</description>
+			<filepath>MODded\AircraftHotKeys.java</filepath>
+			<line>1090</line>
+			<timestamp>1474939271</timestamp>
+		</todotaskitem>
+		<todotaskitem>
+			<description>TODO:Placeholder for &apos;Radar Setting #2&apos;</description>
+			<filepath>MODded\AircraftHotKeys.java</filepath>
+			<line>1098</line>
+			<timestamp>1474939271</timestamp>
+		</todotaskitem>
+		<todotaskitem>
+			<description>TODO:Placeholder for &apos;Radar Setting #3&apos;</description>
+			<filepath>MODded\AircraftHotKeys.java</filepath>
+			<line>1107</line>
+			<timestamp>1474939271</timestamp>
+		</todotaskitem>
+		<todotaskitem>
+			<description>TODO:Placeholder for &apos;Radar Setting #4&apos;</description>
+			<filepath>MODded\AircraftHotKeys.java</filepath>
+			<line>1116</line>
+			<timestamp>1474939271</timestamp>
+		</todotaskitem>
+		<todotaskitem>
+			<description>TODO:</description>
+			<filepath>MODded\AircraftHotKeys.java</filepath>
+			<line>1288</line>
+			<timestamp>1474939271</timestamp>
+		</todotaskitem>
+		<todotaskitem>
+			<description>TODO: Next two cases added in to allow for toggling of engines 7 and 8</description>
+			<filepath>MODded\AircraftHotKeys.java</filepath>
+			<line>1425</line>
+			<timestamp>1474939271</timestamp>
+		</todotaskitem>
+		<todotaskitem>
+			<description>TODO: Added flapIndex integer to following two keys to allow for custom flap settings</description>
+			<filepath>MODded\AircraftHotKeys.java</filepath>
+			<line>1524</line>
+			<timestamp>1474939271</timestamp>
+		</todotaskitem>
+		<todotaskitem>
+			<description>TODO: New hotkeys for variable geometry/incidence wings</description>
+			<filepath>MODded\AircraftHotKeys.java</filepath>
+			<line>1539</line>
+			<timestamp>1474939271</timestamp>
+		</todotaskitem>
+		<todotaskitem>
+			<description>TODO: Blown Flaps</description>
+			<filepath>MODded\AircraftHotKeys.java</filepath>
+			<line>1554</line>
+			<timestamp>1474939271</timestamp>
+		</todotaskitem>
+		<todotaskitem>
+			<description>TODO: Disabled for ModAct compatibility</description>
+			<filepath>MODded\AircraftHotKeys.java</filepath>
+			<line>1629</line>
+			<timestamp>1474939271</timestamp>
+		</todotaskitem>
+		<todotaskitem>
+			<description>TODO: New misc keys</description>
+			<filepath>MODded\AircraftHotKeys.java</filepath>
+			<line>2418</line>
+			<timestamp>1474939271</timestamp>
+		</todotaskitem>
+		<todotaskitem>
+			<description>TODO: Custom flap settings. Parameters are defined in the flight model and allow for numerous different flap settings.</description>
+			<filepath>MODded\AircraftHotKeys.java</filepath>
+			<line>5117</line>
+			<timestamp>1474939271</timestamp>
+		</todotaskitem>
+		<todotaskitem>
+			<description>TODO: Custom flap settings. Parameters are defined in the flight model and allow for numerous different flap settings.</description>
+			<filepath>MODded\AircraftHotKeys.java</filepath>
+			<line>5235</line>
+			<timestamp>1474939271</timestamp>
+		</todotaskitem>
+	</tasks>
+</project>

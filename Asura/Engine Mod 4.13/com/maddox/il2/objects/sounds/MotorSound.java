@@ -1,0 +1,227 @@
+// Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
+// Jad home page: http://www.kpdus.com/jad.html
+// Decompiler options: packimports(3) deadcode 
+// Source File Name:   MotorSound.java
+
+package com.maddox.il2.objects.sounds;
+
+import com.maddox.JGP.Point3d;
+import com.maddox.il2.ai.World;
+import com.maddox.il2.fm.FmSounds;
+import com.maddox.il2.fm.Motor;
+import com.maddox.il2.game.Main;
+import com.maddox.il2.net.NetServerParams;
+import com.maddox.sound.*;
+import java.io.File;
+import java.io.PrintStream;
+import java.util.Random;
+
+// Referenced classes of package com.maddox.il2.objects.sounds:
+//            SndAircraft
+
+public class MotorSound
+    implements FmSounds
+{
+
+    public MotorSound(Motor motor1, SndAircraft sndaircraft)
+    {
+        owner = null;
+        motor = null;
+        sndStartState = 0;
+        dmgRnd = new Random();
+        nextTime = 0L;
+        prevTime = 0L;
+        tDmg = 0.5F;
+        kDmg = 0.0F;
+        sndMotor = null;
+        sndProp = null;
+        spStart = null;
+        spCartridge = new SamplePool("motor.CartridgeStart");
+        spEnd = null;
+        prevState = 0;
+        bRunning = false;
+        owner = sndaircraft;
+        motor = motor1;
+        if(!BaseObject.isEnabled())
+            return;
+        String s = motor1.soundName;
+        String s1 = motor1.propName;
+        String s2 = motor1.startStopName;
+        String s3 = motor1.emdName;
+        String s4 = motor1.emdSubName;
+        if(doesPresetExist(s4))
+            s = s4;
+        else
+        if(doesPresetExist(s3))
+            s = s3;
+        if(s == null)
+            s = "db605";
+        s = "motor." + s;
+        if(doesPresetExist(s4 + ".start.begin") && doesPresetExist(s4 + ".start.end"))
+            s2 = s4;
+        else
+        if(doesPresetExist(s3 + ".start.begin") && doesPresetExist(s3 + ".start.end"))
+            s2 = s3;
+        if(s2 == null)
+            s2 = "std_p";
+        else
+        if(s2.compareToIgnoreCase("none") == 0)
+            s2 = null;
+        if(s2 != null)
+        {
+            spStart = new SamplePool("motor." + s2 + ".start.begin");
+            spEnd = new SamplePool("motor." + s2 + ".start.end");
+        }
+        sndMotor = sndaircraft.newSound(s, true);
+        if(sndMotor != null)
+        {
+            sndMotor.setParent(sndaircraft.getRootFX());
+            sndMotor.setPosition(motor1.getEnginePos());
+            sndMotor.setControl(500, 0.0F);
+        }
+        if(s1 != null && !"".equals(s1))
+        {
+            s1 = "propeller." + s1;
+            sndProp = sndaircraft.newSound(s1, true);
+            if(sndProp != null)
+            {
+                sndProp.setParent(sndaircraft.getRootFX());
+                sndProp.setPosition(motor1.getEnginePos());
+            }
+        }
+        motor1.isnd = this;
+    }
+
+    private boolean doesPresetExist(String paramString)
+    {
+      if ((Main.cur().netServerParams == null) || (Main.cur().netServerParams.allowCustomSounds))
+      {
+        String str = "my_presets/sounds/motor." + paramString + ".prs";
+        try
+        {
+          File localFile = new File(str);
+          if (World.cur().debugSounds)
+          {
+            if (localFile.exists())
+            {
+              System.out.println("Searching for motor preset " + str + ". FOUND!");
+            }
+            else
+            {
+              System.out.println("Searching for motor preset " + str + ". NOT FOUND!");
+            }
+          }
+
+          return localFile.exists();
+        }
+        catch (NullPointerException localNullPointerException)
+        {
+          return false;
+        }
+      }
+      return false;
+    }
+
+    public void setPos(Point3d point3d)
+    {
+    }
+
+    public void onEngineState(int i)
+    {
+        if(sndMotor != null)
+        {
+            if(i != prevState)
+            {
+                if(i == 2 && spStart != null)
+                    sndMotor.play(spStart);
+	                if(motor.getStarter() == 3)
+	                    sndMotor.play(spCartridge);
+                if(i == 4 && spEnd != null)
+                    sndMotor.play(spEnd);
+            }
+            if(i > 2 && i <= 6)
+            {
+                if(i == 3)
+                {
+                    sndMotor.setControl(500, 1.0F);
+                    sndMotor.setControl(501, 10F);
+                }
+                if(i == 5)
+                    sndMotor.setControl(501, 20F);
+                if(i == 6)
+                {
+                    sndMotor.setControl(500, 1.0F);
+                    bRunning = true;
+                }
+            }
+            sndMotor.setControl(106, i <= 1 || i >= 4 ? 0.0F : 1.0F);
+            sndMotor.setControl(112, i);
+        }
+        prevState = i;
+    }
+
+    public void update()
+    {
+        float f = motor.getRPM();
+        if(sndMotor != null)
+        {
+            int i = motor.getType();
+            boolean flag = i == 0 || i == 1;
+            float f2 = motor.getReadyness();
+            float f3 = f;
+            if(f2 < 0.0F)
+                f2 = 0.0F;
+            f2 = 1.0F - f2;
+            if(flag && prevState == 0)
+                bRunning = f > 5F;
+            if(bRunning)
+            {
+                if(!flag && f < 60F && prevState == 0)
+                    bRunning = false;
+                if(f < 1200F)
+                {
+                    sndMotor.setControl(501, f / 30F);
+                    sndMotor.setControl(502, f2 * 0.7F);
+                    if(f > 400F)
+                        sndMotor.setControl(503, (0.8F * (1200F - f)) / 800F);
+                    else
+                        sndMotor.setControl(503, 0.8F);
+                } else
+                {
+                    sndMotor.setControl(501, 0.0F);
+                }
+            } else
+            {
+                sndMotor.setControl(501, 0.0F);
+            }
+            float f4 = f;
+            if(f2 > 0.0F)
+                f4 *= 1.0F - f2 * 0.15F * dmgRnd.nextFloat();
+            sndMotor.setControl(100, f4);
+            sndMotor.setControl(101, f2);
+            float f5 = motor.getThrustOutput();
+            sndMotor.setControl(1001, f5);
+        }
+        if(sndProp != null)
+        {
+            float f1 = motor.getPropRPM();
+            sndProp.setControl(100, f1);
+        }
+    }
+
+    protected SndAircraft owner;
+    protected Motor motor;
+    protected int sndStartState;
+    protected Random dmgRnd;
+    protected long nextTime;
+    protected long prevTime;
+    protected float tDmg;
+    protected float kDmg;
+    protected SoundFX sndMotor;
+    protected SoundFX sndProp;
+    protected SamplePool spStart;
+    protected SamplePool spEnd;
+    private int prevState;
+    private boolean bRunning;
+    protected SamplePool spCartridge;
+}

@@ -1,0 +1,9 @@
+default,10 MGunSpandauMaxim08st 250, , , , , , , , , , , , , , , , 
+2x75mmC+Artillery spotter,10 MGunSpandauMaxim08st 250,3 BombGunObus75mmC 1,3 BombGunObus75mmC 1, , ,1 MGun152mm 50,1 MGun152mm 50,1 MGun152mm 50,1 MGun152mm 50,1 MGun152mm 50,1 MGun152mm 50,1 MGun152mm 50,1 MGun152mm 50,1 MGun152mm 50,1 MGun152mm 50,1 MGun152mm 50,1 MGun152mm 50
+4x75mmC,10 MGunSpandauMaxim08st 250,3 BombGunObus75mmC 1,3 BombGunObus75mmC 1,3 BombGunObus75mmC 1,3 BombGunObus75mmC 1, , , , , , , , , , , , 
+2x90mm+Artillery spotter,10 MGunSpandauMaxim08st 250,3 BombGunObus90mm 1,3 BombGunObus90mm 1, , ,1 MGun152mm 50,1 MGun152mm 50,1 MGun152mm 50,1 MGun152mm 50,1 MGun152mm 50,1 MGun152mm 50,1 MGun152mm 50,1 MGun152mm 50,1 MGun152mm 50,1 MGun152mm 50,1 MGun152mm 50,1 MGun152mm 50
+4xGA122mm,10 MGunSpandauMaxim08st 250,3 BombGunGA122mm 1,3 BombGunGA122mm 1,3 BombGunGA122mm 1,3 BombGunGA122mm 1, , , , , , , , , , , , 
+2xGA155mm+Artillery spotter,10 MGunSpandauMaxim08st 250,3 BombGunGA155mm 1,3 BombGunGA155mm 1, , ,1 MGun152mm 50,1 MGun152mm 50,1 MGun152mm 50,1 MGun152mm 50,1 MGun152mm 50,1 MGun152mm 50,1 MGun152mm 50,1 MGun152mm 50,1 MGun152mm 50,1 MGun152mm 50,1 MGun152mm 50,1 MGun152mm 50
+2xGA122mm_2xGA155mm,10 MGunSpandauMaxim08st 250,3 BombGunGA155mm 1,3 BombGunGA155mm 1,3 BombGunGA122mm 1,3 BombGunGA122mm 1, , , , , , , , , , , , 
+3xGruz,10 MGunSpandauMaxim08st 250,3 BombGunCargo70 3, , , , , , , , , , , , , , , 
+none, , , , , , , , , , , , , , , , , 

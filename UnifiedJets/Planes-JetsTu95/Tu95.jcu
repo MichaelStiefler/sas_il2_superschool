@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<workspace_user>
+	<active_project>
+		<label>Su25</label>
+	</active_project>
+	<projects>
+		<project>
+			<label>Su25</label>
+			<showfiles>false</showfiles>
+			<folderitem>
+				<path>srcTU_95</path>
+			</folderitem>
+		</project>
+	</projects>
+	<open_files>
+		<docitem>
+			<path>srcTU_95\TU_95.java</path>
+			<source>true</source>
+			<index>0</index>
+			<active>false</active>
+		</docitem>
+		<docitem>
+			<path>srcTU_95\TU_95X.java</path>
+			<source>true</source>
+			<index>1</index>
+			<active>true</active>
+		</docitem>
+	</open_files>
+	<symboltables>
+		<symboltable>
+			<path>srcTU_95\TU_95.java.sdk</path>
+			<symbols>
+				<symbol>CockpitTU95</symbol>
+				<symbol>CockpitTU95_AGunner</symbol>
+				<symbol>CockpitTU95_Bombardier</symbol>
+				<symbol>CockpitTU95_RGunner</symbol>
+				<symbol>TU_95</symbol>
+				<symbol>TU_95X</symbol>
+			</symbols>
+		</symboltable>
+	</symboltables>
+</workspace_user>

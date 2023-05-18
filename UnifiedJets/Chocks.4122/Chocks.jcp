@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<project>
+	<settings>
+		<label>Chocks</label>
+		<root_path>\</root_path>
+		<output_path>\</output_path>
+		<source_path>src\</source_path>
+		<jdkprofile_ref>JDK version 1.3.1_28</jdkprofile_ref>
+		<compiler_ref>Il-2 (Java3)</compiler_ref>
+		<ant_ref/>
+	</settings>
+	<ant_events/>
+	<run_items/>
+	<runtimes>
+		<runtime>
+			<label>&lt;Default&gt;</label>
+			<application_ref/>
+			<applet_ref/>
+			<debugger_ref/>
+			<param/>
+			<run/>
+			<verify>true</verify>
+		</runtime>
+	</runtimes>
+	<libraries>
+		<library_ref>Classes(AIMod.4122)</library_ref>
+		<library_ref>Classes(4.122)</library_ref>
+	</libraries>
+	<files>
+		<include>
+			<folderitem>
+				<path>MODded</path>
+			</folderitem>
+			<fileitem>
+				<path>MODded\Gear.java</path>
+				<folder>MODded</folder>
+			</fileitem>
+			<fileitem>
+				<path>MODded\LandAux.java</path>
+				<folder>MODded</folder>
+			</fileitem>
+			<fileitem>
+				<path>MODded\TypeBlastDeflector.java</path>
+				<folder>MODded</folder>
+			</fileitem>
+		</include>
+	</files>
+	<tasks>
+		<todotaskitem>
+			<description>TODO: This method has been extensively edited for the differential braking and steering mod. Please follow comments for changes</description>
+			<filepath>MODded\Gear.java</filepath>
+			<line>866</line>
+			<timestamp>1444968050</timestamp>
+		</todotaskitem>
+		<todotaskitem>
+			<description>TODO: PAS++</description>
+			<filepath>MODded\Gear.java</filepath>
+			<line>919</line>
+			<timestamp>1444968050</timestamp>
+		</todotaskitem>
+		<todotaskitem>
+			<description>TODO: PAS++ after TAK</description>
+			<filepath>MODded\Gear.java</filepath>
+			<line>940</line>
+			<timestamp>1444968050</timestamp>
+		</todotaskitem>
+		<todotaskitem>
+			<description>TODO: PAS++</description>
+			<filepath>MODded\Gear.java</filepath>
+			<line>1049</line>
+			<timestamp>1444968050</timestamp>
+		</todotaskitem>
+		<todotaskitem>
+			<description>TODO: PAS++</description>
+			<filepath>MODded\Gear.java</filepath>
+			<line>1128</line>
+			<timestamp>1444968050</timestamp>
+		</todotaskitem>
+		<todotaskitem>
+			<description>TODO: This edit sets limits on degree of rotation for passively steering front wheels</description>
+			<filepath>MODded\Gear.java</filepath>
+			<line>1198</line>
+			<timestamp>1444968050</timestamp>
+		</todotaskitem>
+		<todotaskitem>
+			<description>TODO: +++ CTO Mod 4.12 +++</description>
+			<filepath>MODded\Gear.java</filepath>
+			<line>1819</line>
+			<timestamp>1444968050</timestamp>
+		</todotaskitem>
+		<todotaskitem>
+			<description>TODO: This method controls carrier catapult offest and positioning. To be edited in future versions so this info is read from an external .ini file</description>
+			<filepath>MODded\Gear.java</filepath>
+			<line>1820</line>
+			<timestamp>1444968050</timestamp>
+		</todotaskitem>
+	</tasks>
+</project>

@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<Updater>
+  <UpdaterUrl>
+    http://il2updater.sas1946.rocks/up3_updater/
+  </UpdaterUrl>
+  <Version>
+    UP3_RC4_PatchPack301
+  </Version>
+  <MaxDiff>
+    2000000000
+  </MaxDiff>
+  <OutputFile>
+    up3_rc4_updater_manifest.xml
+  </OutputFile>
+</Updater>

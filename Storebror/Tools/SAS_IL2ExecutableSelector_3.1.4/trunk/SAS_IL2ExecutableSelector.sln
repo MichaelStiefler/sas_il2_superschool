@@ -1,0 +1,51 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 10.00
+# Visual Studio 2008
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "SAS_IL2ExecutableSelector", "SAS_IL2ExecutableSelector\SAS_IL2ExecutableSelector.vcproj", "{2A802654-0633-41D4-903F-0D4ED3E59981}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "DINPUT", "dinput\dinput.vcproj", "{F41599A1-FD0D-4670-A97B-FDB97BFCFA5C}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Il-2 Selector Launcher", "Il-2 Selector Launcher\Il-2 Selector Launcher.vcproj", "{0D82EC7C-74AC-4CD3-BC13-143EC5CECC1F}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "SAS IL-2 Wrapper", "SAS IL-2 Wrapper\SAS IL-2 Wrapper.vcproj", "{20B2D485-DCD9-4C59-9724-DFC4F8AF68BE}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{6F2B3A9E-7767-442C-8EE5-96F44CF4708D}"
+	ProjectSection(SolutionItems) = preProject
+		global\globals.h = global\globals.h
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "SAS IL-2 Watchdog", "SAS IL-2 Watchdog\SAS IL-2 Watchdog.vcproj", "{6B04FBC3-9F0D-49DC-BAB3-0BD0445709CC}"
+EndProject
+Global
+	GlobalSection(SubversionScc) = preSolution
+		Svn-Managed = True
+		Manager = AnkhSVN - Subversion Support for Visual Studio
+	EndGlobalSection
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Win32 = Debug|Win32
+		Release|Win32 = Release|Win32
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{2A802654-0633-41D4-903F-0D4ED3E59981}.Debug|Win32.ActiveCfg = Debug|Win32
+		{2A802654-0633-41D4-903F-0D4ED3E59981}.Debug|Win32.Build.0 = Debug|Win32
+		{2A802654-0633-41D4-903F-0D4ED3E59981}.Release|Win32.ActiveCfg = Release|Win32
+		{2A802654-0633-41D4-903F-0D4ED3E59981}.Release|Win32.Build.0 = Release|Win32
+		{F41599A1-FD0D-4670-A97B-FDB97BFCFA5C}.Debug|Win32.ActiveCfg = Debug|Win32
+		{F41599A1-FD0D-4670-A97B-FDB97BFCFA5C}.Release|Win32.ActiveCfg = Release|Win32
+		{F41599A1-FD0D-4670-A97B-FDB97BFCFA5C}.Release|Win32.Build.0 = Release|Win32
+		{0D82EC7C-74AC-4CD3-BC13-143EC5CECC1F}.Debug|Win32.ActiveCfg = Debug|Win32
+		{0D82EC7C-74AC-4CD3-BC13-143EC5CECC1F}.Release|Win32.ActiveCfg = Release|Win32
+		{0D82EC7C-74AC-4CD3-BC13-143EC5CECC1F}.Release|Win32.Build.0 = Release|Win32
+		{20B2D485-DCD9-4C59-9724-DFC4F8AF68BE}.Debug|Win32.ActiveCfg = Debug|Win32
+		{20B2D485-DCD9-4C59-9724-DFC4F8AF68BE}.Debug|Win32.Build.0 = Debug|Win32
+		{20B2D485-DCD9-4C59-9724-DFC4F8AF68BE}.Release|Win32.ActiveCfg = Release|Win32
+		{20B2D485-DCD9-4C59-9724-DFC4F8AF68BE}.Release|Win32.Build.0 = Release|Win32
+		{6B04FBC3-9F0D-49DC-BAB3-0BD0445709CC}.Debug|Win32.ActiveCfg = Debug|Win32
+		{6B04FBC3-9F0D-49DC-BAB3-0BD0445709CC}.Debug|Win32.Build.0 = Debug|Win32
+		{6B04FBC3-9F0D-49DC-BAB3-0BD0445709CC}.Release|Win32.ActiveCfg = Release|Win32
+		{6B04FBC3-9F0D-49DC-BAB3-0BD0445709CC}.Release|Win32.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

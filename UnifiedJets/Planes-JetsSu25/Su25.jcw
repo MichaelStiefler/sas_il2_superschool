@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<workspace>
+	<settings>
+		<label>Su25</label>
+		<id>122</id>
+		<version>0</version>
+	</settings>
+	<users>
+		<user>
+			<path>Su25.jcu</path>
+		</user>
+	</users>
+	<projects>
+		<project>
+			<path>Su25.jcp</path>
+		</project>
+	</projects>
+</workspace>

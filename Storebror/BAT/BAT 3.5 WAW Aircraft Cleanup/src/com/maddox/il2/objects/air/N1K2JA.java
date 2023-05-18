@@ -1,0 +1,77 @@
+package com.maddox.il2.objects.air;
+
+import com.maddox.il2.engine.HierMesh;
+import com.maddox.rts.Property;
+
+public class N1K2JA extends N1K {
+
+    public N1K2JA() {
+    }
+
+    public static void moveGear(HierMesh hiermesh, float f, float f1, float f2) {
+        hiermesh.chunkSetAngles("GearL2_D0", 0.0F, Aircraft.cvt(f, 0.35F, 0.95F, 0.0F, -82F), 0.0F);
+        hiermesh.chunkSetAngles("GearL6_D0", 0.0F, Aircraft.cvt(f, 0.35F, 0.4F, 0.0F, -90F), 0.0F);
+        hiermesh.chunkSetAngles("GearL7_D0", 0.0F, Aircraft.cvt(f, 0.35F, 0.95F, 0.0F, -48F), 0.0F);
+        hiermesh.chunkSetAngles("GearL8_D0", 0.0F, Aircraft.cvt(f, 0.35F, 0.95F, 0.0F, -58F), 0.0F);
+        hiermesh.chunkSetAngles("GearR2_D0", 0.0F, Aircraft.cvt(f1, 0.05F, 0.65F, 0.0F, -82F), 0.0F);
+        hiermesh.chunkSetAngles("GearR6_D0", 0.0F, Aircraft.cvt(f1, 0.05F, 0.1F, 0.0F, -90F), 0.0F);
+        hiermesh.chunkSetAngles("GearR7_D0", 0.0F, Aircraft.cvt(f1, 0.05F, 0.65F, 0.0F, -48F), 0.0F);
+        hiermesh.chunkSetAngles("GearR8_D0", 0.0F, Aircraft.cvt(f1, 0.05F, 0.65F, 0.0F, -58F), 0.0F);
+        Aircraft.xyz[0] = Aircraft.xyz[1] = Aircraft.xyz[2] = Aircraft.ypr[0] = Aircraft.ypr[1] = Aircraft.ypr[2] = 0.0F;
+        Aircraft.xyz[0] = Aircraft.cvt(f2, 0.0F, 1.0F, -0.075F, 0.0F);
+        Aircraft.ypr[1] = Aircraft.cvt(f2, 0.0F, 1.0F, 40F, 0.0F);
+        hiermesh.chunkSetLocate("GearC2_D0", Aircraft.xyz, Aircraft.ypr);
+    }
+
+    protected void moveGear(float f, float f1, float f2) {
+        N1K2JA.moveGear(this.hierMesh(), f, f1, f2);
+    }
+
+    public void moveWheelSink() {
+        if (this.FM.CT.getGear() == 1.0F) {
+            this.hierMesh().chunkSetAngles("GearC2_D0", 0.0F, Aircraft.cvt(this.FM.Gears.gWheelSinking[2], 0.0F, 0.1F, 0.0F, 20F), 0.0F);
+        }
+        this.resetYPRmodifier();
+        Aircraft.xyz[1] = Aircraft.cvt(this.FM.Gears.gWheelSinking[0], 0.0F, 0.23F, 0.0F, 0.23F);
+        this.hierMesh().chunkSetLocate("GearL3_D0", Aircraft.xyz, Aircraft.ypr);
+        this.hierMesh().chunkSetAngles("GearL4_D0", 0.0F, Aircraft.cvt(this.FM.Gears.gWheelSinking[0], 0.0F, 0.23F, 0.0F, -42F), 0.0F);
+        this.hierMesh().chunkSetAngles("GearL5_D0", 0.0F, Aircraft.cvt(this.FM.Gears.gWheelSinking[0], 0.0F, 0.23F, 0.0F, -45F), 0.0F);
+        Aircraft.xyz[1] = Aircraft.cvt(this.FM.Gears.gWheelSinking[1], 0.0F, 0.27625F, 0.0F, 0.27625F);
+        this.hierMesh().chunkSetLocate("GearR3_D0", Aircraft.xyz, Aircraft.ypr);
+        this.hierMesh().chunkSetAngles("GearR4_D0", 0.0F, Aircraft.cvt(this.FM.Gears.gWheelSinking[1], 0.0F, 0.27625F, 0.0F, -33F), 0.0F);
+        this.hierMesh().chunkSetAngles("GearR5_D0", 0.0F, Aircraft.cvt(this.FM.Gears.gWheelSinking[1], 0.0F, 0.27625F, 0.0F, -66F), 0.0F);
+    }
+
+    public void moveSteering(float f) {
+        this.hierMesh().chunkSetAngles("GearC3_D0", 0.0F, -f, 0.0F);
+    }
+
+    public void update(float f) {
+        super.update(f);
+        float f1 = this.FM.EI.engines[0].getControlRadiator();
+        if (Math.abs(this.flapps - f1) > 0.01F) {
+            this.flapps = f1;
+            for (int i = 1; i < 9; i++) {
+                this.hierMesh().chunkSetAngles("Cowflap" + i + "_D0", 0.0F, -20F * f1, 0.0F);
+            }
+
+        }
+    }
+
+    static {
+        Class class1 = N1K2JA.class;
+        new NetAircraft.SPAWN(class1);
+        Property.set(class1, "iconFar_shortClassName", "N1K");
+        Property.set(class1, "meshName", "3DO/Plane/N1K2-Ja(Multi1)/hier.him");
+        Property.set(class1, "PaintScheme", new PaintSchemeFMPar01());
+        Property.set(class1, "meshName_ja", "3DO/Plane/N1K2-Ja(ja)/hier.him");
+        Property.set(class1, "PaintScheme_ja", new PaintSchemeFCSPar05());
+        Property.set(class1, "yearService", 1944F);
+        Property.set(class1, "yearExpired", 1945.5F);
+        Property.set(class1, "FlightModel", "FlightModels/N1K2-Ja.fmd");
+        Property.set(class1, "cockpitClass", new Class[] { CockpitN1K2JA.class });
+        Property.set(class1, "LOSElevation", 1.1716F);
+        Aircraft.weaponTriggersRegister(class1, new int[] { 1, 1, 1, 1, 3, 3, 3, 3, 9, 9 });
+        Aircraft.weaponHooksRegister(class1, new String[] { "_CANNON01", "_CANNON02", "_CANNON03", "_CANNON04", "_ExternalBomb01", "_ExternalBomb02", "_ExternalBomb03", "_ExternalBomb04", "_ExternalDev01", "_ExternalDev02" });
+    }
+}

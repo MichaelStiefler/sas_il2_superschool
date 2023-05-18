@@ -1,0 +1,192 @@
+[Aircraft]
+  Type 1
+  Crew 1
+  Wingspan 7.15
+  Length 12.2
+  Seaplane 0
+  Canard 0
+  Jet 0
+  JetHiV 0
+[Mass]
+  Empty 5000
+  TakeOff 7102
+  Oil 50.0
+  Fuel 2052
+[Controls]
+  CAileron 1
+;By PAL, it should always have been 1 (set to 0 before)
+  CAileronTrim 1
+  CElevator 1
+  CElevatorTrim 1
+  CRudder 1
+  CRudderTrim 1
+  CFlap 1
+  CFlapPos 2
+  CFlapStage0 25.0
+  CFlapStage1 44.5
+  CFlapStageMax 44.5
+//CFlapStageText 1,2,3,4,5
+  CDiveBrake 1
+  CInterceptor 0
+  CEngine 1
+  CVectoredThrust 0
+  CUndercarriage 1
+  CLockTailwheel 0
+  CDiffBrake 3
+  CStabilizer 1
+  CArrestorHook 0
+  CWingFold 0
+  CCockpitDoor 1
+  CockpitDoorPeriod 2.0
+  CAileronThreshold 600.0
+  CRudderThreshold 600.0
+  CElevatorThreshold 530.0
+  DefaultAileronTrim 0.000
+  DefaultElevatorTrim 0.000
+  DefaultRudderTrim 0.000
+[Squares]
+  Wing 22.10
+  Aileron 1.32
+  Flap 1.7
+  Stabilizer 4.2
+  Elevator 2.0
+  Keel 4.1
+  Rudder 0.5
+  Wing_In 3.5
+  Wing_Mid 3.5
+  Wing_Out 4.05
+  AirbrakeCxS 0.18
+[Arm]
+  Aileron 3.5
+  Flap 1.6
+  Stabilizer 5.5
+  Keel 5.5
+  Elevator 5.8
+  Rudder 5.9
+  Wing_In 1.1
+  Wing_Mid 1.7
+  Wing_Out 3.0
+  Wing_V 1.5
+  GCenter 0.21
+  GCenterZ 0.00
+  GC_AOA_Shift -1.25
+  GC_Flaps_Shift 0.1
+  GC_Gear_Shift  -0.05
+[Toughness]
+  AroneL 50
+  AroneR 50
+  CF 300
+  Engine1 70
+  Engine2 70
+  Engine3 70
+  Engine4 100
+  GearC2 4000
+  GearL2 2000
+  GearR2 2000
+  Keel1 100
+  Keel2 100
+  Nose 70
+  Oil 50
+  Rudder1 70
+  Rudder2 70
+  StabL 100
+  StabR 100
+  Tail1 100
+  Tail2 150
+  Turret1B 100
+  Turret2B 100
+  Turret3B 100
+  Turret4B 100
+  Turret5B 100
+  Turret6B 100
+  VatorL 80
+  VatorR 80
+  WingLIn 100
+  WingLMid 100
+  WingLOut 80
+  WingRIn 100
+  WingRMid 100
+  WingROut 80
+  Flap01 100
+  Flap02 100
+  Flap03 100
+  Flap04 100
+[Engine]
+  Engine0Family Tumanski:MIG21
+  Engine0SubModel R11F-300
+[Gear]
+  H 1.614541
+;Pitch 0
+  Pitch 0.8
+;SinkFactor 500.0
+  SinkFactor 800.0
+;SpringsStiffness 0.35
+  SpringsStiffness 0.75
+;TailStiffness 0.35
+  TailStiffness 0.4
+[Params]
+  CriticalAOA 25.00
+  CriticalCy 00.65
+  CxCurvature 00.70
+  CxStraightness 00.08
+  CriticalAOAFlap 22.00
+  CriticalCyFlap 00.93
+  SpinTailAlpha 17.00
+  SpinCxLoss 0.10
+  SpinCyLoss 0.05
+  Vmin 350
+  Vmax 1300.0
+  VmaxAllowed 2500.0
+  VmaxH 2200.0
+  HofVmax 11500.0
+  VminFLAPS 330.0
+  VmaxFLAPS 600.0
+  Vz_climb 112.96134
+  V_climb 618.00494
+  T_turn 22.715391
+  V_turn 618.00494
+  K_max 20.0
+  Cy0_max 0.15
+  FlapsMult 2.0
+  FlapsAngSh 6.0
+  Range 1200.0
+  CruiseSpeed 800.0
+  G_class_coeff 20.0
+  G_class 12.0
+  SensYaw 0.25
+  SensPitch 0.42
+  SensRoll 0.3
+[Polares]
+  lineCyCoeff 0.06
+  AOAMinCx_Shift 0.4
+  Cy0_0 0.006
+  AOACritH_0 22.0
+  AOACritL_0 -14.0
+  CyCritH_0 1.15
+  CyCritL_0 -0.7
+  CxMin_0 0.0358
+  parabCxCoeff_0 8.5E-4
+  Cy0_1 0.15
+  AOACritH_1 22.0
+  AOACritL_1 -15.0
+  CyCritH_1  1.2
+  CyCritL_1 -0.7
+  CxMin_1 0.073
+  parabCxCoeff_1 11.5E-4
+  parabAngle 6.0
+  Decline 0.004
+  maxDistAng 40.0
+  draw_graphs 0
+[SOUND]
+  Engine Jumo004
+  Prop none
+  Start klimov_start
+  FeedType HYDRAULIC
+[Supersonic]
+  VminMach 0.92
+  VsoundMach1 0.98
+  CfsoundMach1 1.12
+  VsoundMach2 1.2
+  CfsoundMach2 1.08
+  VmaxMach 1.25
+  CfmaxMach 0.94

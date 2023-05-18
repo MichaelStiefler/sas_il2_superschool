@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.7"/>
+	<classpathentry kind="lib" path="C:/Users/Koty/OLD_PC/Downloads/Projects/RESOLVED/EngMod_2 - kopie"/>
+	<classpathentry kind="lib" path="C:/Users/Koty/OLD_PC/Downloads/Projects/RESOLVED/SAM_Generic"/>
+	<classpathentry kind="lib" path="C:/Users/Koty/OLD_PC/Downloads/Projects/RESOLVED/WeaponMod"/>
+	<classpathentry kind="lib" path="C:/Users/Koty/OLD_PC/Downloads/Projects/RESOLVED/SAM_Wasted"/>
+	<classpathentry kind="lib" path="C:/Users/Koty/OLD_PC/Downloads/eclipse-java-luna-SR1-win32-x86_64/Classes/SAS_Common_Utils_109.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Koty/OLD_PC/Downloads/Projects/RESOLVED/JetEra"/>
+	<classpathentry kind="lib" path="C:/Users/Koty/OLD_PC/Downloads/eclipse-java-luna-SR1-win32-x86_64/Classes/ClassDump_4.12.2.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Koty/OLD_PC/Downloads/Projects/RESOLVED/F-104"/>
+	<classpathentry kind="lib" path="C:/Users/Koty/OLD_PC/Downloads/Projects/RESOLVED/Weapons_16"/>
+	<classpathentry kind="output" path="bin"/>
+</classpath>

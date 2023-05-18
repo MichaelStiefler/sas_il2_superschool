@@ -1,0 +1,13 @@
+default,0 MGunUBsi 150, , , , , , , , , , , , , , , , 
+1xTarBrand10kg,0 MGunUBsi 150, , , , ,3 BombGunTarBrand10kg 1, , , , , , , , , , , 
+1xTarBrand10kgB,0 MGunUBsi 150,3 BombGunTarBrand10kgB 1, , , , , , , , , , , , , , , 
+2x10Funt1914Under,0 MGunUBsi 150, , , , , , , , , , , , ,3 BombGun10Funt1914 1,3 BombGunNull 1,3 BombGunNull 1,3 BombGun10Funt1914 1
+2x10Funt1914,0 MGunUBsi 150, ,3 BombGun10Funt1914 1,3 BombGunNull 1,3 BombGun10Funt1914 1, , , , , , , , , , , , 
+2x25Funt1914,0 MGunUBsi 150, , , , , , , , ,3 BombGun25Funt1914 1,3 BombGunNull 1,3 BombGunNull 1,3 BombGun25Funt1914 1, , , , 
+2x10Funt1915F,0 MGunUBsi 150, ,3 BombGun10Funt1915F 1,3 BombGunNull 1,3 BombGun10Funt1915F 1, , , , , , , , , , , , 
+2x25Funt1915F,0 MGunUBsi 150, ,3 BombGun25Funt1915F 1,3 BombGunNull 1,3 BombGun25Funt1915F 1, , , , , , , , , , , , 
+2x10Funt1916IUnder,0 MGunUBsi 150, , , , , , , , , , , , ,3 BombGun10Funt1916I 1,3 BombGunNull 1,3 BombGunNull 1,3 BombGun10Funt1916I 1
+2x10Funt1916I,0 MGunUBsi 150, ,3 BombGun10Funt1916I 1,3 BombGunNull 1,3 BombGun10Funt1916I 1, , , , , , , , , , , , 
+2xRL50lbs,0 MGunUBsi 150, , , , , , , , ,3 BombGunRL50lbs 1,3 BombGunNull 1,3 BombGunNull 1,3 BombGunRL50lbs 1, , , , 
+2xRL65lbs,0 MGunUBsi 150, , , , , , , , ,3 BombGunRL65lbs 1,3 BombGunNull 1,3 BombGunNull 1,3 BombGunRL65lbs 1, , , , 
+none, , , , , , , , , , , , , , , , , 

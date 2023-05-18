@@ -1,0 +1,128 @@
+<?xml version="1.0"?>
+<ManifestGenerator>
+  <Common UpdaterUrl="http://il2updater.sas1946.rocks/up3_updater/" Version="UP3_RC4_PatchPack301" MaxDiff="2000000000" OutputFile="up3_rc4_updater_manifest.xml"/>
+  <IgnoreFiles>
+    <!--<File searchpattern="\*.sfs"/>-->
+    <File searchpattern="\*.lst"/>
+    <File searchpattern="\*.cmd"/>
+    <File searchpattern="\conf.ini"/>
+    <File searchpattern="\Screenshots\*"/>
+    <File searchpattern="\#UP#\*"/>
+    <File searchpattern="\MyScreenshots\*"/>
+    <File searchpattern="\Users\*"/>
+    <File searchpattern="\Missions\*"/>
+    <File searchpattern="\records\*"/>
+    <File searchpattern="\Training\*"/>
+    <File searchpattern="\Intros\*"/>
+    <File searchpattern="\Quicks\*"/>
+    <File searchpattern="\PaintSchemes\Cache\*"/>
+    <File searchpattern="\PaintSchemes\NetCache\*"/>
+    <File searchpattern="\PaintSchemes\Noseart\*"/>
+    <File searchpattern="\PaintSchemes\Pilots\*"/>
+    <File searchpattern="\PaintSchemes\Skins\*"/>
+    <File searchpattern="\jsgmemods\#UP#_Enable_Hakenkreuz\*"/>
+    <File searchpattern="\jsgmemods\#UP#_Enable_WideScreenSupport\*"/>
+    <File searchpattern="\jsgmemods\#UP#_Enable_WideScreenSupport&amp;Hakenkreuz\*"/>
+  </IgnoreFiles>
+  <AlternativeUrls>
+    <File name="fb_3do.SFS" url="https://onedrive.live.com/download?cid=7F11E7867133791A&amp;resid=7F11E7867133791A%21481&amp;authkey=ACPmLjdrS7_CUUI"/>
+    <File name="fb_3do01.SFS" url="https://onedrive.live.com/download?cid=7F11E7867133791A&amp;resid=7F11E7867133791A%21491&amp;authkey=AGdEVLPfK8y1a_I"/>
+    <File name="fb_3do02.SFS" url="https://onedrive.live.com/download?cid=7F11E7867133791A&amp;resid=7F11E7867133791A%21477&amp;authkey=AEBoK7iBXU3kdt4"/>
+    <File name="fb_3do03.SFS" url="https://onedrive.live.com/download?cid=7F11E7867133791A&amp;resid=7F11E7867133791A%21478&amp;authkey=AMegNOJ7aUp3ckg"/>
+    <File name="fb_3do04.SFS" url="https://onedrive.live.com/download?cid=7F11E7867133791A&amp;resid=7F11E7867133791A%21479&amp;authkey=AOpluY-gUcexYRU"/>
+    <File name="fb_3do05.SFS" url="https://onedrive.live.com/download?cid=7F11E7867133791A&amp;resid=7F11E7867133791A%21480&amp;authkey=AK-fZ79tApgCCRc"/>
+    <File name="fb_3do06.SFS" url="https://onedrive.live.com/download?cid=7F11E7867133791A&amp;resid=7F11E7867133791A%21484&amp;authkey=APCe0Kt_6EsiyJs"/>
+    <File name="fb_3do07.SFS" url="https://onedrive.live.com/download?cid=7F11E7867133791A&amp;resid=7F11E7867133791A%21482&amp;authkey=AAZCnxQcGV5nsFE"/>
+    <File name="fb_3do08.SFS" url="https://onedrive.live.com/download?cid=7F11E7867133791A&amp;resid=7F11E7867133791A%21483&amp;authkey=AJcD1YPGTPrRY_8"/>
+    <File name="fb_3do08p.SFS" url="https://onedrive.live.com/download?cid=7F11E7867133791A&amp;resid=7F11E7867133791A%21501&amp;authkey=ACbRmwHxN3t5LFE"/>
+    <File name="fb_3do09p.SFS" url="https://onedrive.live.com/download?cid=7F11E7867133791A&amp;resid=7F11E7867133791A%21485&amp;authkey=ANuixjO5eRlICfs"/>
+    <File name="fb_3do10p.SFS" url="https://onedrive.live.com/download?cid=7F11E7867133791A&amp;resid=7F11E7867133791A%21486&amp;authkey=AGUFXX2keni8Pd8"/>
+    <File name="fb_3do11.SFS" url="https://onedrive.live.com/download?cid=7F11E7867133791A&amp;resid=7F11E7867133791A%21487&amp;authkey=AA3nIIraWqRIN2E"/>
+    <File name="fb_3do11p.SFS" url="https://onedrive.live.com/download?cid=7F11E7867133791A&amp;resid=7F11E7867133791A%21488&amp;authkey=AC2LjfFucX4Pzqs"/>
+    <File name="fb_3do12.SFS" url="https://onedrive.live.com/download?cid=7F11E7867133791A&amp;resid=7F11E7867133791A%21489&amp;authkey=AI4T3IjO9_ZVOp8"/>
+    <File name="fb_3do12p.SFS" url="https://onedrive.live.com/download?cid=7F11E7867133791A&amp;resid=7F11E7867133791A%21490&amp;authkey=ADTbzWLCRCawBjw"/>
+    <File name="fb_3do13.SFS" url="https://onedrive.live.com/download?cid=7F11E7867133791A&amp;resid=7F11E7867133791A%21495&amp;authkey=AGnihleIlNmduCo"/>
+    <File name="fb_3do13p.SFS" url="https://onedrive.live.com/download?cid=7F11E7867133791A&amp;resid=7F11E7867133791A%21492&amp;authkey=ANAKfIxfaiaYYII"/>
+    <File name="fb_3do14.SFS" url="https://onedrive.live.com/download?cid=7F11E7867133791A&amp;resid=7F11E7867133791A%21493&amp;authkey=AGN374R0N2MQDGs"/>
+    <File name="fb_3do14p.SFS" url="https://onedrive.live.com/download?cid=7F11E7867133791A&amp;resid=7F11E7867133791A%21494&amp;authkey=AJ3GGLsF7LAH3ak"/>
+    <File name="fb_3do15.SFS" url="https://onedrive.live.com/download?cid=7F11E7867133791A&amp;resid=7F11E7867133791A%21497&amp;authkey=ANIY0WVtd7P45KY"/>
+    <File name="fb_3do16.SFS" url="https://onedrive.live.com/download?cid=7F11E7867133791A&amp;resid=7F11E7867133791A%21496&amp;authkey=AC_hZxr26wFGSF8"/>
+    <File name="fb_3do16p.SFS" url="https://onedrive.live.com/download?cid=7F11E7867133791A&amp;resid=7F11E7867133791A%21498&amp;authkey=AOsGoSnVbNwB0Ro"/>
+    <File name="fb_3do17.SFS" url="https://onedrive.live.com/download?cid=7F11E7867133791A&amp;resid=7F11E7867133791A%21500&amp;authkey=AHe5S2TLG0rzpJk"/>
+    <File name="fb_3do18.SFS" url="https://onedrive.live.com/download?cid=7F11E7867133791A&amp;resid=7F11E7867133791A%21499&amp;authkey=APEFMZRLOFrJ1SI"/>
+    <File name="fb_3do19.SFS" url="https://onedrive.live.com/download?cid=7F11E7867133791A&amp;resid=7F11E7867133791A%21502&amp;authkey=AK_6y71jX2wsqH4"/>
+    <File name="fb_3do20.SFS" url="https://onedrive.live.com/download?cid=7F11E7867133791A&amp;resid=7F11E7867133791A%21504&amp;authkey=AKlByLWMxiOwRfY"/>
+    <File name="fb_3do21.SFS" url="https://onedrive.live.com/download?cid=7F11E7867133791A&amp;resid=7F11E7867133791A%21505&amp;authkey=AOmgcTU-bubrfdE"/>
+    <File name="fb_3do22.SFS" url="https://onedrive.live.com/download?cid=7F11E7867133791A&amp;resid=7F11E7867133791A%21503&amp;authkey=ANjAgPGfNO4jX3Y"/>
+    <File name="fb_3do23.SFS" url="https://onedrive.live.com/download?cid=7F11E7867133791A&amp;resid=7F11E7867133791A%21512&amp;authkey=ACS5QrVNvftq850"/>
+    <File name="fb_3do24.SFS" url="https://onedrive.live.com/download?cid=7F11E7867133791A&amp;resid=7F11E7867133791A%21506&amp;authkey=AL89Jb-aIyhntO4"/>
+    <File name="fb_3do25.SFS" url="https://onedrive.live.com/download?cid=7F11E7867133791A&amp;resid=7F11E7867133791A%21508&amp;authkey=ABTVhcB7mNKsHvE"/>
+    <File name="fb_3do26.SFS" url="https://onedrive.live.com/download?cid=7F11E7867133791A&amp;resid=7F11E7867133791A%21507&amp;authkey=AJiD1BIyyM0-pbg"/>
+    <File name="fb_3do27.SFS" url="https://onedrive.live.com/download?cid=7F11E7867133791A&amp;resid=7F11E7867133791A%21509&amp;authkey=APa54mxLgVHf7PU"/>
+    <File name="fb_3do28.SFS" url="https://onedrive.live.com/download?cid=7F11E7867133791A&amp;resid=7F11E7867133791A%21510&amp;authkey=AItA0s2TeGrkip4"/>
+    <File name="fb_3do29.SFS" url="https://onedrive.live.com/download?cid=7F11E7867133791A&amp;resid=7F11E7867133791A%21511&amp;authkey=AHNZZxQ5D4l8CyA"/>
+    <File name="fb_maps.SFS" url="https://onedrive.live.com/download?cid=7F11E7867133791A&amp;resid=7F11E7867133791A%21528&amp;authkey=ABgg2m23t_ovfuI"/>
+    <File name="fb_maps01.SFS" url="https://onedrive.live.com/download?cid=7F11E7867133791A&amp;resid=7F11E7867133791A%21514&amp;authkey=AK9v4ch3n-sxA1w"/>
+    <File name="fb_maps02.SFS" url="https://onedrive.live.com/download?cid=7F11E7867133791A&amp;resid=7F11E7867133791A%21513&amp;authkey=AEM-D1U0IgjHxZY"/>
+    <File name="fb_maps03.SFS" url="https://onedrive.live.com/download?cid=7F11E7867133791A&amp;resid=7F11E7867133791A%21518&amp;authkey=ACO3xKzgtSl3GtI"/>
+    <File name="fb_maps04.SFS" url="https://onedrive.live.com/download?cid=7F11E7867133791A&amp;resid=7F11E7867133791A%21515&amp;authkey=AKOno3jPLRqvsHs"/>
+    <File name="fb_maps05.SFS" url="https://onedrive.live.com/download?cid=7F11E7867133791A&amp;resid=7F11E7867133791A%21516&amp;authkey=AJ3GZd6E6sbyuCs"/>
+    <File name="fb_maps06.SFS" url="https://onedrive.live.com/download?cid=7F11E7867133791A&amp;resid=7F11E7867133791A%21517&amp;authkey=AG56st74fVChAJs"/>
+    <File name="fb_maps07p.SFS" url="https://onedrive.live.com/download?cid=7F11E7867133791A&amp;resid=7F11E7867133791A%21524&amp;authkey=ANo3XmvRi_cpUGQ"/>
+    <File name="fb_maps08p.SFS" url="https://onedrive.live.com/download?cid=7F11E7867133791A&amp;resid=7F11E7867133791A%21519&amp;authkey=AFKtF-u7SYiIwsY"/>
+    <File name="fb_maps09p.SFS" url="https://onedrive.live.com/download?cid=7F11E7867133791A&amp;resid=7F11E7867133791A%21520&amp;authkey=AHsta7UBEaaPsFE"/>
+    <File name="fb_maps10.SFS" url="https://onedrive.live.com/download?cid=7F11E7867133791A&amp;resid=7F11E7867133791A%21521&amp;authkey=AEmLDilc_jyvPnY"/>
+    <File name="fb_maps10p.SFS" url="https://onedrive.live.com/download?cid=7F11E7867133791A&amp;resid=7F11E7867133791A%21522&amp;authkey=AD1TeI-eRiUuolI"/>
+    <File name="fb_maps11.SFS" url="https://onedrive.live.com/download?cid=7F11E7867133791A&amp;resid=7F11E7867133791A%21523&amp;authkey=AGuD47TNEhj17r0"/>
+    <File name="fb_maps12.SFS" url="https://onedrive.live.com/download?cid=7F11E7867133791A&amp;resid=7F11E7867133791A%21525&amp;authkey=AM-13KJ0KyaZ-qM"/>
+    <File name="fb_maps12p.SFS" url="https://onedrive.live.com/download?cid=7F11E7867133791A&amp;resid=7F11E7867133791A%21526&amp;authkey=AA7vWOSVu8-JBb0"/>
+    <File name="fb_maps13.SFS" url="https://onedrive.live.com/download?cid=7F11E7867133791A&amp;resid=7F11E7867133791A%21527&amp;authkey=AB69EPkkB9UXZk8"/>
+    <File name="fb_maps14.SFS" url="https://onedrive.live.com/download?cid=7F11E7867133791A&amp;resid=7F11E7867133791A%21532&amp;authkey=AL0T0oJ2SMiyvsg"/>
+    <File name="fb_maps15.SFS" url="https://onedrive.live.com/download?cid=7F11E7867133791A&amp;resid=7F11E7867133791A%21537&amp;authkey=AMwvSQnjPTOzgdw"/>
+    <File name="fb_maps16.SFS" url="https://onedrive.live.com/download?cid=7F11E7867133791A&amp;resid=7F11E7867133791A%21529&amp;authkey=AEXy-3fJ48NsCL8"/>
+    <File name="fb_maps17.SFS" url="https://onedrive.live.com/download?cid=7F11E7867133791A&amp;resid=7F11E7867133791A%21530&amp;authkey=AKZ8niFKXNPhVhI"/>
+    <File name="fb_maps18.SFS" url="https://onedrive.live.com/download?cid=7F11E7867133791A&amp;resid=7F11E7867133791A%21531&amp;authkey=AHNF3ff_zqbrUGQ"/>
+    <File name="fb_maps19.SFS" url="https://onedrive.live.com/download?cid=7F11E7867133791A&amp;resid=7F11E7867133791A%21534&amp;authkey=AN9aC3HaFyvQAx0"/>
+    <File name="fb_maps20.SFS" url="https://onedrive.live.com/download?cid=7F11E7867133791A&amp;resid=7F11E7867133791A%21533&amp;authkey=AOaVsAtGSdcbeAA"/>
+    <File name="fb_maps21.SFS" url="https://onedrive.live.com/download?cid=7F11E7867133791A&amp;resid=7F11E7867133791A%21536&amp;authkey=AODQ50-8BPimCt0"/>
+    <File name="fb_maps22.SFS" url="https://onedrive.live.com/download?cid=7F11E7867133791A&amp;resid=7F11E7867133791A%21535&amp;authkey=APRiLyavyazXp4Y"/>
+    <File name="fb_sound.SFS" url="https://onedrive.live.com/download?cid=7F11E7867133791A&amp;resid=7F11E7867133791A%21545&amp;authkey=APQfHxSDAvBcoMs"/>
+    <File name="fb_sound01.SFS" url="https://onedrive.live.com/download?cid=7F11E7867133791A&amp;resid=7F11E7867133791A%21539&amp;authkey=ACSArxT5LhN11DA"/>
+    <File name="fb_sound02.SFS" url="https://onedrive.live.com/download?cid=7F11E7867133791A&amp;resid=7F11E7867133791A%21538&amp;authkey=AD2bjJ5qX_IyDKk"/>
+    <File name="fb_sound03.SFS" url="https://onedrive.live.com/download?cid=7F11E7867133791A&amp;resid=7F11E7867133791A%21540&amp;authkey=ALXACLsh0nzZeRY"/>
+    <File name="fb_sound04.SFS" url="https://onedrive.live.com/download?cid=7F11E7867133791A&amp;resid=7F11E7867133791A%21541&amp;authkey=AO6uXCx1BohyQLw"/>
+    <File name="fb_sound05.SFS" url="https://onedrive.live.com/download?cid=7F11E7867133791A&amp;resid=7F11E7867133791A%21542&amp;authkey=AKYEq13Lxy3g-0M"/>
+    <File name="fb_sound06.SFS" url="https://onedrive.live.com/download?cid=7F11E7867133791A&amp;resid=7F11E7867133791A%21543&amp;authkey=ALVZATA832qSW-o"/>
+    <File name="fb_sound07.SFS" url="https://onedrive.live.com/download?cid=7F11E7867133791A&amp;resid=7F11E7867133791A%21544&amp;authkey=AALDVsS4YBbgT_c"/>
+    <File name="sasup_decals_01.sfs" url="https://onedrive.live.com/download?cid=7F11E7867133791A&amp;resid=7F11E7867133791A%21577&amp;authkey=AL5xtj0R1KOr4QE"/>
+    <File name="up_cockpits01.sfs" url="https://onedrive.live.com/download?cid=7F11E7867133791A&amp;resid=7F11E7867133791A%21547&amp;authkey=AHGn8AoyCUPrFYQ"/>
+    <File name="up_cockpits02.sfs" url="https://onedrive.live.com/download?cid=7F11E7867133791A&amp;resid=7F11E7867133791A%21549&amp;authkey=AEAizcDT024TNTw"/>
+    <File name="up_cockpits03.sfs" url="https://onedrive.live.com/download?cid=7F11E7867133791A&amp;resid=7F11E7867133791A%21548&amp;authkey=AOpyUwlPL2v2x5A"/>
+    <File name="up_cockpits04.sfs" url="https://onedrive.live.com/download?cid=7F11E7867133791A&amp;resid=7F11E7867133791A%21553&amp;authkey=ANMIHJqyrOqViD0"/>
+    <File name="up_cockpits05.sfs" url="https://onedrive.live.com/download?cid=7F11E7867133791A&amp;resid=7F11E7867133791A%21551&amp;authkey=AJMAa4LE3vT5yys"/>
+    <File name="up_effects01.sfs" url="https://onedrive.live.com/download?cid=7F11E7867133791A&amp;resid=7F11E7867133791A%21550&amp;authkey=APWECKGurDb6dqA"/>
+    <File name="up_maps01.sfs" url="https://onedrive.live.com/download?cid=7F11E7867133791A&amp;resid=7F11E7867133791A%21552&amp;authkey=AJO89yq_0t6RwOI"/>
+    <File name="up_maps02.sfs" url="https://onedrive.live.com/download?cid=7F11E7867133791A&amp;resid=7F11E7867133791A%21554&amp;authkey=AGqS4YNndMWlMx0"/>
+    <File name="up_maps03.sfs" url="https://onedrive.live.com/download?cid=7F11E7867133791A&amp;resid=7F11E7867133791A%21557&amp;authkey=AKk6XkYckaBSUa4"/>
+    <File name="up_maps04.sfs" url="https://onedrive.live.com/download?cid=7F11E7867133791A&amp;resid=7F11E7867133791A%21556&amp;authkey=AJGnUyVn2Y_AR6Q"/>
+    <File name="up_maps05.sfs" url="https://onedrive.live.com/download?cid=7F11E7867133791A&amp;resid=7F11E7867133791A%21555&amp;authkey=AL0L2_-bVfWfpI0"/>
+    <File name="up_objects01.sfs" url="https://onedrive.live.com/download?cid=7F11E7867133791A&amp;resid=7F11E7867133791A%21558&amp;authkey=AB8DSu8XypJFZDo"/>
+    <File name="up_objects02.sfs" url="https://onedrive.live.com/download?cid=7F11E7867133791A&amp;resid=7F11E7867133791A%21560&amp;authkey=APu8qfeNX2lIphI"/>
+    <File name="up_objects03.sfs" url="https://onedrive.live.com/download?cid=7F11E7867133791A&amp;resid=7F11E7867133791A%21563&amp;authkey=AIvrsH3bRwZFHEg"/>
+    <File name="up_objects04.sfs" url="https://onedrive.live.com/download?cid=7F11E7867133791A&amp;resid=7F11E7867133791A%21559&amp;authkey=AF0XBP31cxnBfls"/>
+    <File name="up_planes01.sfs" url="https://onedrive.live.com/download?cid=7F11E7867133791A&amp;resid=7F11E7867133791A%21561&amp;authkey=AH4Ur51xcWnluS4"/>
+    <File name="up_planes02.sfs" url="https://onedrive.live.com/download?cid=7F11E7867133791A&amp;resid=7F11E7867133791A%21562&amp;authkey=AFKTwaR26WEPevg"/>
+    <File name="up_planes03.sfs" url="https://onedrive.live.com/download?cid=7F11E7867133791A&amp;resid=7F11E7867133791A%21564&amp;authkey=ALYlzfHWNuKZpwY"/>
+    <File name="up_planes04.sfs" url="https://onedrive.live.com/download?cid=7F11E7867133791A&amp;resid=7F11E7867133791A%21565&amp;authkey=ACfW1owp6NZ-x1Y"/>
+    <File name="up_planes05.sfs" url="https://onedrive.live.com/download?cid=7F11E7867133791A&amp;resid=7F11E7867133791A%21567&amp;authkey=AJ64VlsG_1FppBU"/>
+    <File name="up_planes06.sfs" url="https://onedrive.live.com/download?cid=7F11E7867133791A&amp;resid=7F11E7867133791A%21574&amp;authkey=AKCmV7-9m63XK1Q"/>
+    <File name="up_planes07.sfs" url="https://onedrive.live.com/download?cid=7F11E7867133791A&amp;resid=7F11E7867133791A%21566&amp;authkey=AO8Kwl2l0LarDYw"/>
+    <File name="up_sounds.sfs" url="https://onedrive.live.com/download?cid=7F11E7867133791A&amp;resid=7F11E7867133791A%21571&amp;authkey=AI_wIQo84RS1p40"/>
+    <File name="up_sounds02.sfs" url="https://onedrive.live.com/download?cid=7F11E7867133791A&amp;resid=7F11E7867133791A%21568&amp;authkey=AJLodRB3CLtFaN8"/>
+    <File name="up_sounds03.sfs" url="https://onedrive.live.com/download?cid=7F11E7867133791A&amp;resid=7F11E7867133791A%21569&amp;authkey=AC1WRLbRD5pTdHs"/>
+    <File name="up_sounds04.sfs" url="https://onedrive.live.com/download?cid=7F11E7867133791A&amp;resid=7F11E7867133791A%21570&amp;authkey=ACYIn8SE4eJzmXU"/>
+    <File name="up_textures01.sfs" url="https://onedrive.live.com/download?cid=7F11E7867133791A&amp;resid=7F11E7867133791A%21575&amp;authkey=AGPw1pWP6c5ivgE"/>
+    <File name="up_textures02.sfs" url="https://onedrive.live.com/download?cid=7F11E7867133791A&amp;resid=7F11E7867133791A%21572&amp;authkey=AJcHysRJBdjWZ-0"/>
+    <File name="up_ultra.sfs" url="https://onedrive.live.com/download?cid=7F11E7867133791A&amp;resid=7F11E7867133791A%21573&amp;authkey=AFLUOPRz0q83Z6c"/>
+  </AlternativeUrls>
+</ManifestGenerator>

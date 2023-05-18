@@ -1,0 +1,13 @@
+; dinput.def : Declares the module parameters for the DLL.
+
+LIBRARY      "DINPUT.dll"
+;DESCRIPTION  'IL-2 DINPUT Link Library'
+
+EXPORTS
+    ; Explicit exports can go here
+		DirectInputCreateA
+		DirectInputCreateEx
+		DirectInputCreateW
+		DllRegisterServer	PRIVATE
+		DllUnregisterServer	PRIVATE
+		ImmDisableIME

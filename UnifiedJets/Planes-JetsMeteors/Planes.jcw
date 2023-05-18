@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<workspace>
+	<settings>
+		<label>Planes</label>
+		<id>206</id>
+		<version>0</version>
+	</settings>
+	<users>
+		<user>
+			<path>Planes.jcu</path>
+		</user>
+	</users>
+	<projects>
+		<project>
+			<path>Planes.jcp</path>
+		</project>
+	</projects>
+</workspace>

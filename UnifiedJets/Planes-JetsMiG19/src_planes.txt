@@ -1,0 +1,17 @@
+P:\IL2Work\MODs\Planes-JetsMiG19\MODded\AGM.java
+P:\IL2Work\MODs\Planes-JetsMiG19\MODded\AGM65.java
+P:\IL2Work\MODs\Planes-JetsMiG19\MODded\APU60L.java
+P:\IL2Work\MODs\Planes-JetsMiG19\MODded\APU60R.java
+P:\IL2Work\MODs\Planes-JetsMiG19\MODded\CockpitMig_19.java
+P:\IL2Work\MODs\Planes-JetsMiG19\MODded\CockpitSM_12.java
+P:\IL2Work\MODs\Planes-JetsMiG19\MODded\FuelTank_Tank19.java
+P:\IL2Work\MODs\Planes-JetsMiG19\MODded\FuelTankGun_Tank19.java
+P:\IL2Work\MODs\Planes-JetsMiG19\MODded\MGunNR30kiSM.java
+P:\IL2Work\MODs\Planes-JetsMiG19\MODded\Mig_19.java
+P:\IL2Work\MODs\Planes-JetsMiG19\MODded\Mig_19S.java
+P:\IL2Work\MODs\Planes-JetsMiG19\MODded\MissileK5MS.java
+P:\IL2Work\MODs\Planes-JetsMiG19\MODded\MissileR55S.java
+P:\IL2Work\MODs\Planes-JetsMiG19\MODded\RocketGunAGM65.java
+P:\IL2Work\MODs\Planes-JetsMiG19\MODded\RocketGunK5MS.java
+P:\IL2Work\MODs\Planes-JetsMiG19\MODded\RocketGunR55S.java
+P:\IL2Work\MODs\Planes-JetsMiG19\MODded\SM_12.java

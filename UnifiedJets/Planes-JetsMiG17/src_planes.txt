@@ -1,0 +1,9 @@
+P:\IL2Work\MODs\Planes-JetsMiG17\MODded\CockpitMig_17.java
+P:\IL2Work\MODs\Planes-JetsMiG17\MODded\CockpitMig_17PF.java
+P:\IL2Work\MODs\Planes-JetsMiG17\MODded\CockpitMig_17Radar.java
+P:\IL2Work\MODs\Planes-JetsMiG17\MODded\Mig_17.java
+P:\IL2Work\MODs\Planes-JetsMiG17\MODded\Mig_17A.java
+P:\IL2Work\MODs\Planes-JetsMiG17\MODded\Mig_17F.java
+P:\IL2Work\MODs\Planes-JetsMiG17\MODded\Mig_17PF.java
+P:\IL2Work\MODs\Planes-JetsMiG17\MODded\PaintSchemeFCSPar1956.java
+P:\IL2Work\MODs\Planes-JetsMiG17\MODded\PaintSchemeFMPar1956.java

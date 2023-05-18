@@ -1,0 +1,9 @@
+default,10 MGunSpandauMaxim08st 450, , , , 
+2x75mmC,10 MGunSpandauMaxim08st 450,3 BombGunObus75mmC 1,3 BombGunObus75mmC 1, , 
+4x75mmC,10 MGunSpandauMaxim08st 450,3 BombGunObus75mmC 1,3 BombGunObus75mmC 1,3 BombGunObus75mmC 1,3 BombGunObus75mmC 1
+2x90mm,10 MGunSpandauMaxim08st 450,3 BombGunObus90mm 1,3 BombGunObus90mm 1, , 
+4xGA122mm,10 MGunSpandauMaxim08st 450,3 BombGunGA122mm 1,3 BombGunGA122mm 1,3 BombGunGA122mm 1,3 BombGunGA122mm 1
+2xGA155mm,10 MGunSpandauMaxim08st 450,3 BombGunGA155mm 1,3 BombGunGA155mm 1, , 
+2xGA122mm_2xGA155mm,10 MGunSpandauMaxim08st 450,3 BombGunGA155mm 1,3 BombGunGA155mm 1,3 BombGunGA122mm 1,3 BombGunGA122mm 1
+3xGruz,10 MGunSpandauMaxim08st 450, ,3 BombGunCargo70 1,3 BombGunCargo70 1,3 BombGunCargo70 1
+none, , , , , 

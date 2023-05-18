@@ -1,0 +1,206 @@
+[Aircraft]
+  Type 1
+  Crew 1
+  Wingspan 8.38
+  Length 12.12
+  Seaplane 0
+  Canard 0
+  Jet 1
+  JetHiV 1
+  CrewFunction0 1
+[Mass]
+  Empty 4726.0
+  TakeOff 7442.0  //5830.0
+  Oil 20.0
+  Fuel 2492.0  //880.0
+[Controls]
+  CAileron 3
+  CAileronTrim 1
+  CElevator 3
+  CElevatorTrim 1
+  CRudder 3
+  CRudderTrim 1
+  CFlap 1
+  CFlapPos 3
+  CDiveBrake 1
+  CInterceptor 0
+  CEngine 1
+  CVectoredThrust 0
+  CUndercarriage 1
+  CLockTailwheel 0
+  CWheelBrakes 1
+//By PAL, it should always have been 3 (required empty Steering method in Class)  
+  CDiffBrake 3  
+  CStabilizer 0
+  CArrestorHook 1
+  CWingFold 0
+//By PAL, to avoid opening in Carriers by AI
+  CCockpitDoor 2
+  CockpitDoorPeriod 2.25
+//By western0221, A-4M has Drag chute
+  CDragChute 1
+  CAileronThreshold 500.0
+  CRudderThreshold 550.0
+  CElevatorThreshold 630.0
+  DefaultAileronTrim 0.000
+  DefaultElevatorTrim 0.000
+  DefaultRudderTrim 0.000
+  CTargetPitchDegreeAIApproach 5.0
+  AILandingWPGearDown 7
+  AILandingWPHookDown 8
+  AILandingWPFlapHalfDown 7
+  AILandingWPFlapFullDown 5
+  AILandingWP360OverHeadApproach 2
+  AILandingWPDownwindSpd 290
+[Squares]
+  Wing 24.11
+  Aileron 1.32
+  Flap 1.7
+  Stabilizer 3.20
+  Elevator 0.8
+  Keel 2.1
+  Rudder 0.4
+  Wing_In 4.40
+  Wing_Mid 4.60
+  Wing_Out 3.055
+  AirbrakeCxS 0.095
+[Arm]
+  Aileron 3.5
+  Flap 1.6
+  Stabilizer 4.1
+  Keel 4.1
+  Elevator 4.3
+  Rudder 4.4
+  Wing_In 1.3
+  Wing_Mid 2.8
+  Wing_Out 4.4
+  Wing_V 0.25
+  GCenter 0.0
+  GCenterZ 0.00
+  GC_AOA_Shift 0.40 //-0.12
+  GC_Flaps_Shift 0.05 //0.15
+  GC_Gear_Shift 0.8 //0.8
+[Toughness]
+  AroneL 50
+  AroneR 50
+  CF 200
+  Engine1 70
+  Engine2 75
+  Engine3 75
+  Engine4 100
+  GearC2 1200
+  GearL2 2000 //350
+  GearR2 2000 //350
+  Keel1 100
+  Keel2 100
+  Nose 80
+  Oil 60
+  Rudder1 70
+  Rudder2 70
+  StabL 100
+  StabR 100
+  Tail1 100
+  Tail2 150
+  Turret1B 100
+  Turret2B 100
+  Turret3B 100
+  Turret4B 100
+  Turret5B 100
+  Turret6B 100
+  VatorL 80
+  VatorR 80
+  WingLIn 100
+  WingLMid 100
+  WingLOut 80
+  WingRIn 100
+  WingRMid 100
+  WingROut 80
+  Flap01 90
+  Flap02 90
+  Flap03 90
+  Flap04 90
+[Engine]
+  Engine0Family PWJ52:SKYHAWKS
+  Engine0SubModel A4-P408
+[Gear]
+  H 1.42
+  Pitch 5.80
+  SinkFactor 1500.0 //1000.0 //250.0
+  SpringsStiffness 0.6 //0.7
+  TailStiffness 0.45 //0.35 //0.4 //0.5
+  ShockAbsorber 0.9
+  WheelDiameterLR 0.60
+  WheelDiameterC 0.46
+  NoseGearMaxSteer 45.0
+  CatGearMesh 3DO/Arms/CatHook/CableHook_Skyhawk.sim
+[Params]
+  CriticalAOA 18.00
+  CriticalCy 01.52
+  CxCurvature 00.70
+  CxStraightness 00.08
+  CriticalAOAFlap 20.00
+  CriticalCyFlap 01.70
+  SpinTailAlpha 17.00
+  SpinCxLoss 0.09
+  SpinCyLoss 0.05
+  Vmin 210
+  Vmax 700
+  VmaxAllowed 1200.0
+  VmaxH 910.0
+  HofVmax 6000.0
+  VminFLAPS 180.0
+  VmaxFLAPS 770.0
+  Vlanding 185.0
+  VtakeoffRot 200.0
+  Vz_climb 33.51
+  V_climb 413.66
+  T_turn 19.8
+  V_turn 426.0
+  K_max 14.0
+  Cyo_max 0.2
+  FlapsMult 1.3
+  FlapsAngSh 2.0
+  Range 1000.0
+  CruiseSpeed 540.0
+  G_class_coeff 20.0
+  G_class 13.5
+  SensYaw 0.34
+  SensPitch 0.55
+  SensRoll 0.59
+[Polares]
+  lineCyCoeff 0.07
+  AOAMinCx_Shift 0.1
+  Cy0_0 0.009
+  AOACritH_0 20.0
+  AOACritL_0 -16.0
+  CyCritH_0 1.1
+  CyCritL_0 -0.7
+  CxMin_0 0.018
+  parabCxCoeff_0 12.0E-4
+  Cy0_1 0.5
+  AOACritH_1 20.0
+  AOACritL_1 -18.0
+  CyCritH_1 1.4
+  CyCritL_1 -0.7
+  CxMin_1 0.08
+  parabCxCoeff_1 10.0E-4
+  parabAngle 7.5
+  Decline 0.003
+  maxDistAng 40.0
+  draw_graphs 0
+  mc3 -2.2728,-18.547,-99.96,-175.88,-18.174,-0.2387,-11.446,-6.3667
+  mc4 9.045,155.34,875.93,3068.5,195.8,48.771,36.677,12.707
+  mm 0.979,0.995,0.991,0.991,0.998,0.99,0.892,0.892
+  mz 0.515,0.127,0.079,0.041,0.104,0.137,0.222,0.354
+[SOUND]
+  Engine Jumo004
+  Prop none
+  Start j47_start
+[Supersonic]
+  VminMach 0.86
+  VsoundMach1 0.895
+  CfsoundMach1 3.0
+  VsoundMach2 1.1
+  CfsoundMach2 3.0
+  VmaxMach 1.8
+  CfmaxMach 1.5

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.7"/>
+	<classpathentry kind="lib" path="C:/Users/Koty/OLD_PC/Downloads/Projects/RESOLVED/WeaponMod"/>
+	<classpathentry kind="lib" path="C:/Users/Koty/OLD_PC/Downloads/Projects/RESOLVED/EngMod_2 - kopie"/>
+	<classpathentry kind="lib" path="C:/Users/Koty/OLD_PC/Downloads/eclipse-java-luna-SR1-win32-x86_64/Classes/SAS_Common_Utils_109.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Koty/OLD_PC/Downloads/Projects/RESOLVED/MiG-21Weapons"/>
+	<classpathentry kind="lib" path="C:/Users/Koty/OLD_PC/Downloads/Projects/RESOLVED/EngMod"/>
+	<classpathentry kind="lib" path="C:/Users/Koty/OLD_PC/Downloads/Projects/RESOLVED/JetEra"/>
+	<classpathentry kind="lib" path="C:/Users/Koty/OLD_PC/Downloads/Projects/RESOLVED/MiG-21_paint"/>
+	<classpathentry kind="lib" path="C:/Users/Koty/OLD_PC/Downloads/Projects/RESOLVED/Su-25"/>
+	<classpathentry kind="lib" path="C:/Users/Koty/OLD_PC/Downloads/eclipse-java-luna-SR1-win32-x86_64/Classes/ClassDump_4.12.2.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Koty/OLD_PC/Downloads/Projects/Decompiled/GN16"/>
+	<classpathentry kind="lib" path="C:/Users/Koty/OLD_PC/Downloads/Projects/RESOLVED/MiG-23"/>
+	<classpathentry kind="output" path="bin"/>
+</classpath>

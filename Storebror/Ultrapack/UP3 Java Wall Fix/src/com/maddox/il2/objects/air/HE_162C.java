@@ -1,0 +1,74 @@
+package com.maddox.il2.objects.air;
+
+import com.maddox.il2.engine.Actor;
+import com.maddox.rts.Property;
+
+public class HE_162C extends HE_162
+{
+
+    public HE_162C()
+    {
+    }
+
+    protected void moveRudder(float f)
+    {
+        resetYPRmodifier();
+        xyz[1] = cvt(FM.Gears.gWheelSinking[2], 0.0F, 0.0632F, 0.0F, 0.0632F);
+        if(FM.CT.getGear() > 0.99F)
+            ypr[1] = 40F * FM.CT.getRudder();
+        hierMesh().chunkSetLocate("GearC25_D0", xyz, ypr);
+        hierMesh().chunkSetAngles("GearC27_D0", 0.0F, cvt(FM.Gears.gWheelSinking[2], 0.0F, 0.0632F, 0.0F, -15F), 0.0F);
+        hierMesh().chunkSetAngles("GearC28_D0", 0.0F, cvt(FM.Gears.gWheelSinking[2], 0.0F, 0.0632F, 0.0F, 30F), 0.0F);
+        updateControlsVisuals();
+    }
+
+    protected void moveElevator(float f)
+    {
+        updateControlsVisuals();
+    }
+
+    private final void updateControlsVisuals()
+    {
+        hierMesh().chunkSetAngles("VatorL_D0", 0.0F, -21.25F * FM.CT.getElevator() - 21.25F * FM.CT.getRudder(), 0.0F);
+        hierMesh().chunkSetAngles("VatorR_D0", 0.0F, -21.25F * FM.CT.getElevator() + 21.25F * FM.CT.getRudder(), 0.0F);
+    }
+
+    protected boolean cutFM(int i, int j, Actor actor)
+    {
+        switch(i)
+        {
+        case 33:
+            return super.cutFM(34, j, actor);
+
+        case 36:
+            return super.cutFM(37, j, actor);
+
+        case 17:
+            return super.cutFM(11, j, actor);
+
+        case 18:
+            return super.cutFM(12, j, actor);
+        }
+        return super.cutFM(i, j, actor);
+    }
+
+    static 
+    {
+        Class class1 = HE_162C.class;
+        new NetAircraft.SPAWN(class1);
+        Property.set(class1, "iconFar_shortClassName", "He-162");
+        Property.set(class1, "meshName", "3DO/Plane/He-162C/hier.him");
+        Property.set(class1, "PaintScheme", new PaintSchemeFMPar06());
+        Property.set(class1, "yearService", 1946F);
+        Property.set(class1, "yearExpired", 1956F);
+        Property.set(class1, "FlightModel", "FlightModels/He-162C.fmd");
+        Property.set(class1, "cockpitClass", new Class[] { CockpitHE_162C.class });
+        Property.set(class1, "LOSElevation", 0.5099F);
+        weaponTriggersRegister(class1, new int[] {
+            0, 0
+        });
+        weaponHooksRegister(class1, new String[] {
+            "_CANNON01", "_CANNON02"
+        });
+    }
+}

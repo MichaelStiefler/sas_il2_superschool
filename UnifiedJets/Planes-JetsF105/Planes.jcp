@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<project>
+	<settings>
+		<label>Planes</label>
+		<root_path>\</root_path>
+		<output_path>\</output_path>
+		<source_path>\</source_path>
+		<jdkprofile_ref>JDK version 1.3.1_28</jdkprofile_ref>
+		<compiler_ref>Il-2 (Java3)</compiler_ref>
+		<ant_ref/>
+	</settings>
+	<ant_events/>
+	<run_items/>
+	<runtimes>
+		<runtime>
+			<label>&lt;Default&gt;</label>
+			<application_ref/>
+			<applet_ref/>
+			<debugger_ref/>
+			<param/>
+			<run/>
+			<verify>true</verify>
+		</runtime>
+	</runtimes>
+	<libraries>
+		<library_ref>Classes(AIMod.4122)</library_ref>
+		<library_ref>SAS_Common_Utils</library_ref>
+		<library_ref>Classes(4.122)</library_ref>
+	</libraries>
+	<files>
+		<include>
+			<folderitem>
+				<path>MODded</path>
+			</folderitem>
+			<folderitem>
+				<path>srcF105</path>
+			</folderitem>
+			<fileitem>
+				<path>MODded\CockpitF_105.java</path>
+				<folder>MODded</folder>
+			</fileitem>
+			<fileitem>
+				<path>MODded\CockpitF_105Bombardier.java</path>
+				<folder>MODded</folder>
+			</fileitem>
+			<fileitem>
+				<path>MODded\F_105.java</path>
+				<folder>MODded</folder>
+			</fileitem>
+			<fileitem>
+				<path>MODded\F_105D.java</path>
+				<folder>MODded</folder>
+			</fileitem>
+			<fileitem>
+				<path>srcF105\CockpitF_105.java</path>
+				<folder>srcF105</folder>
+			</fileitem>
+			<fileitem>
+				<path>srcF105\CockpitF_105Bombardier.java</path>
+				<folder>srcF105</folder>
+			</fileitem>
+			<fileitem>
+				<path>srcF105\F_105.java</path>
+				<folder>srcF105</folder>
+			</fileitem>
+			<fileitem>
+				<path>srcF105\F_105D.java</path>
+				<folder>srcF105</folder>
+			</fileitem>
+		</include>
+	</files>
+	<tasks/>
+</project>

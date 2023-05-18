@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<workspace>
+	<settings>
+		<label>MiG21</label>
+		<id>320</id>
+		<version>0</version>
+	</settings>
+	<users>
+		<user>
+			<path>MiG21.jcu</path>
+		</user>
+	</users>
+	<projects>
+		<project>
+			<path>MiG21.jcp</path>
+		</project>
+	</projects>
+</workspace>
